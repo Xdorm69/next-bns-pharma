@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint"
   },
+  
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "@prisma/client": "^6.15.0",
