@@ -20,8 +20,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRegisterMutation } from "./_mutations/registerMutation";
 import { SignupDataType, signupSchema } from "@/lib/validations/auth";
+import { useRegisterMutation } from "./_mutations/registerMutation";
 
 export default function SignupPage() {
   const { mutate, isPending } = useRegisterMutation();
