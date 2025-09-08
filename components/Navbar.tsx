@@ -37,12 +37,12 @@ export default function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-40">
-                <DropdownMenuItem>
-                  <Link href="/products/third-party">Third Party</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/products/pcd">PCD</Link>
-                </DropdownMenuItem>
+                <Link href="/products/third-party">
+                  <DropdownMenuItem>Third Party</DropdownMenuItem>
+                </Link>
+                <Link href="/products/pcd">
+                  <DropdownMenuItem>PCD</DropdownMenuItem>
+                </Link>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -55,8 +55,12 @@ export default function Navbar() {
             <ModeToggle />
 
             {/* Login Button */}
-            <Button variant="default" className="text-white font-semibold font-sans" asChild>
-              <Link href="/login">Login</Link>
+            <Button
+              variant="default"
+              className="text-white font-semibold font-sans"
+              asChild
+            >
+              <Link href="/auth/login">Login</Link>
             </Button>
           </div>
 

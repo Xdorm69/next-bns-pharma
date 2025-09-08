@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,6 +43,7 @@ export default function RootLayout({
             <Navbar />
             <main className="font-sans">{children}</main>
             <Footer />
+            <Toaster richColors duration={2000} />
           </ThemeProvider>
         </ReactQueryProvider>
       </body>
