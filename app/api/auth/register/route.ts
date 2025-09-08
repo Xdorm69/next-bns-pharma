@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { z } from "zod";
 import { signupSchema } from "@/lib/validations/auth";
 
 export async function POST(request: NextRequest) {
@@ -10,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     // ✅ Validate using zod
     const parsed = signupSchema.safeParse(body);
-    
+
     if (!parsed.success) {
       return NextResponse.json(
         {
