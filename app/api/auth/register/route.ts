@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("User creation failed:", error);
     return NextResponse.json(
       { success: false, error: "Internal Server Error" },

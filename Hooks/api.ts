@@ -7,7 +7,7 @@ export type ApiResponse<T> = {
   message?: string;
 };
 
-export async function useFetch<T>(
+export async function fetchApi<T>(
   url: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {

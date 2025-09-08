@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { useFetch } from "./api";
+import { fetchApi } from "./api";
 
 
 export async function handleApi<T>(
@@ -8,7 +8,7 @@ export async function handleApi<T>(
   successMessage?: string
 ): Promise<T | T[] | null> {
   try {
-    const dataJson = await useFetch<T>(url, options);
+    const dataJson = await fetchApi<T>(url, options);
 
     toast.success(dataJson.message || successMessage || "Success");
     return dataJson.data ?? null;
