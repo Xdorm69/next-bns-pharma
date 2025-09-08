@@ -34,7 +34,7 @@ export function useRegisterMutation() {
     onSuccess: (data) => {
       toast.success(`Welcome, ${data.name}!`, { id: "user" });
     },
-    onError: (error: {message?: string}) => {
+    onError: (error: { message?: string }) => {
       toast.error(error.message || "User registration failed", { id: "user" });
     },
   });
