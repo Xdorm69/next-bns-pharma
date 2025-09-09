@@ -13,14 +13,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { loginMutation } from "./_mutations/loginMutation";
+import { LoginMutation } from "./_mutations/loginMutation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   // Mutation for login
-  const { mutate, isPending } = loginMutation();
+  const { mutate, isPending } = LoginMutation();
 
   //handling submit
   const handleSubmit = (e: React.FormEvent) => {

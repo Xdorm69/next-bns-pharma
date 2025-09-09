@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
-export function loginMutation() {
+export function LoginMutation() {
   return useMutation({
     mutationFn: async ({
       email,
