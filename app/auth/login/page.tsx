@@ -12,8 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { loginMutation } from "./_mutations/loginMutation";
 import { signIn } from "next-auth/react";
+import { loginMutation } from "./_mutations/loginMutation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
