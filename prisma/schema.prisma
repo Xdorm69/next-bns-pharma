@@ -13,19 +13,31 @@ enum userRole {
 }
 
 model User {
-  id             String      @id @default(uuid())
-  email          String   @unique
-  name           String?
-  password       String
-  role           userRole @default(USER)
-  createdAt      DateTime @default(now())
-  updatedAT      DateTime @updatedAt
+  id         String   @id @default(uuid())
+  email      String   @unique
+  name       String?
+  password   String
+  role       userRole @default(USER)
+  createdAt  DateTime @default(now())
+  updatedAT  DateTime @updatedAt
+  subscribed Boolean  @default(false)
+}
+
+enum ProductTypes {
+  ThirdParty
+  PCD
 }
 
 model Product {
-  id          String      @id @default(uuid())
+  id          String       @id @default(uuid())
   name        String
   description String?
   price       Float?
-  createdAt   DateTime @default(now())
+  type        ProductTypes
+  clicks      Int          @default(0)
+  createdAt   DateTime     @default(now())
+  image       String  
+  thumbnail   String?
 }
+
+

@@ -1,8 +1,6 @@
-import { toast } from "sonner";
-
 export type ApiResponse<T> = {
   success: boolean;
-  data?: T | T[];
+  data?: T;
   error?: string;
   message?: string;
 };

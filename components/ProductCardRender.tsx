@@ -1,38 +1,58 @@
 import { ProductData } from "@/types/product";
 import { ProductCard } from "./ProductCard";
-import Link from "next/link";
-import { Button } from "./ui/button";
 
 type ProductRenderType = {
-  title: string;
   data: ProductData[];
-  link?: string;
+  isLoading?: boolean;
 };
 
-export const ProductCardRender = ({ title, data, link }: ProductRenderType) => {
-  return (
-    <div>
-      <h1 className="text-4xl font-bold my-8">{title}</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.map((product: ProductData) => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
-            description={product.description}
-            imageUrl={product.imgUrl}
-            ctaLabel={product.ctaLabel}
-            onCtaClick={product.ctaClick}
-          />
-        ))}
-      </div>
+export const ProductCardRender = ({
+  data,
 
-      {link && (
-        <div className="w-full flex justify-end my-8">
-          <Link href={link}>
-            <Button className="text-white">View More</Button>
-          </Link>
-        </div>
-      )}
+  isLoading,
+}: ProductRenderType) => {
+  return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* LOADING  */}
+        {isLoading && <ProductGridSkeleton />}
+        {!isLoading &&
+          data.map((product: ProductData) => (
+            <ProductCard key={product.id} data={product} />
+          ))}
+      </div>
+    </>
+  );
+};
+
+const ProductCardSkeleton = () => {
+  return (
+    <div className="bg-gray-800 w-full rounded-2xl shadow animate-pulse">
+      {/* Image placeholder */}
+      <div className="w-full h-48 bg-gray-700 rounded-t-2xl" />
+
+      {/* Content */}
+      <div className="p-4 space-y-3">
+        {/* Title */}
+        <div className="w-3/4 h-5 bg-gray-700 rounded" />
+        {/* Description */}
+        <div className="w-full h-4 bg-gray-700 rounded" />
+        <div className="w-2/3 h-4 bg-gray-700 rounded" />
+        {/* Price */}
+        <div className="w-1/4 h-4 bg-gray-700 rounded" />
+        {/* Button */}
+        <div className="mt-4 h-10 w-full bg-gray-700 rounded-lg" />
+      </div>
     </div>
+  );
+};
+
+export const ProductGridSkeleton = () => {
+  return (
+    <>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <ProductCardSkeleton key={i} />
+      ))}
+    </>
   );
 };

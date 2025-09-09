@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Menu } from "lucide-react";
 import { ModeToggle } from "./ui/ModeToggle";
+import AuthBtns from "./AuthBtns";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,14 +38,8 @@ export default function Navbar() {
             {/* MODE TOGGLE  */}
             <ModeToggle />
 
-            {/* Login Button */}
-            <Button
-              variant="default"
-              className="text-white font-semibold font-sans"
-              asChild
-            >
-              <Link href="/auth/login">Login</Link>
-            </Button>
+            {/* Auth Button */}
+            <AuthBtns />
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -70,9 +65,7 @@ export default function Navbar() {
               About
             </Link>
 
-            <Button variant="default" asChild className="w-full">
-              <Link href="/login">Login</Link>
-            </Button>
+            <AuthBtns />
           </div>
         )}
       </div>
@@ -104,7 +97,7 @@ const ProductsDropdownMenu = () => {
         <Link href="/products/pcd" className="w-full">
           <DropdownMenuItem className="w-full">PCD</DropdownMenuItem>
         </Link>
-    </DropdownMenuContent>
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 };

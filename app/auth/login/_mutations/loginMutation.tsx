@@ -28,7 +28,7 @@ export function loginMutation() {
     },
     onSuccess: () => {
       toast.success("Login successful", { id: "login" });
-      redirect("/dashboard");
+      redirect("/");
     },
     onError: (error: { message?: string }) => {
       toast.error(error.message || "Login failed", { id: "login" });

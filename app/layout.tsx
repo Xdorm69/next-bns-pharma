@@ -6,13 +6,13 @@ import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
+import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-// JetBrains Mono for code / monospace
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
@@ -31,22 +31,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-      suppressHydrationWarning
+        suppressHydrationWarning
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar />
-            <main className="font-sans">{children}</main>
-            <Footer />
-            <Toaster richColors duration={2000} />
-          </ThemeProvider>
-        </ReactQueryProvider>
+        <SessionProviderWrapper>
+          <ReactQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar />
+              <main className="font-sans">{children}</main>
+              <Footer />
+              <Toaster richColors duration={2000} />
+            </ThemeProvider>
+          </ReactQueryProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

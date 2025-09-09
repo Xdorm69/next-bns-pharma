@@ -1,48 +1,19 @@
-"use client";
-import { toast } from "sonner";
-import { ProductData } from "@/types/product";
-import { ProductCardRender } from "../ProductCardRender";
+import HomePageProductRender from "../HomePageProductRender";
 
 export default function ProductsPage() {
-  const generateThirdDemoProductData = (length: number = 3): ProductData[] => {
-    return Array.from({ length }).map((_, id) => ({
-      id: id.toString(),
-      name: `Product${id}`,
-      description: `Description${id}`,
-      imgUrl: `/imgurl${id}.jpg`,
-      ctaLabel: "View Details",
-      ctaClick: () => toast.success("product clicked"),
-    }));
-  };
-  const generatePCDDemoProductData = (length: number = 3): ProductData[] => {
-    return Array.from({ length }).map((_, id) => ({
-      id: id.toString(),
-      name: `Product${id}`,
-      description: `Description${id}`,
-      imgUrl: `/imgurl${id}.jpg`,
-      ctaLabel: "View Details",
-      ctaClick: () => toast.success("product clicked"),
-    }));
-  };
-
   return (
     <section className="min-h-screen w-full">
       <div className="cont">
         <div className="mb-8">
-          <ProductCardRender
-            title={"Popular Third Party Products"}
-            data={generateThirdDemoProductData(3)}
-            link={"/products/third-party"}
-          />
+          <h1 className="text-4xl font-bold mb-8">PCD Popular Products</h1>
+          <HomePageProductRender type="pcd" />
         </div>
-        <div>
-          <ProductCardRender
-            title={"Popular PCD Party Products"}
-            data={generatePCDDemoProductData(3)}
-            link={"/products/pcd"}
-          />
+        <div className="mt-8">
+          <h1 className="text-4xl font-bold mb-8">Third Party Popular Products</h1>
+          <HomePageProductRender type="third-party" />
         </div>
       </div>
     </section>
   );
 }
+
