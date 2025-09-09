@@ -20,7 +20,7 @@ const AuthBtns = () => {
   if (!session) {
     return (
       <Button variant="default" asChild>
-        <Link href="/login">Login</Link>
+        <Link href="/auth/login">Login</Link>
       </Button>
     );
   }

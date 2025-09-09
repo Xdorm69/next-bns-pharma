@@ -4,8 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "./prisma";
 import bcrypt from "bcrypt";
 
-
-
 export const authOptions: NextAuthOptions = {
   providers: [
     // Credentials login
@@ -57,20 +55,43 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Only handle Google sign-ins
+      if (account?.provider === "google") {
+        // Check if the user already exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+
+        if (!existingUser) {
+          // Create a new user in DB
+          await prisma.user.create({
+            data: {
+              name: user.name!,
+              email: user.email!,
+              // You can add a placeholder password or leave it null
+              password: "google-managed",
+              provider: "google",
+            },
+          });
+        }
+      }
+
+      return true; // Allow sign-in
+    },
+
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id as string;
         token.email = user.email as string;
-        token.name = user.name as string; 
+        token.name = user.name as string;
       }
-
-      // For Google users, attach account info if needed
       if (account?.provider === "google") {
         token.provider = "google";
       }
-
       return token;
     },
+
     async session({ session, token }) {
       if (token) {
         session.user = {

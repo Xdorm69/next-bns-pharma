@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   if (!session || homepage === "true") {
     try {
       const thirdParty = await prisma.product.findMany({
-        where: { type: "ThirdParty" },
+        where: { type: "THIRDPARTY"},
         take: 3,
         orderBy: { clicks: "desc" },
       });
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
   }
   try {
     const thirdParty = await prisma.product.findMany({
-      where: { type: "ThirdParty" },
+      where: { type: "THIRDPARTY" },
     });
     return NextResponse.json(
       { success: true, data: thirdParty },

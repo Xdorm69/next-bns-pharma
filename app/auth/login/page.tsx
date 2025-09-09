@@ -15,6 +15,8 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { LoginMutation } from "./_mutations/loginMutation";
 
+
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,7 +68,7 @@ export default function LoginPage() {
             <Button
               type="button"
               variant="outline"
-              className="w-full"
+              className="w-full mb-2"
               onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
             >
               Continue with Google

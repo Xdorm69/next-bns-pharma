@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -21,23 +21,43 @@ model User {
   createdAt  DateTime @default(now())
   updatedAT  DateTime @updatedAt
   subscribed Boolean  @default(false)
+  provider   String   @default("app-auth")
 }
 
+
 enum ProductTypes {
-  ThirdParty
+  TABLET
+  SYRUP
+  CAPSULE
+  INJECTION
+  OINTMENT
+  DROPS
+  OTHER
+}
+
+enum ProductCatType {
   PCD
+  THIRDPARTY
 }
 
 model Product {
-  id          String       @id @default(uuid())
-  name        String
-  description String?
-  price       Float?
-  type        ProductTypes
-  clicks      Int          @default(0)
-  createdAt   DateTime     @default(now())
-  image       String  
-  thumbnail   String?
+  id            String       @id @default(uuid())
+  name          String
+  description   String?      // Detailed info about the product
+  price         Float?       // Selling price
+  ProductType   ProductTypes // Enum for structured type
+  type          ProductCatType       // Optional: custom type or brand-specific info add pcd or third-party keep spelling same
+  clicks        Int          @default(0) // Track popularity
+  stock         Int?         // Optional: inventory count
+  isActive      Boolean      @default(true) // Soft delete or availability flag
+  category      String?      // Optional: medicine category e.g., "Painkiller"
+  ingredients   String?      // Optional: list of active ingredients
+  manufacturer  String?      // Optional: manufacturer name
+  expiryDate    DateTime?    // Optional: expiry date
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  image         String       // Main image URL (from ImageKit)
+  thumbnail     String?      // Optional: smaller image
+  rating        Float?       // Optional: average rating
+  reviewsCount  Int?         // Optional: number of reviews
 }
-
-

@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   if (!session || homepage === "true") {
     try {
       const pcd = await prisma.product.findMany({
-        where: { type: "PCD" },
+        where: { type: 'PCD' },
         take: 3,
         orderBy: { clicks: "desc" },
       });
@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
     }
   }
   try {
-    const pcd = await prisma.product.findMany({ where: { type: "PCD" } });
+    const pcd = await prisma.product.findMany({
+      where: { type: "PCD" },
+    });
     return NextResponse.json({ success: true, data: pcd }, { status: 200 });
   } catch (error) {
     console.log(error)

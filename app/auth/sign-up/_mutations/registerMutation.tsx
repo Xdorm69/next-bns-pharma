@@ -2,7 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchApi } from "@/Hooks/api";
+import { fetchApi } from "@/hooks/api";
 
 //HOW resultant data will come from api
 export type UserResponse = {

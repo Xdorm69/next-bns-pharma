@@ -1,8 +1,8 @@
-import { ProductData } from "@/types/product";
 import { ProductCard } from "./ProductCard";
+import { Product } from "@prisma/client";
 
 type ProductRenderType = {
-  data: ProductData[];
+  data: Product[];
   isLoading?: boolean;
 };
 
@@ -17,7 +17,7 @@ export const ProductCardRender = ({
         {/* LOADING  */}
         {isLoading && <ProductGridSkeleton />}
         {!isLoading &&
-          data.map((product: ProductData) => (
+          data.map((product: Product) => (
             <ProductCard key={product.id} data={product} />
           ))}
       </div>
