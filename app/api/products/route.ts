@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
       price,
       ProductType,
       type,
-      clicks: clicks ?? 0,
+      clicks: clicks || 0,
       stock,
       isActive,
       category,

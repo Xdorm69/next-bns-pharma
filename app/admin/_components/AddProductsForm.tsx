@@ -118,7 +118,7 @@ const AddProductsForm = () => {
         reviewsCount: undefined,
       });
     },
-    onError: (error: any) => {
+    onError: (error: {message: string}) => {
       toast.error(error.message || "Failed to add product", {
         id: "add-product",
       });
