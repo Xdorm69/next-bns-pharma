@@ -16,9 +16,19 @@ export async function POST(request: NextRequest) {
   }
 
   // 2️⃣ Check admin role
+  const email = session.user?.email;
+
+  if (!email) {
+    return NextResponse.json(
+      { success: false, error: "User email not found in session" },
+      { status: 400 }
+    );
+  }
+
   const isAdmin = await prisma.user.findUnique({
-    where: { email: session.user?.email! },
+    where: { email },
   });
+
 
   if (!isAdmin || isAdmin.role !== "ADMIN") {
     return NextResponse.json(
