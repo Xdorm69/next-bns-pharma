@@ -80,24 +80,29 @@ export default function Navbar() {
   );
 }
 
-
 const ProductsDropdownMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="px-2 py-1 flex gap-1 items-center bg-muted"
+          className="px-2 py-1 flex gap-1 items-center bg-muted w-full md:w-auto justify-between"
         >
-          Products <ChevronDown />
+          <span>Products</span>
+          <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40">
-        <Link href="/products/third-party">
-          <DropdownMenuItem>Third Party</DropdownMenuItem>
+
+      <DropdownMenuContent
+        className="
+          w-[88vw] md:w-full
+        "
+      >
+        <Link href="/products/third-party" className="w-full">
+          <DropdownMenuItem className="w-full">Third Party</DropdownMenuItem>
         </Link>
-        <Link href="/products/pcd">
-          <DropdownMenuItem>PCD</DropdownMenuItem>
+        <Link href="/products/pcd" className="w-full">
+          <DropdownMenuItem className="w-full">PCD</DropdownMenuItem>
         </Link>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -20,7 +20,7 @@ const Hero = () => {
               <Button variant={"outline"}>View More</Button>
             </div>
           </div>
-          <div className="bg-white/10 rounded-xl shadow w-1/2 h-1/2">
+          <div className="hidden md:block bg-white/10 rounded-xl shadow w-1/2 h-1/2">
             <Image
               src={"/hero.jpg"}
               width={800}
