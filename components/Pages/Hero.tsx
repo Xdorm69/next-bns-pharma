@@ -9,7 +9,7 @@ const Hero = () => {
         <div className="flex w-full h-full items-center justify-center">
           <div>
             {/* HERO TEXT  */}
-            <h1 className="text-6xl font-bold">BNS Pharmaceuticals</h1>
+            <h1 className="text-6xl font-bold">BNS Pharma</h1>
             <p className="text-muted-foreground font-mono max-w-sm mt-4">
               Committed to providing high-quality healthcare products with trust
               and innovation.

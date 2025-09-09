@@ -27,24 +27,7 @@ export default function Navbar() {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Products Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="px-2 py-1 flex gap-1 items-center bg-muted"
-                >
-                  Products <ChevronDown />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-40">
-                <Link href="/products/third-party">
-                  <DropdownMenuItem>Third Party</DropdownMenuItem>
-                </Link>
-                <Link href="/products/pcd">
-                  <DropdownMenuItem>PCD</DropdownMenuItem>
-                </Link>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ProductsDropdownMenu />
 
             {/* About */}
             <Link href="/about">
@@ -78,21 +61,7 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-2 flex flex-col space-y-2 px-2 pb-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full text-left">
-                  Products
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-full">
-                <DropdownMenuItem>
-                  <Link href="/products/third-party">Third Party</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/products/pcd">PCD</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ProductsDropdownMenu />
 
             <Link
               href="/about"
@@ -110,3 +79,27 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
+const ProductsDropdownMenu = () => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className="px-2 py-1 flex gap-1 items-center bg-muted"
+        >
+          Products <ChevronDown />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-40">
+        <Link href="/products/third-party">
+          <DropdownMenuItem>Third Party</DropdownMenuItem>
+        </Link>
+        <Link href="/products/pcd">
+          <DropdownMenuItem>PCD</DropdownMenuItem>
+        </Link>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
