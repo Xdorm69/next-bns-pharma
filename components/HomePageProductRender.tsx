@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "@/hooks/api";
+import { fetchApi } from "@/Hooks/api";
 import { ProductCardRender } from "./ProductCardRender";
 import { Product } from "@prisma/client";
 

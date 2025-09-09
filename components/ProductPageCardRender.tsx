@@ -2,7 +2,7 @@
 import React from "react";
 import { ProductCardRender } from "@/components/ProductCardRender";
 import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "@/hooks/api";
+import { fetchApi } from "@/Hooks/api";
 import { Product } from "@prisma/client";
 
 const ProductPageCardRender = ({ type }: { type: string }) => {
