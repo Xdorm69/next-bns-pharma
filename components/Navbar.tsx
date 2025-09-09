@@ -104,7 +104,7 @@ const ProductsDropdownMenu = () => {
         <Link href="/products/pcd" className="w-full">
           <DropdownMenuItem className="w-full">PCD</DropdownMenuItem>
         </Link>
-      </DropdownMenuContent>
+    </DropdownMenuContent>
     </DropdownMenu>
   );
 };
