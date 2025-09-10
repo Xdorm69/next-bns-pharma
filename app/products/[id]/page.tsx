@@ -35,7 +35,7 @@ export default function ProductPage() {
     return <p className="text-center mt-8">Product not found</p>;
 
   return (
-    <section className="my-12 w-full pb-24 h-[90vh] flex justify-center items-start px-4">
+    <section className="my-12 w-full pb-24 min-h-[90vh] flex justify-center items-start px-4">
       <div className="cont w-full grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
         {/* Product Image */}
         <div className="flex justify-center items-center h-full flex-col">
