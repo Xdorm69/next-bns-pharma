@@ -7,7 +7,7 @@ export default function SessionProviderWrapper({
   session,
 }: {
   children: React.ReactNode;
-  session?: {user: {id: string, email: string, name: string}, expires: string};
+  session?: {user: {id: string, email: string, name: string, role: string}, expires: string};
 }) {
   return <SessionProvider session={session}>{children}</SessionProvider>;
 }

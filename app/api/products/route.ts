@@ -18,22 +18,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const email = session.user?.email;
-  if (!email) {
-    return NextResponse.json(
-      { success: false, error: "User email not found in session" },
-      { status: 400 }
-    );
-  }
-
-  // 2️⃣ Check admin role
-  const isAdmin = await prisma.user.findUnique({ where: { email } });
-  if (!isAdmin || isAdmin.role !== "ADMIN") {
-    return NextResponse.json(
-      { success: false, error: "User is not authorized" },
-      { status: 403 }
-    );
-  }
+  const isAdmin = session.user.role === "ADMIN";
+  if (!isAdmin)
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 403 });
 
   // 3️⃣ Parse and validate JSON using Zod
   let data: AddProductSchemaType;
