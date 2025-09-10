@@ -1,14 +1,21 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(context: { params: Promise<{ id: string }> }) {
-  const { id } = await context.params;
+// File: app/api/products/[id]/route.ts
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const product = await prisma.product.findUnique({ where: { id: id } });
-    return NextResponse.json({succes: true, data: product});
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ succes: false, data: []});
+    const { id } = await context.params;
 
+    const product = await prisma.product.findUnique({
+      where: { id: id as string }, // 👈 if `id` is Int in Prisma schema → use Number(id)
+    });
+
+    return NextResponse.json({ success: true, data: product });
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return NextResponse.json({ success: false, data: [] }, { status: 500 });
   }
 }
