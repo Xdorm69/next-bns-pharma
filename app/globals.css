@@ -224,6 +224,7 @@
     letter-spacing: var(--tracking-normal);
   }
   .cont {
-    @apply max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-6xl container mx-auto px-4 sm:px-6 lg:px-8;
   }
+  
 }

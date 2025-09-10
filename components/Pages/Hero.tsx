@@ -4,12 +4,14 @@ import { Button } from "../ui/button";
 
 const Hero = () => {
   return (
-    <section className="py-24 w-full min-h-screen">
+    <section className="py-12 w-full">
       <div className="cont">
         <div className="flex w-full h-full items-center justify-center">
-          <div>
+          <div className="flex-1">
             {/* HERO TEXT  */}
-            <h1 className="text-6xl font-bold font-mono">Innovating for a healthier world</h1>
+            <h1 className="text-6xl font-bold font-mono">
+              Innovating for a healthier world
+            </h1>
             <p className="text-muted-foreground text-lg max-w-sm mt-4">
               Committed to providing high-quality healthcare products with trust
               and innovation.
@@ -20,15 +22,24 @@ const Hero = () => {
               <Button variant={"outline"}>View More</Button>
             </div>
           </div>
-          <div className="hidden md:block bg-white/10 rounded-xl shadow w-1/2 h-1/2">
-            <Image
-              src={"/hero.jpg"}
-              width={800}
-              priority
-              height={600}
-              className="object-cover w-full h-full"
-              alt="hero"
-            />
+          <div className="flex-1 relative">
+            {/* Blue background */}
+            <div className="absolute top-0 left-0 w-4/5 h-4/5 z-20 rounded-full bg-primary/40" />
+
+            {/* Main Image */}
+            <div className="hidden md:block rounded-xl w-full relative z-30 overflow-hidden">
+              <Image
+                src="/hero.png"
+                width={900}
+                height={600}
+                priority
+                alt="hero"
+                className="object-cover w-full h-full"
+              />
+
+              {/* Gradient overlay on top of image */}
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent from-[65%] to-background z-40" />
+            </div>
           </div>
         </div>
       </div>

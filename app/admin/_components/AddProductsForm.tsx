@@ -157,11 +157,11 @@ const AddProductsForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 w-md bg-card p-2 rounded shadow"
+      className="space-y-4 w-sm bg-card p-2 rounded shadow"
     >
       {/* Name */}
       <div>
-        <Label>Name</Label>
+        <Label className="mb-1">Name</Label>
         <Input
           name="name"
           value={formData.name}
@@ -173,7 +173,7 @@ const AddProductsForm = () => {
 
       {/* Description */}
       <div>
-        <Label>Description</Label>
+        <Label className="mb-1">Description</Label>
         <Textarea
           name="description"
           value={formData.description}
@@ -182,80 +182,95 @@ const AddProductsForm = () => {
         />
       </div>
 
-      {/* Price */}
-      <div>
-        <Label>Price</Label>
-        <Input
-          type="number"
-          name="price"
-          step="0.01"
-          value={formData.price ?? ""}
-          onChange={handleChange}
-          placeholder="Enter price"
-        />
+      <div className="grid grid-cols-3 gap-4">
+        {/* Price */}
+        <div className="w-full">
+          <Label className="mb-1">Price</Label>
+          <Input
+            type="number"
+            name="price"
+            step="0.01"
+            value={formData.price ?? ""}
+            onChange={handleChange}
+            placeholder="Enter price"
+          />
+        </div>
+
+        {/* Product Type */}
+        <div className="w-full">
+          <Label className="mb-1">Product Type</Label>
+          <Select
+            name="ProductType"
+            value={formData.ProductType}
+            onValueChange={(value: ProductTypes) =>
+              setFormData((prev) => ({ ...prev, ProductType: value }))
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              {[
+                "TABLET",
+                "SYRUP",
+                "CAPSULE",
+                "INJECTION",
+                "OINTMENT",
+                "DROPS",
+                "OTHER",
+              ].map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Type (PCD / Third-party) */}
+        <div className="w-full">
+          <Label className="mb-1">Type</Label>
+          <Select
+            name="type"
+            value={formData.type}
+            onValueChange={(value: ProductCatType) =>
+              setFormData((prev) => ({ ...prev, type: value }))
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="PCD">PCD</SelectItem>
+              <SelectItem value="THIRDPARTY">Third-party</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Product Type */}
-      <div>
-        <Label>Product Type</Label>
-        <Select
-          name="ProductType"
-          value={formData.ProductType}
-          onValueChange={(value: ProductTypes) =>
-            setFormData((prev) => ({ ...prev, ProductType: value }))
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            {[
-              "TABLET",
-              "SYRUP",
-              "CAPSULE",
-              "INJECTION",
-              "OINTMENT",
-              "DROPS",
-              "OTHER",
-            ].map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Type (PCD / Third-party) */}
-      <div>
-        <Label>Type (PCD / Third-party)</Label>
-        <Select
-          name="type"
-          value={formData.type}
-          onValueChange={(value: ProductCatType) =>
-            setFormData((prev) => ({ ...prev, type: value }))
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="PCD">PCD</SelectItem>
-            <SelectItem value="THIRDPARTY">Third-party</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Stock */}
-      <div>
-        <Label>Stock</Label>
-        <Input
-          type="number"
-          name="stock"
-          value={formData.stock ?? ""}
-          onChange={handleChange}
-          placeholder="Enter stock quantity"
-        />
+      <div className="flex gap-4 items-center">
+        {/* Stock */}
+        <div className="flex-1">
+          <Label className="mb-1">Stock</Label>
+          <Input
+            type="number"
+            name="stock"
+            value={formData.stock ?? ""}
+            onChange={handleChange}
+            placeholder="Enter stock quantity"
+          />
+        </div>
+        {/* Expiry Date */}
+        <div className="flex-1">
+          <Label className="mb-1">Expiry Date</Label>
+          <Input
+            type="date"
+            className="w-full"
+            name="expiryDate"
+            value={formData.expiryDate ?? ""}
+            onChange={handleChange}
+          />
+        </div>
       </div>
 
       {/* Active */}
@@ -269,20 +284,35 @@ const AddProductsForm = () => {
         <Label>Active</Label>
       </div>
 
-      {/* Category */}
-      <div>
-        <Label>Category</Label>
-        <Input
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          placeholder="Enter category e.g., Painkiller"
-        />
+      <div className="flex w-full items-center gap-4">
+        {/* Category */}
+        <div className="flex-1">
+          <Label className="mb-1">Category</Label>
+          <Input
+            className="w-full"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            placeholder="e.g., Painkiller"
+          />
+        </div>
+
+        {/* Manufacturer */}
+        <div className="flex-1">
+          <Label className="mb-1">Manufacturer</Label>
+          <Input
+            name="manufacturer"
+            className="w-full"
+            value={formData.manufacturer}
+            onChange={handleChange}
+            placeholder="Enter manufacturer"
+          />
+        </div>
       </div>
 
       {/* Ingredients */}
       <div>
-        <Label>Ingredients</Label>
+        <Label className="mb-1">Ingredients</Label>
         <Textarea
           name="ingredients"
           value={formData.ingredients}
@@ -291,31 +321,9 @@ const AddProductsForm = () => {
         />
       </div>
 
-      {/* Manufacturer */}
-      <div>
-        <Label>Manufacturer</Label>
-        <Input
-          name="manufacturer"
-          value={formData.manufacturer}
-          onChange={handleChange}
-          placeholder="Enter manufacturer"
-        />
-      </div>
-
-      {/* Expiry Date */}
-      <div>
-        <Label>Expiry Date</Label>
-        <Input
-          type="date"
-          name="expiryDate"
-          value={formData.expiryDate ?? ""}
-          onChange={handleChange}
-        />
-      </div>
-
       {/* Image */}
       <div>
-        <Label>Image</Label>
+        <Label className="mb-1">Image</Label>
         <Input
           type="file"
           accept="image/*"
