@@ -10,19 +10,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Menu } from "lucide-react";
-import { ModeToggle } from "./ui/ModeToggle";
 import AuthBtns from "./AuthBtns";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="dark:bg-card shadow-md sticky top-0 z-50">
+    <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="cont">
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold">
-            BNS Pharmaceuticals
+          <Link href="/" className="text-2xl font-bold font-mono">
+            PharmaCo.
           </Link>
 
           {/* Desktop Menu */}
@@ -36,7 +35,7 @@ export default function Navbar() {
             </Link>
 
             {/* MODE TOGGLE  */}
-            <ModeToggle />
+            {/* <ModeToggle /> */}
 
             {/* Auth Button */}
             <AuthBtns />
