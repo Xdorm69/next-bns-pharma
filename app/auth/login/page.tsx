@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -14,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { LoginMutation } from "./_mutations/loginMutation";
+import Image from "next/image";
 
 
 
@@ -31,10 +33,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="h-[calc(100vh-3rem)] flex items-center justify-center">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Login</CardTitle>
+          <CardTitle className="text-2xl text-center font-semibold font-mono">Login Form</CardTitle>
+          <CardDescription className="text-muted-foreground text-center">
+            Enter your email and password to login. <br />If you don't have an account,
+            please <Link href="/auth/sign-up">sign up</Link>.
+          </CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
@@ -68,10 +74,16 @@ export default function LoginPage() {
             <Button
               type="button"
               variant="outline"
-              className="w-full mb-2"
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              className="w-full mb-2 flex items-center gap-2"
+              onClick={() => signIn("google", { callbackUrl: "/" })}
             >
-              Continue with Google
+              <Image
+                width={20}
+                height={20}
+                alt="google"
+                src={"/google_auth.png"}
+              />{" "}
+              <p>Continue with Google</p>
             </Button>
           </CardContent>
 

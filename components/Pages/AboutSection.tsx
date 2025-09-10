@@ -8,7 +8,7 @@ export function AboutSection() {
       <div className="cont">
         <Card className="shadow-md border-none">
           <CardContent className="p-8 md:p-12 text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-mono">
               About Us
             </h2>
             <p className="max-w-3xl mx-auto text-lg text-muted-foreground leading-relaxed">

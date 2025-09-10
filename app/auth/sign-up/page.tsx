@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
+
 } from "@/components/ui/card";
 import {
   Form,
@@ -22,12 +24,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupDataType, signupSchema } from "@/lib/validations/auth";
 import { useRegisterMutation } from "./_mutations/registerMutation";
-
-
-
+import Image from "next/image";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { Eye } from "lucide-react";
 
 export default function SignupPage() {
   const { mutate, isPending } = useRegisterMutation();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<SignupDataType>({
     resolver: zodResolver(signupSchema),
@@ -44,10 +48,17 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="h-[calc(100vh-3rem)] flex items-center justify-center">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Create Account</CardTitle>
+          <CardTitle className="text-2xl text-center font-semibold font-mono">
+            Create Account
+          </CardTitle>
+          <CardDescription className="text-muted-foreground text-center">
+            Enter your email and password to login. <br />
+            If you don't have an account, please{" "}
+            <Link href="/auth/sign-up">sign up</Link>.
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -95,11 +106,15 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="••••••••"
-                        {...field}
-                      />
+                      <div className="flex items-center justify-between pr-2 border-1 rounded">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          className="focus:outline-none w-full px-3 py-1.5"
+                          placeholder="••••••••"
+                          {...field}
+                        />
+                        <Eye className="text-muted-foreground/80" />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,9 +122,20 @@ export default function SignupPage() {
               />
 
               {/* Social signup placeholder */}
-              <div className="border rounded-md p-4 text-center text-gray-500 text-sm">
-                Social signup options (NextAuth) will go here
-              </div>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full mb-2 flex items-center gap-2"
+                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              >
+                <Image
+                  width={20}
+                  height={20}
+                  alt="google"
+                  src={"/google_auth.png"}
+                />{" "}
+                <p>Continue with Google</p>
+              </Button>
 
               <Button
                 type="submit"

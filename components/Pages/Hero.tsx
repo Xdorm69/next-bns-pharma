@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 
 const Hero = () => {
   return (
-    <section className="py-12 w-full">
+    <section className="py-12 w-full bg-background">
       <div className="cont">
         <div className="flex w-full h-full items-center justify-center">
           <div className="flex-1">

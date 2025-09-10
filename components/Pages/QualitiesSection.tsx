@@ -15,7 +15,7 @@ export function QualitiesSection() {
     <section className="w-full py-20 bg-background">
       <div className="cont">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight font-mono">
             Why Choose Us
           </h2>
           <p className="text-muted-foreground mt-2">
