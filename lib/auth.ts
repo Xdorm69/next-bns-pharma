@@ -38,6 +38,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id.toString(),
           email: user.email,
           name: user.name,
+          role: user.role,
         };
       },
     }),
@@ -69,6 +70,7 @@ export const authOptions: NextAuthOptions = {
             data: {
               name: user.name!,
               email: user.email!,
+              role: "USER",
               // You can add a placeholder password or leave it null
               password: "google-managed",
               provider: "google",
@@ -81,14 +83,29 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user, account }) {
+      // If logging in with credentials, we already return role in authorize()
       if (user) {
         token.id = user.id as string;
         token.email = user.email as string;
         token.name = user.name as string;
+
+        if ("role" in user && user.role) {
+          // Credentials login already has role
+          token.role = user.role as "USER" | "ADMIN";
+        } else {
+          // Google login → fetch role from DB
+          const dbUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+            select: { role: true },
+          });
+          token.role = dbUser?.role || "USER";
+        }
       }
+
       if (account?.provider === "google") {
         token.provider = "google";
       }
+
       return token;
     },
 
@@ -98,6 +115,7 @@ export const authOptions: NextAuthOptions = {
           id: token.id as string,
           email: token.email as string,
           name: token.name as string,
+          role: token.role as "USER" | "ADMIN",
         };
         session.provider = token.provider as string | undefined;
       }

@@ -3,7 +3,10 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { imagekit } from "@/lib/imagekit";
-
+import {
+  AddProductSchema,
+  AddProductSchemaType,
+} from "@/lib/validations/addprod";
 
 export async function POST(request: NextRequest) {
   // 1️⃣ Get session
@@ -15,9 +18,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 2️⃣ Check admin role
   const email = session.user?.email;
-
   if (!email) {
     return NextResponse.json(
       { success: false, error: "User email not found in session" },
@@ -25,11 +26,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const isAdmin = await prisma.user.findUnique({
-    where: { email },
-  });
-
-
+  // 2️⃣ Check admin role
+  const isAdmin = await prisma.user.findUnique({ where: { email } });
   if (!isAdmin || isAdmin.role !== "ADMIN") {
     return NextResponse.json(
       { success: false, error: "User is not authorized" },
@@ -37,37 +35,43 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 3️⃣ Parse form data
-  const data = await request.json();
-  const {
-    name,
-    description,
-    price,
-    ProductType,
-    type,
-    clicks,
-    stock,
-    isActive,
-    category,
-    ingredients,
-    manufacturer,
-    expiryDate,
-    image, // base64 string
-    thumbnail,
-    rating,
-    reviewsCount,
-  } = data;
+  // 3️⃣ Parse and validate JSON using Zod
+  let data: AddProductSchemaType;
+  try {
+    const body = await request.json();
+    const parsed = AddProductSchema.safeParse(body);
+
+    if (!parsed.success) {
+      const errors = parsed.error.issues
+        .map((issue) => issue.message)
+        .join(", ");
+      return NextResponse.json(
+        { success: false, error: errors },
+        { status: 400 }
+      );
+    }
+
+    data = parsed.data; // Use validated and parsed data
+  } catch (err) {
+    const text = await request.text();
+    console.error("Invalid JSON body:", text);
+    return NextResponse.json(
+      { success: false, error: "Invalid JSON body" },
+      { status: 400 }
+    );
+  }
 
   // 4️⃣ Upload image to ImageKit
   let imageUrl = "";
   try {
     const uploadResponse = await imagekit.upload({
-      file: image, // base64 string or file buffer
-      fileName: `${name}-${Date.now()}.jpg`,
+      file: data.image, // base64 string
+      fileName: `${data.name}-${Date.now()}.jpg`,
       folder: "/products",
     });
     imageUrl = uploadResponse.url;
   } catch (err) {
+    console.error("Image upload error:", err);
     return NextResponse.json(
       { success: false, error: "Image upload failed" },
       { status: 500 }
@@ -75,26 +79,34 @@ export async function POST(request: NextRequest) {
   }
 
   // 5️⃣ Save product in database
-  const product = await prisma.product.create({
-    data: {
-      name,
-      description,
-      price,
-      ProductType,
-      type,
-      clicks: clicks || 0,
-      stock,
-      isActive,
-      category,
-      ingredients,
-      manufacturer,
-      expiryDate: expiryDate ? new Date(expiryDate) : undefined,
-      image: imageUrl,
-      thumbnail,
-      rating,
-      reviewsCount,
-    },
-  });
+  try {
+    const product = await prisma.product.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price ?? 0,
+        ProductType: data.ProductType,
+        type: data.type,
+        clicks: data.clicks ?? 0,
+        stock: data.stock ?? 0,
+        isActive: data.isActive ?? true,
+        category: data.category,
+        ingredients: data.ingredients,
+        manufacturer: data.manufacturer,
+        expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined,
+        image: imageUrl,
+        thumbnail: data.thumbnail,
+        rating: data.rating,
+        reviewsCount: data.reviewsCount,
+      },
+    });
 
-  return NextResponse.json({ success: true, product });
+    return NextResponse.json({ success: true, product });
+  } catch (err) {
+    console.error("Prisma create error:", err);
+    return NextResponse.json(
+      { success: false, error: "Failed to create product" },
+      { status: 500 }
+    );
+  }
 }

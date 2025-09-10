@@ -31,7 +31,7 @@ type ProductFormData = {
   description?: string;
   price?: number;
   ProductType: ProductTypes;
-  type: ProductCatType; // e.g., PCD, third-party
+  type: ProductCatType;
   clicks?: number;
   stock?: number;
   isActive: boolean;
@@ -65,8 +65,41 @@ const AddProductsForm = () => {
     reviewsCount: undefined,
   });
 
-  const addProduct = async (formData: ProductFormData) => {
-    if (!formData.image) throw new Error("No image selected");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // ------------------------- Validation -------------------------
+  const validate = (data: ProductFormData) => {
+    const newErrors: Record<string, string> = {};
+    if (!data.name.trim()) newErrors.name = "Product name is required";
+    if (!data.ProductType) newErrors.ProductType = "Product type is required";
+    if (!data.type) newErrors.type = "Category type is required";
+    if (!data.image) newErrors.image = "Product image is required";
+    if (data.price !== undefined && (isNaN(data.price) || data.price < 0))
+      newErrors.price = "Price must be a positive number";
+    if (data.stock !== undefined && (isNaN(data.stock) || data.stock < 0))
+      newErrors.stock = "Stock must be a positive number";
+    if (data.clicks !== undefined && (isNaN(data.clicks) || data.clicks < 0))
+      newErrors.clicks = "Clicks must be a positive number";
+    if (
+      data.rating !== undefined &&
+      (isNaN(data.rating) || data.rating < 0 || data.rating > 5)
+    )
+      newErrors.rating = "Rating must be between 0 and 5";
+    if (
+      data.reviewsCount !== undefined &&
+      (isNaN(data.reviewsCount) || data.reviewsCount < 0)
+    )
+      newErrors.reviewsCount = "Reviews count must be positive";
+    if (data.expiryDate && !/^\d{4}-\d{2}-\d{2}$/.test(data.expiryDate))
+      newErrors.expiryDate = "Expiry date must be in YYYY-MM-DD format";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // ------------------------- Mutation -------------------------
+  const addProduct = async (data: ProductFormData) => {
+    if (!data.image) throw new Error("No image selected");
 
     const fileToBase64 = (file: File) =>
       new Promise<string>((resolve, reject) => {
@@ -76,29 +109,25 @@ const AddProductsForm = () => {
         reader.onerror = (error) => reject(error);
       });
 
-    const base64Image = await fileToBase64(formData.image);
+    const base64Image = await fileToBase64(data.image);
 
     const res = await fetch("/api/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...formData, image: base64Image }),
+      body: JSON.stringify({ ...data, image: base64Image }),
     });
 
-    const data = await res.json();
-
-    if (!data.success) throw new Error(data.error || "Failed to add product");
-
-    return data;
+    const result = await res.json();
+    if (!result.success)
+      throw new Error(result.error || "Failed to add product");
+    return result;
   };
 
   const mutation = useMutation({
     mutationFn: addProduct,
-    onMutate: () => {
-      toast.loading("Adding product...", { id: "add-product" });
-    },
-    onSuccess: (data) => {
+    onMutate: () => toast.loading("Adding product...", { id: "add-product" }),
+    onSuccess: () => {
       toast.success("Product added successfully!", { id: "add-product" });
-
       setFormData({
         name: "",
         description: "",
@@ -117,14 +146,15 @@ const AddProductsForm = () => {
         rating: undefined,
         reviewsCount: undefined,
       });
+      setErrors({});
     },
-    onError: (error: {message: string}) => {
+    onError: (error: { message: string }) =>
       toast.error(error.message || "Failed to add product", {
         id: "add-product",
-      });
-    },
+      }),
   });
 
+  // ------------------------- Handlers -------------------------
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -142,38 +172,37 @@ const AddProductsForm = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({
-        ...prev,
-        image: e.target.files![0],
-      }));
+      setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
     }
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!validate(formData)) return;
     mutation.mutate(formData);
   };
 
+  // ------------------------- JSX -------------------------
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 w-sm bg-card p-2 rounded shadow"
+      className="space-y-4 w-full max-w-xl mx-auto p-4 bg-card rounded shadow"
     >
       {/* Name */}
       <div>
-        <Label className="mb-1">Name</Label>
+        <Label>Name</Label>
         <Input
           name="name"
           value={formData.name}
           onChange={handleChange}
           placeholder="Enter product name"
-          required
         />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
       </div>
 
       {/* Description */}
       <div>
-        <Label className="mb-1">Description</Label>
+        <Label>Description</Label>
         <Textarea
           name="description"
           value={formData.description}
@@ -184,8 +213,8 @@ const AddProductsForm = () => {
 
       <div className="grid grid-cols-3 gap-4">
         {/* Price */}
-        <div className="w-full">
-          <Label className="mb-1">Price</Label>
+        <div>
+          <Label>Price</Label>
           <Input
             type="number"
             name="price"
@@ -194,19 +223,21 @@ const AddProductsForm = () => {
             onChange={handleChange}
             placeholder="Enter price"
           />
+          {errors.price && (
+            <p className="text-red-500 text-sm">{errors.price}</p>
+          )}
         </div>
 
         {/* Product Type */}
-        <div className="w-full">
-          <Label className="mb-1">Product Type</Label>
+        <div>
+          <Label>Product Type</Label>
           <Select
-            name="ProductType"
             value={formData.ProductType}
             onValueChange={(value: ProductTypes) =>
               setFormData((prev) => ({ ...prev, ProductType: value }))
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger>
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -225,19 +256,21 @@ const AddProductsForm = () => {
               ))}
             </SelectContent>
           </Select>
+          {errors.ProductType && (
+            <p className="text-red-500 text-sm">{errors.ProductType}</p>
+          )}
         </div>
 
-        {/* Type (PCD / Third-party) */}
-        <div className="w-full">
-          <Label className="mb-1">Type</Label>
+        {/* Type */}
+        <div>
+          <Label>Type</Label>
           <Select
-            name="type"
             value={formData.type}
             onValueChange={(value: ProductCatType) =>
               setFormData((prev) => ({ ...prev, type: value }))
             }
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger>
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -245,13 +278,14 @@ const AddProductsForm = () => {
               <SelectItem value="THIRDPARTY">Third-party</SelectItem>
             </SelectContent>
           </Select>
+          {errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
         </div>
       </div>
 
-      <div className="flex gap-4 items-center">
+      <div className="grid grid-cols-2 gap-4">
         {/* Stock */}
-        <div className="flex-1">
-          <Label className="mb-1">Stock</Label>
+        <div>
+          <Label>Stock</Label>
           <Input
             type="number"
             name="stock"
@@ -259,17 +293,23 @@ const AddProductsForm = () => {
             onChange={handleChange}
             placeholder="Enter stock quantity"
           />
+          {errors.stock && (
+            <p className="text-red-500 text-sm">{errors.stock}</p>
+          )}
         </div>
+
         {/* Expiry Date */}
-        <div className="flex-1">
-          <Label className="mb-1">Expiry Date</Label>
+        <div>
+          <Label>Expiry Date</Label>
           <Input
             type="date"
-            className="w-full"
             name="expiryDate"
             value={formData.expiryDate ?? ""}
             onChange={handleChange}
           />
+          {errors.expiryDate && (
+            <p className="text-red-500 text-sm">{errors.expiryDate}</p>
+          )}
         </div>
       </div>
 
@@ -284,25 +324,21 @@ const AddProductsForm = () => {
         <Label>Active</Label>
       </div>
 
-      <div className="flex w-full items-center gap-4">
-        {/* Category */}
-        <div className="flex-1">
-          <Label className="mb-1">Category</Label>
+      {/* Category and Manufacturer */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Category</Label>
           <Input
-            className="w-full"
             name="category"
             value={formData.category}
             onChange={handleChange}
             placeholder="e.g., Painkiller"
           />
         </div>
-
-        {/* Manufacturer */}
-        <div className="flex-1">
-          <Label className="mb-1">Manufacturer</Label>
+        <div>
+          <Label>Manufacturer</Label>
           <Input
             name="manufacturer"
-            className="w-full"
             value={formData.manufacturer}
             onChange={handleChange}
             placeholder="Enter manufacturer"
@@ -312,7 +348,7 @@ const AddProductsForm = () => {
 
       {/* Ingredients */}
       <div>
-        <Label className="mb-1">Ingredients</Label>
+        <Label>Ingredients</Label>
         <Textarea
           name="ingredients"
           value={formData.ingredients}
@@ -323,18 +359,14 @@ const AddProductsForm = () => {
 
       {/* Image */}
       <div>
-        <Label className="mb-1">Image</Label>
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          required
-        />
+        <Label>Product Image</Label>
+        <Input type="file" accept="image/*" onChange={handleFileChange} />
+        {errors.image && <p className="text-red-500 text-sm">{errors.image}</p>}
       </div>
 
       {/* Submit */}
       <Button type="submit" disabled={mutation.isPending}>
-        Add Product
+        {mutation.isPending ? "Adding..." : "Add Product"}
       </Button>
     </form>
   );

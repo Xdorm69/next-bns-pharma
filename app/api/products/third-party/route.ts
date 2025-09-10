@@ -28,13 +28,28 @@ export async function GET(req: NextRequest) {
     }
   }
   try {
+    const searchParams = new URL(req.url).searchParams;
+    const search = searchParams.get("search") as string;
+    const priceFilter = searchParams.get("price") as "asc" | "desc";
+    const expiryFilter = searchParams.get("expiry") as "asc" | "desc";
+    const take = Number(searchParams.get("take")) || 10;
+    const skip = Number(searchParams.get("skip")) || 0;
+
+    const orderBy: Array<{
+      price?: "asc" | "desc";
+      expiryDate?: "asc" | "desc";
+    }> = [];
+    if (priceFilter) orderBy.push({ price: priceFilter });
+    if (expiryFilter) orderBy.push({ expiryDate: expiryFilter });
+
     const thirdParty = await prisma.product.findMany({
-      where: { type: "THIRDPARTY" },
+      where: { type: "THIRDPARTY", name: { contains: search, mode: "insensitive" } },
+      orderBy: orderBy.length ? orderBy : undefined,
+      take,
+      skip,
     });
-    return NextResponse.json(
-      { success: true, data: thirdParty },
-      { status: 200 }
-    );
+
+    return NextResponse.json({ success: true, data: thirdParty }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

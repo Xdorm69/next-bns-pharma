@@ -11,9 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Menu } from "lucide-react";
 import AuthBtns from "./AuthBtns";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const session = useSession();
+  console.log(session);
+  const isAdmin = session?.data?.user?.role === "ADMIN";
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -34,8 +38,11 @@ export default function Navbar() {
               <Button variant={"outline"}>About</Button>
             </Link>
 
-            {/* MODE TOGGLE  */}
-            {/* <ModeToggle /> */}
+            {isAdmin && (
+              <Link href="/admin">
+                <Button variant={"outline"}>Admin</Button>
+              </Link>
+            )}
 
             {/* Auth Button */}
             <AuthBtns />
