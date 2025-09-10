@@ -38,7 +38,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle className="text-2xl text-center font-semibold font-mono">Login Form</CardTitle>
           <CardDescription className="text-muted-foreground text-center">
-            Enter your email and password to login. <br />If you don't have an account,
+            Enter your email and password to login. <br />If you don&apos;t have an account,
             please <Link href="/auth/sign-up">sign up</Link>.
           </CardDescription>
         </CardHeader>

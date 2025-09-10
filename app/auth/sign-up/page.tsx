@@ -56,7 +56,7 @@ export default function SignupPage() {
           </CardTitle>
           <CardDescription className="text-muted-foreground text-center">
             Enter your email and password to login. <br />
-            If you don't have an account, please{" "}
+            If you don&apos;t have an account, please{" "}
             <Link href="/auth/sign-up">sign up</Link>.
           </CardDescription>
         </CardHeader>
@@ -113,7 +113,7 @@ export default function SignupPage() {
                           placeholder="••••••••"
                           {...field}
                         />
-                        <Eye className="text-muted-foreground/80" />
+                        <Eye onClick={() => setShowPassword(prev => !prev)} className="text-muted-foreground/80" />
                       </div>
                     </FormControl>
                     <FormMessage />
