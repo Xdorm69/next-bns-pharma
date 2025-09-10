@@ -12,21 +12,15 @@ import {
 import { ChevronDown, Menu } from "lucide-react";
 import AuthBtns from "./AuthBtns";
 import { useSession } from "next-auth/react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
 import Skeleton from "./ui/skeleton";
+import { useRouter } from "next/navigation";
 // ✅ assuming you have a skeleton component
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const session = useSession();
   const isAdmin = session?.data?.user?.role === "ADMIN";
+  const router = useRouter();
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -45,25 +39,30 @@ export default function Navbar() {
             <Link href="/about">
               <Button variant={"outline"}>About</Button>
             </Link>
-            {/* Admin options with skeleton fallback */}
-            {session.status === "loading" ? (
-              // Show skeleton while session is loading
-              <Skeleton className="w-24 h-10 rounded" />
-            ) : isAdmin ? (
-              // Show Select only if user is admin
-              <Select
-                onValueChange={(value) => {
-                  if (value === "add-product")
-                    window.location.href = "/admin/add-product";
-                  if (value === "user") window.location.href = "/admin/users";
-                  if (value === "products")
-                    window.location.href = "/admin/products";
-                }}
-              >
-                {/* Your SelectItems here */}
-              </Select>
-            ) : null}
-            {/* Auth Buttons with skeleton fallback */}
+
+            {isAdmin && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center">Admin <ChevronDown/></Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => router.push("/admin/add-product")}
+                  >
+                    Add Product
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/admin/users")}>
+                    Users
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/admin/products")}
+                  >
+                    Products
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
             {session.status === "loading" ? (
               <Skeleton className="w-20 h-10 rounded" />
             ) : (
