@@ -14,7 +14,8 @@ import {
   SelectTrigger,
   SelectContent,
 } from "./ui/select"; // ✅ import everything from shadcn wrapper
-
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const ProductPageCardRender = ({
   type,
@@ -25,13 +26,15 @@ const ProductPageCardRender = ({
   title?: string;
   description?: string;
 }) => {
+  const session = useSession();
+  const isAuthenticated = session.status === "authenticated";
+
   const [search, setSearch] = useState<string>("");
   const [debouncedSearch, setDebouncedSearch] = useState<string>(search);
   const [priceOrder, setPriceOrder] = useState<string>("");
   const [expiryOrder, setExpiryOrder] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const take = 12;
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,10 +48,19 @@ const ProductPageCardRender = ({
   }, [debouncedSearch, priceOrder, expiryOrder]);
 
   const { data, isFetching, isLoading, isError } = useQuery({
-    queryKey: ["products", type, debouncedSearch, priceOrder, expiryOrder, page], // ✅ include filters
+    queryKey: [
+      "products",
+      type,
+      debouncedSearch,
+      priceOrder,
+      expiryOrder,
+      page,
+    ], // ✅ include filters
     queryFn: async () =>
       await fetchApi<Product[]>(
-        `/api/products/${type}?search=${debouncedSearch}&price=${priceOrder}&expiry=${expiryOrder}&take=${take}&skip=${page * take}`
+        `/api/products/${type}?search=${debouncedSearch}&price=${priceOrder}&expiry=${expiryOrder}&take=${take}&skip=${
+          page * take
+        }`
       ),
     refetchOnWindowFocus: false,
     staleTime: 60 * 60 * 1000, // 1 hour
@@ -58,7 +70,7 @@ const ProductPageCardRender = ({
   const products: Product[] = data?.data || [];
 
   return (
-    <div>
+    <div className="relative">
       {isError && <p>Error fetching products</p>}
 
       {title && description && (
@@ -79,13 +91,14 @@ const ProductPageCardRender = ({
           placeholder="Search.."
           className="max-w-sm"
           type="text"
+          disabled={!isAuthenticated}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <div className="flex gap-4">
           {/* PRICE FILTER */}
-          <Select onValueChange={setPriceOrder}>
+          <Select disabled={!isAuthenticated} onValueChange={setPriceOrder}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Price" />
             </SelectTrigger>
@@ -99,7 +112,7 @@ const ProductPageCardRender = ({
           </Select>
 
           {/* EXPIRY FILTER */}
-          <Select onValueChange={setExpiryOrder}>
+          <Select disabled={!isAuthenticated} onValueChange={setExpiryOrder}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Expiry" />
             </SelectTrigger>
@@ -115,15 +128,29 @@ const ProductPageCardRender = ({
       </div>
 
       <ProductCardRender
+        isAuthenticated={isAuthenticated}
         isLoading={isFetching || isLoading}
         data={products || []}
       />
 
-      <PaginationBtns
-        page={page}
-        setPage={setPage}
-        isLastPage={products.length < take}
-      />
+      {isAuthenticated ? (
+        <PaginationBtns
+          page={page}
+          setPage={setPage}
+          isLastPage={products.length < take}
+        />
+      ) : (
+        <div className="absolute bg-gradient-to-t  from-background from-45%  to-transparent  w-full h-96 -bottom-4 scale-105 z-50 flex flex-col">
+          <div className="w-full relative top-1/2 flex items-center justify-center flex-col gap-1 py-6 rounded">
+            <h1 className="text-4xl font-bold text-center font-mono ">
+              Login to view all products
+            </h1>
+            <Link href={"/auth/login"} className="text-primary text-center ">
+              Click here to login
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
