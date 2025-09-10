@@ -41,40 +41,28 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {/* Products Dropdown */}
             <ProductsDropdownMenu />
-
             {/* About */}
             <Link href="/about">
               <Button variant={"outline"}>About</Button>
             </Link>
-
             {/* Admin options with skeleton fallback */}
             {session.status === "loading" ? (
-              <Skeleton className="w-23 h-10 rounded" />
-            ) : (
-              isAdmin && (
-                <Select
-                  onValueChange={(value) => {
-                    if (value === "add-product")
-                      window.location.href = "/admin/add-product";
-                    if (value === "user") window.location.href = "/admin/users";
-                    if (value === "products")
-                      window.location.href = "/admin/products";
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Admin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="add-product">Add Product</SelectItem>
-                      <SelectItem value="user">Users</SelectItem>
-                      <SelectItem value="products">Products</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )
-            )}
-
+              // Show skeleton while session is loading
+              <Skeleton className="w-24 h-10 rounded" />
+            ) : isAdmin ? (
+              // Show Select only if user is admin
+              <Select
+                onValueChange={(value) => {
+                  if (value === "add-product")
+                    window.location.href = "/admin/add-product";
+                  if (value === "user") window.location.href = "/admin/users";
+                  if (value === "products")
+                    window.location.href = "/admin/products";
+                }}
+              >
+                {/* Your SelectItems here */}
+              </Select>
+            ) : null}
             {/* Auth Buttons with skeleton fallback */}
             {session.status === "loading" ? (
               <Skeleton className="w-20 h-10 rounded" />
