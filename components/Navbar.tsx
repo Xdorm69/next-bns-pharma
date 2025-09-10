@@ -12,11 +12,20 @@ import {
 import { ChevronDown, Menu } from "lucide-react";
 import AuthBtns from "./AuthBtns";
 import { useSession } from "next-auth/react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import Skeleton from "./ui/skeleton";
+// ✅ assuming you have a skeleton component
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const session = useSession();
-  console.log(session);
   const isAdmin = session?.data?.user?.role === "ADMIN";
 
   return (
@@ -38,14 +47,40 @@ export default function Navbar() {
               <Button variant={"outline"}>About</Button>
             </Link>
 
-            {isAdmin && (
-              <Link href="/admin">
-                <Button variant={"outline"}>Admin</Button>
-              </Link>
+            {/* Admin options with skeleton fallback */}
+            {session.status === "loading" ? (
+              <Skeleton className="w-23 h-10 rounded" />
+            ) : (
+              isAdmin && (
+                <Select
+                  onValueChange={(value) => {
+                    if (value === "add-product")
+                      window.location.href = "/admin/add-product";
+                    if (value === "user") window.location.href = "/admin/users";
+                    if (value === "products")
+                      window.location.href = "/admin/products";
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Admin" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="add-product">Add Product</SelectItem>
+                      <SelectItem value="user">Users</SelectItem>
+                      <SelectItem value="products">Products</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )
             )}
 
-            {/* Auth Button */}
-            <AuthBtns />
+            {/* Auth Buttons with skeleton fallback */}
+            {session.status === "loading" ? (
+              <Skeleton className="w-20 h-10 rounded" />
+            ) : (
+              <AuthBtns />
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -63,7 +98,6 @@ export default function Navbar() {
         {mobileMenuOpen && (
           <div className="md:hidden mt-2 flex flex-col space-y-2 px-2 pb-4">
             <ProductsDropdownMenu />
-
             <Link
               href="/about"
               className="px-2 py-1 text-gray-800 hover:text-blue-700"
@@ -71,7 +105,11 @@ export default function Navbar() {
               About
             </Link>
 
-            <AuthBtns />
+            {session.status === "loading" ? (
+              <Skeleton className="w-full h-10 rounded" />
+            ) : (
+              <AuthBtns />
+            )}
           </div>
         )}
       </div>
@@ -92,11 +130,7 @@ const ProductsDropdownMenu = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        className="
-          w-[88vw] md:w-full
-        "
-      >
+      <DropdownMenuContent className="w-[88vw] md:w-full">
         <Link href="/products/third-party" className="w-full">
           <DropdownMenuItem className="w-full">Third Party</DropdownMenuItem>
         </Link>

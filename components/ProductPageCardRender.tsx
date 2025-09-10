@@ -40,6 +40,10 @@ const ProductPageCardRender = ({
     return () => clearTimeout(timer);
   }, [search]);
 
+  useEffect(() => {
+    setPage(0);
+  }, [debouncedSearch, priceOrder, expiryOrder]);
+
   const { data, isFetching, isLoading, isError } = useQuery({
     queryKey: ["products", type, debouncedSearch, priceOrder, expiryOrder, page], // ✅ include filters
     queryFn: async () =>
