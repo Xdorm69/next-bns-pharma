@@ -29,19 +29,21 @@ export function ProductCard({ data }: { data: Product }) {
             className="object-cover"
           />
         </div>
-        <CardTitle className="text-lg font-semibold font-mono">{data.name}</CardTitle>
+        <CardTitle className="text-lg font-semibold font-mono">
+          {data.name}
+        </CardTitle>
         <CardDescription>
-          {data.description && (
-            <p className="text-sm text-muted-foreground">
-              {data.type}
-            </p>
+          {data.type && (
+            <p className="text-sm text-muted-foreground">{data.type}</p>
           )}
         </CardDescription>
       </CardHeader>
 
       {/* Content */}
       <CardContent className="space-y-2">
-        {data.description && <p>{data.description}</p>}
+        {data.description && (
+          <p className=" line-clamp-2">{data.description}</p>
+        )}
 
         {(data.rating !== undefined || data.reviewsCount !== undefined) && (
           <p className="text-xs text-yellow-500">
@@ -54,7 +56,9 @@ export function ProductCard({ data }: { data: Product }) {
       {/* Footer */}
       <CardFooter className="w-full flex justify-between items-center">
         {data.price && (
-          <h1 className="font-mono font-bold text-lg text-primary">Rs.{data.price}</h1>
+          <h1 className="font-mono font-bold text-lg text-primary">
+            Rs.{data.price}
+          </h1>
         )}
         <Button
           variant={"outline"}
