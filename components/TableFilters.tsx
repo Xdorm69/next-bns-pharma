@@ -44,7 +44,7 @@ const TableFilters = ({
 
   useEffect(() => {
     setPage(0);
-  }, [filters]);
+  }, [search, ...filters.map((f) => f.state)]);
 
   return (
     <div>
@@ -76,7 +76,7 @@ const TableFilters = ({
                   <SelectLabel>{filter.title}</SelectLabel>
                   {filter.selectItems.map((item) => (
                     <SelectItem key={item.key} value={item.value}>
-                      {item.value}
+                      {item.key}
                     </SelectItem>
                   ))}
                 </SelectGroup>

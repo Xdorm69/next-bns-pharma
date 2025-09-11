@@ -54,8 +54,8 @@ function TableCompt<T>({ columns, data, loading, error }: TableComptProps<T>) {
     <Table className="rounded-xl shadow">
       <TableHeader className="rounded-xl">
         <TableRow>
-          {columns.map((col) => (
-            <TableHead key={col.column} className="capitalize bg-gray-300 ">
+          {columns.map((col, id) => (
+            <TableHead key={id} className="capitalize bg-gray-300 ">
               {col.column}
             </TableHead>
           ))}
@@ -64,8 +64,8 @@ function TableCompt<T>({ columns, data, loading, error }: TableComptProps<T>) {
       <TableBody className="bg-gray-100 rounded-xl">
         {data.map((row, rowIndex) => (
           <TableRow key={rowIndex}>
-            {columns.map((col) => (
-              <TableCell key={col.column}>{col.render(row)}</TableCell>
+            {columns.map((col, id) => (
+              <TableCell key={id}>{col.render(row)}</TableCell>
             ))}
           </TableRow>
         ))}
