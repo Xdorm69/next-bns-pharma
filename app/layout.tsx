@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
 import localFont from "next/font/local";
+import Preloader from "@/components/Preloader";
 
 const equitanSans = localFont({
   src: [
@@ -56,6 +57,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <Preloader />
               <Navbar />
               <main className="font-sans">{children}</main>
               <Footer />
