@@ -142,7 +142,7 @@ const UserMenu = ({
   onLogout,
   mobile = false,
 }: {
-  user: any;
+  user: { name: string; email: string; id: string };
   onLogout: () => void;
   mobile?: boolean;
 }) => (
@@ -152,11 +152,7 @@ const UserMenu = ({
         variant="outline"
         className="rounded-full w-10 h-10 p-0 overflow-hidden"
       >
-        {user?.image ? (
-          <Image src={user.image} alt="User" width={40} height={40} />
-        ) : (
-          <User className="w-6 h-6" />
-        )}
+        <User className="w-6 h-6" />
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className={mobile ? "w-full" : "w-48"} align="end">
@@ -167,7 +163,9 @@ const UserMenu = ({
       <Link href="/profile">
         <DropdownMenuItem>Profile</DropdownMenuItem>
       </Link>
-      <DropdownMenuItem variant="destructive" onClick={onLogout}>Logout</DropdownMenuItem>
+      <DropdownMenuItem variant="destructive" onClick={onLogout}>
+        Logout
+      </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 );
