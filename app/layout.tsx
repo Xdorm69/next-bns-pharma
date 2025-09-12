@@ -57,7 +57,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Preloader />
+              
               <Navbar />
               <main className="font-sans">{children}</main>
               <Footer />

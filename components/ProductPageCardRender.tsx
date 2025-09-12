@@ -17,6 +17,7 @@ import {
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { PaginationBtns } from "./PaginationBtns";
+import TableFilters from "./TableFilters";
 
 const ProductPageCardRender = ({
   type,
@@ -88,43 +89,33 @@ const ProductPageCardRender = ({
       {/* FILTERS */}
       <div className="flex justify-between items-center my-10">
         {/* SEARCH */}
-        <Input
-          placeholder="Search.."
-          className="max-w-sm"
-          type="text"
-          disabled={!isAuthenticated}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <div className="flex gap-4">
-          {/* PRICE FILTER */}
-          <Select disabled={!isAuthenticated} onValueChange={setPriceOrder}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Price" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Price filter</SelectLabel>
-                <SelectItem value="asc">Low to High</SelectItem>
-                <SelectItem value="desc">High to Low</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
-          {/* EXPIRY FILTER */}
-          <Select disabled={!isAuthenticated} onValueChange={setExpiryOrder}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Expiry" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Expiry filter</SelectLabel>
-                <SelectItem value="asc">Low to High</SelectItem>
-                <SelectItem value="desc">High to Low</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+        <div className="w-full">
+          <TableFilters
+            disabled={!products.length || !isAuthenticated}
+            search={search}
+            setSearch={setSearch}
+            setPage={setPage}
+            filters={[
+              {
+                title: "Price Filter",
+                state: priceOrder,
+                setState: setPriceOrder,
+                selectItems: [
+                  { key: "Low to High", value: "asc" },
+                  { key: "High to Low", value: "desc" },
+                ],
+              },
+              {
+                title: "Expiry Filter",
+                state: expiryOrder,
+                setState: setExpiryOrder,
+                selectItems: [
+                  { key: "Low to High", value: "asc" },
+                  { key: "High to Low", value: "desc" },
+                ],
+              },
+            ]}
+          />
         </div>
       </div>
 

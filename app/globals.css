@@ -93,7 +93,7 @@
   --muted: oklch(0.96 0.01 250);
   --muted-foreground: oklch(0.55 0.02 250);
 
-    /* Accent (Teal-Blue hover to match primary) */
+  /* Accent (Teal-Blue hover to match primary) */
   --accent: oklch(0.9 0.05 220); /* soft light-blue */
   --accent-foreground: oklch(0.25 0.03 230); /* dark blue-gray */
 
@@ -226,5 +226,9 @@
   .cont {
     @apply max-w-6xl container mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+  html.noscroll,
+  body.noscroll {
+    overflow: hidden;
+    height: 100%;
+  }
 }

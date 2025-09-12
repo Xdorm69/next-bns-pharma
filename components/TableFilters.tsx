@@ -20,16 +20,16 @@ type TableFilter = {
 
 type TableFilterProps = {
   search: string;
+  disabled?: boolean;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
-  isAuthenticated: boolean;
   filters: TableFilter[];
   setPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const TableFilters = ({
+  disabled,
   search,
   setSearch,
-  isAuthenticated,
   filters,
   setPage,
 }: TableFilterProps) => {
@@ -54,7 +54,7 @@ const TableFilters = ({
           placeholder="Search..."
           className="max-w-sm"
           type="text"
-          disabled={!isAuthenticated}
+          disabled={disabled}
           value={debouncedSearch}
           onChange={(e) => setDebouncedSearch(e.target.value)}
         />
@@ -64,7 +64,7 @@ const TableFilters = ({
           {filters.map((filter) => (
             <Select
               key={filter.title}
-              disabled={!isAuthenticated}
+              disabled={disabled}
               value={filter.state}
               onValueChange={filter.setState}
             >

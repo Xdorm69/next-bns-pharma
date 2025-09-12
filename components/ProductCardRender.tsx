@@ -19,6 +19,9 @@ export const ProductCardRender = ({
         {isLoading && (
           <ProductGridSkeleton isAuthenticated={isAuthenticated as boolean} />
         )}
+        {!isLoading && !data.length && (
+          <p className="text-muted-foreground text-2xl text-center col-span-1 sm:col-span-2 lg:col-span-3 my-16">No products found</p>
+        )}
         {!isLoading &&
           data.map((product: Product) => (
             <ProductCard key={product.id} data={product} />
