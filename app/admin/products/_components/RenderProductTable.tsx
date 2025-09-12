@@ -51,7 +51,7 @@ const RenderProductTable = () => {
     <div>
       {/* FILTERS  */}
       <TableFilters
-        isAuthenticated={isAuthenticated}
+    
         search={search}
         setSearch={setSearch}
         setPage={setPage}
