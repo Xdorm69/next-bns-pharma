@@ -51,7 +51,7 @@ const RenderProductTable = () => {
     <div>
       {/* FILTERS  */}
       <TableFilters
-    
+        disabled={!isAuthenticated || !products.length}
         search={search}
         setSearch={setSearch}
         setPage={setPage}
@@ -101,16 +101,27 @@ const RenderProductTable = () => {
           { column: "name", render: (row) => row.name },
           {
             column: "description",
-            render: (row) => (
-              row.description ? <CopyHoverCard data={row.description} tag="Description" /> : "-"
-            ),
+            render: (row) =>
+              row.description ? (
+                <CopyHoverCard data={row.description} tag="Description" />
+              ) : (
+                "-"
+              ),
           },
           { column: "price", render: (row) => row.price || "-" },
           { column: "type", render: (row) => row.ProductType as ProductTypes },
           { column: "type", render: (row) => row.type as ProductCatType },
           { column: "clicks", render: (row) => row.clicks || "0" },
           { column: "category", render: (row) => row.category || "-" },
-          { column: "Ingredients", render: (row) => row.ingredients ? <CopyHoverCard data={row.ingredients} tag="Ingredients" /> : "-" },
+          {
+            column: "Ingredients",
+            render: (row) =>
+              row.ingredients ? (
+                <CopyHoverCard data={row.ingredients} tag="Ingredients" />
+              ) : (
+                "-"
+              ),
+          },
           { column: "Manufacturer", render: (row) => row.manufacturer || "-" },
           {
             column: "Expiry Date",
@@ -126,8 +137,15 @@ const RenderProductTable = () => {
             },
           },
           { column: "stock", render: (row) => row.stock },
-          { column: "isActive", render: (row) => row.isActive ? "Yes" : "No" },
-          { column: "image", render: (row) => row.image ? <CopyHoverCard data={row.image} tag="Image" /> : "NA" },
+          {
+            column: "isActive",
+            render: (row) => (row.isActive ? "Yes" : "No"),
+          },
+          {
+            column: "image",
+            render: (row) =>
+              row.image ? <CopyHoverCard data={row.image} tag="Image" /> : "NA",
+          },
           { column: "thumbnail", render: (row) => row.thumbnail || "NA" },
           { column: "rating", render: (row) => row.rating || "0" },
           { column: "reviewsCount", render: (row) => row.reviewsCount || "0" },

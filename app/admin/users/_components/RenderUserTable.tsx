@@ -51,7 +51,7 @@ const RenderUserTable = () => {
     <div>
       {/* FILTERS  */}
       <TableFilters
-        isAuthenticated={isAuthenticated}
+      disabled={!isAuthenticated || !users.length}
         search={search}
         setSearch={setSearch}
         setPage={setPage}
