@@ -7,7 +7,7 @@ const steps = [
   { title: "Consultation", desc: "Discuss your requirements with our team." },
   {
     title: "Manufacturing / Supply",
-    desc: "High-quality production in WHO-certified facilities.",
+    desc: "High-quality production and WHO-certified.",
   },
   {
     title: "Delivery",

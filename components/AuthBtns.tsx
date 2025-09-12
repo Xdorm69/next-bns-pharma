@@ -27,7 +27,7 @@ const AuthBtns = () => {
 
   // If logged in
   return (
-    <Button variant="destructive" onClick={() => signOut()}>
+    <Button variant="destructive" className="w-full" onClick={() => signOut()}>
       Logout
     </Button>
   );

@@ -7,14 +7,16 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, User } from "lucide-react";
 import AuthBtns from "./AuthBtns";
 import { useSession } from "next-auth/react";
 import Skeleton from "./ui/skeleton";
 import { useRouter } from "next/navigation";
-// ✅ assuming you have a skeleton component
+import Image from "next/image";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,107 +26,148 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="cont">
-        <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
-          <Link href="/" className="text-2xl font-bold font-mono">
-            PharmaCo.
+      <div className="cont flex justify-between h-16 items-center">
+        {/* Logo */}
+        <Link href="/" className="text-2xl font-bold font-mono">
+          PharmaCo.
+        </Link>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-6">
+          <ProductsDropdownMenu />
+          <Link href="/about" className="text-gray-700 hover:text-primary">
+            About
           </Link>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Products Dropdown */}
-            <ProductsDropdownMenu />
-            {/* About */}
-            <Link href="/about">
-              <Button variant={"outline"}>About</Button>
-            </Link>
-
-            {isAdmin && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center">Admin <ChevronDown/></Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => router.push("/admin/add-product")}
-                  >
-                    Add Product
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push("/admin/users")}>
-                    Users
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => router.push("/admin/products")}
-                  >
-                    Products
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {session.status === "loading" ? (
-              <Skeleton className="w-20 h-10 rounded" />
-            ) : (
-              <AuthBtns />
-            )}
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              <Menu className="w-6 h-6" />
-            </Button>
-          </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-2 flex flex-col space-y-2 px-2 pb-4">
-            <ProductsDropdownMenu />
-            <Link
-              href="/about"
-              className="px-2 py-1 text-gray-800 hover:text-blue-700"
-            >
-              About
-            </Link>
+        {/* ADMING AND LOGOUT BTNS  */}
+        <div className="flex gap-6">
+          {isAdmin && <AdminDropdownMenu />}
 
-            {session.status === "loading" ? (
-              <Skeleton className="w-full h-10 rounded" />
-            ) : (
-              <AuthBtns />
-            )}
-          </div>
-        )}
+          {/* User / Auth */}
+          {session.status === "loading" ? (
+            <Skeleton className="w-10 h-10 rounded-full" />
+          ) : session.status === "authenticated" ? (
+            <UserMenu
+              user={session.data.user}
+              onLogout={() => router.push("/auth/logout")}
+            />
+          ) : (
+            <AuthBtns />
+          )}
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <Menu className="w-6 h-6" />
+          </Button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden flex flex-col space-y-2 px-4 pb-4">
+          <ProductsDropdownMenu />
+          <Link href="/about" className="text-gray-700 hover:text-primary">
+            About
+          </Link>
+          {isAdmin && <AdminDropdownMenu />}
+          {session.status === "loading" ? (
+            <Skeleton className="w-full h-10 rounded" />
+          ) : session.status === "authenticated" ? (
+            <UserMenu
+              user={session.data.user}
+              onLogout={() => router.push("/auth/logout")}
+              mobile
+            />
+          ) : (
+            <AuthBtns />
+          )}
+        </div>
+      )}
     </nav>
   );
 }
 
-const ProductsDropdownMenu = () => {
+/* --- Sub Components --- */
+
+const ProductsDropdownMenu = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" className="flex items-center gap-1">
+        Products <ChevronDown className="w-4 h-4" />
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent>
+      <Link href="/products/third-party">
+        <DropdownMenuItem>Third Party</DropdownMenuItem>
+      </Link>
+      <Link href="/products/pcd">
+        <DropdownMenuItem>PCD</DropdownMenuItem>
+      </Link>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
+const AdminDropdownMenu = () => {
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className="px-2 py-1 flex gap-1 items-center bg-muted w-full md:w-auto justify-between"
-        >
-          <span>Products</span>
-          <ChevronDown />
+        <Button variant="ghost" className="flex items-center gap-1">
+          Admin <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-
-      <DropdownMenuContent className="w-[88vw] md:w-full">
-        <Link href="/products/third-party" className="w-full">
-          <DropdownMenuItem className="w-full">Third Party</DropdownMenuItem>
-        </Link>
-        <Link href="/products/pcd" className="w-full">
-          <DropdownMenuItem className="w-full">PCD</DropdownMenuItem>
-        </Link>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={() => router.push("/admin/add-product")}>
+          Add Product
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/admin/users")}>
+          Users
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/admin/products")}>
+          Products
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
+
+const UserMenu = ({
+  user,
+  onLogout,
+  mobile = false,
+}: {
+  user: any;
+  onLogout: () => void;
+  mobile?: boolean;
+}) => (
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button
+        variant="outline"
+        className="rounded-full w-10 h-10 p-0 overflow-hidden"
+      >
+        {user?.image ? (
+          <Image src={user.image} alt="User" width={40} height={40} />
+        ) : (
+          <User className="w-6 h-6" />
+        )}
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className={mobile ? "w-full" : "w-48"} align="end">
+      <DropdownMenuLabel>
+        {user?.name || user?.email || "User"}
+      </DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <Link href="/profile">
+        <DropdownMenuItem>Profile</DropdownMenuItem>
+      </Link>
+      <DropdownMenuItem variant="destructive" onClick={onLogout}>Logout</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);

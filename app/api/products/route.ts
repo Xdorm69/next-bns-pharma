@@ -130,7 +130,7 @@ export async function GET(request: NextRequest) {
       where: {
         ...(productType && { ProductType: productType as ProductTypes }),
         ...(category && {
-          category: category,
+          type: category,
         }),
         ...(active && { isActive: active === "true" }),
         ...(search && {
