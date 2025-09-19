@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {  Github, Linkedin, Twitter } from "lucide-react";
+import { Github, Linkedin, Twitter } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -11,19 +11,25 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between gap-6">
           {/* Company */}
           <div>
-            <h2 className="text-2xl font-bold mb-2">
-              BNS Pharmaceuticals
-            </h2>
+            <h2 className="text-2xl font-bold mb-2">BNS Pharmaceuticals</h2>
             <p className="text-muted-foreground max-w-sm">
               Committed to providing high-quality healthcare products with trust
               and innovation.
             </p>
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p>(An ISO & GMP Certified Company)</p>
+              <p>Ground Floor, Shop No. 19,</p>
+              <p>Wadhawa Nagar, Dhakoli,</p>
+              <p>Zirakpur SAS Nagar, Punjab - 140603</p>
+            </div>
           </div>
 
           {/* Quick Links */}
           <div className="flex flex-col md:flex-row gap-8">
             <div>
-              <h3 className="font-semibold text-muted-foreground mb-2">Products</h3>
+              <h3 className="font-semibold text-muted-foreground mb-2">
+                Products
+              </h3>
               <ul className="space-y-1">
                 <li>
                   <Link
@@ -45,7 +51,9 @@ export default function Footer() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-muted-foreground mb-2">Company</h3>
+              <h3 className="font-semibold text-muted-foreground mb-2">
+                Company
+              </h3>
               <ul className="space-y-1">
                 <li>
                   <Link
@@ -69,7 +77,9 @@ export default function Footer() {
 
           {/* Social Media */}
           <div className="flex flex-col gap-2">
-            <h3 className="font-semibold text-muted-foreground mb-2">Follow Us</h3>
+            <h3 className="font-semibold text-muted-foreground mb-2">
+              Follow Us
+            </h3>
             <div className="flex gap-3">
               <Button variant="ghost" size="icon" asChild>
                 <Link href="https://twitter.com" target="_blank">

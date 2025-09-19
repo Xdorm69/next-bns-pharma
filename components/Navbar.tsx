@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Menu, User } from "lucide-react";
 import AuthBtns from "./AuthBtns";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Skeleton from "./ui/skeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -29,7 +29,16 @@ export default function Navbar() {
       <div className="cont flex justify-between h-16 items-center">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold font-mono">
-          PharmaCo.
+          <div className="w-24 h-full">
+            <Image
+              src={"/company_logo.png"}
+              priority
+              width={90}
+              height={90}
+              alt="logo"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </Link>
 
         {/* Desktop Menu */}
@@ -50,7 +59,8 @@ export default function Navbar() {
           ) : session.status === "authenticated" ? (
             <UserMenu
               user={session.data.user}
-              onLogout={() => router.push("/auth/logout")}
+              onLogout={() => signOut({ callbackUrl: "/" })} // optional: redirect to home after logout
+              mobile
             />
           ) : (
             <AuthBtns />
@@ -160,9 +170,9 @@ const UserMenu = ({
         {user?.name || user?.email || "User"}
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <Link href="/profile">
+      {/* <Link href="/profile">
         <DropdownMenuItem>Profile</DropdownMenuItem>
-      </Link>
+      </Link> */}
       <DropdownMenuItem variant="destructive" onClick={onLogout}>
         Logout
       </DropdownMenuItem>

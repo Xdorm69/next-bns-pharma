@@ -10,7 +10,7 @@
     "lint": "eslint"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.jacs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

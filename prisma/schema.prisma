@@ -61,3 +61,10 @@ model Product {
   rating        Float?       // Optional: average rating
   reviewsCount  Int?         // Optional: number of reviews
 }
+
+model Testimonials {
+  id  String @id @default(uuid())
+  name String 
+  email String 
+  message String 
+}

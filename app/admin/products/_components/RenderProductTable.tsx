@@ -222,16 +222,4 @@ const CopyHoverCard = ({
     </HoverCard>
   );
 };
-
-const RenderRoleCard = ({ role }: { role: "ADMIN" | "USER" }) => {
-  return (
-    <Badge
-      className={cn(
-        " border-1 bg-amber-500 border-amber-200",
-        role === "ADMIN" && "bg-emerald-500 border-emerald-200"
-      )}
-    >
-      {role}
-    </Badge>
-  );
-};
+   

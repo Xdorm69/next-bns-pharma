@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
 import localFont from "next/font/local";
 import Preloader from "@/components/Preloader";
+import { AppProvider } from "@/components/providers/FirstContextProvider";
 
 const equitanSans = localFont({
   src: [
@@ -54,13 +55,13 @@ export default function RootLayout({
             <ThemeProvider
               attribute="class"
               defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
+              enableSystem={false}
             >
-              
               <Navbar />
+
               <main className="font-sans">{children}</main>
               <Footer />
+
               <Toaster richColors duration={2000} />
             </ThemeProvider>
           </ReactQueryProvider>
