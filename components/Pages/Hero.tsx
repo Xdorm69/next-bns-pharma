@@ -9,7 +9,7 @@ const Hero = () => {
         <div className="flex w-full h-full items-center justify-center">
           <div className="flex-1">
             <h1 className="hero-title text-6xl font-bold font-mono">
-              Innovating for a healthier world
+              Welcome to <br /> <span className="text-primary">BNS Pharma</span>
             </h1>
             <p className="hero-subtitle text-muted-foreground text-lg max-w-sm mt-4">
               Committed to providing high-quality healthcare products with trust
