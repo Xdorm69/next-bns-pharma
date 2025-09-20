@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Roboto, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
@@ -8,8 +7,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
 import localFont from "next/font/local";
-import Preloader from "@/components/Preloader";
-import { AppProvider } from "@/components/providers/FirstContextProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const equitanSans = localFont({
   src: [
@@ -35,8 +33,40 @@ const brSonoma = localFont({
 
 
 export const metadata: Metadata = {
-  title: "Bns Pharma",
-  description: "bns pharma website",
+  metadataBase: new URL("https://bnspharmaceuticals.com"), // <-- your real domain
+  title: "Bns Pharma | Trusted Pharmaceutical Solutions",
+  description:
+    "Bns Pharma delivers high-quality pharmaceutical products with a focus on innovation, safety, and patient well-being. Explore our medicines, healthcare solutions, and research-driven products.",
+  icons: "/favicon.png",
+  keywords: [
+    "Bns Pharma",
+    "pharmaceutical company",
+    "pharma products",
+    "healthcare solutions",
+    "medicine manufacturing",
+    "quality pharma",
+    "trusted pharmaceuticals",
+  ],
+  openGraph: {
+    title: "Bns Pharma | Trusted Pharmaceutical Solutions",
+    description:
+      "Discover Bns Pharma's wide range of high-quality medicines and healthcare solutions trusted by professionals worldwide.",
+    url: "https://bnspharmaceuticals.com",
+    siteName: "Bns Pharma",
+    images: [
+      {
+        url: "/favicon.png", // place your product/company logo in /public/logo.png
+        width: 512,
+        height: 512,
+        alt: "Bns Pharma Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  alternates: {
+    canonical: "https://bnspharmaceuticals.com",
+  },
 };
 
 export default function RootLayout({
@@ -59,7 +89,10 @@ export default function RootLayout({
             >
               <Navbar />
 
-              <main className="font-sans">{children}</main>
+              <main className="font-sans">
+                {children}
+                <Analytics />
+              </main>
               <Footer />
 
               <Toaster richColors duration={2000} />

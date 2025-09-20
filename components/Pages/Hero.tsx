@@ -31,7 +31,7 @@ const Hero = () => {
                 height={600}
                 priority
                 alt="hero"
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full select-none"
               />
               <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent from-[65%] to-background z-40" />
             </div>

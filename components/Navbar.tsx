@@ -42,7 +42,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           <ProductsDropdownMenu />
           <Link href="/about" className="text-gray-700 hover:text-primary">
             About
@@ -50,7 +50,7 @@ export default function Navbar() {
         </div>
 
         {/* ADMING AND LOGOUT BTNS  */}
-        <div className="flex gap-6">
+        <div className="flex gap-4 items-center">
           {isAdmin && <AdminDropdownMenu />}
 
           {/* User / Auth */}
@@ -170,9 +170,6 @@ const UserMenu = ({
         {user?.name || user?.email || "User"}
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      {/* <Link href="/profile">
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-      </Link> */}
       <DropdownMenuItem variant="destructive" onClick={onLogout}>
         Logout
       </DropdownMenuItem>
