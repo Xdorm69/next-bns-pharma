@@ -1,7 +1,7 @@
 "use client";
 import TableCompt from "@/components/TableCompt";
 import { fetchApi } from "@/Hooks/api";
-import { Product, ProductCatType, ProductTypes, User } from "@prisma/client";
+import { Product, ProductCatType, ProductTypes } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import {
   HoverCard,
@@ -11,7 +11,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
 import TableFilters from "@/components/TableFilters";
@@ -21,7 +20,7 @@ import { PaginationBtns } from "@/components/PaginationBtns";
 const RenderProductTable = () => {
   const [search, setSearch] = React.useState<string>("");
   const [productType, setProductType] = React.useState<string>("");
-  const [category, setCategory] = React.useState<string>("");
+  const [type, setType] = React.useState<string>("");
   const [active, setActive] = React.useState<string>("");
   const [page, setPage] = useState<number>(0);
   const max = 8;
@@ -35,10 +34,10 @@ const RenderProductTable = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["admin", "products", search, productType, category, active, page],
+    queryKey: ["admin", "products", search, productType, type, active, page],
     queryFn: async () => {
       return await fetchApi<Product[]>(
-        `/api/products?productType=${productType}&category=${category}&active=${active}&search=${search}&take=${max}&skip=${
+        `/api/products?productType=${productType}&type=${type}&active=${active}&search=${search}&take=${max}&skip=${
           page * max
         }`
       );
@@ -51,7 +50,7 @@ const RenderProductTable = () => {
     <div>
       {/* FILTERS  */}
       <TableFilters
-        disabled={!isAuthenticated || !products.length}
+        disabled={!isAuthenticated}
         search={search}
         setSearch={setSearch}
         setPage={setPage}
@@ -71,9 +70,9 @@ const RenderProductTable = () => {
             ],
           },
           {
-            state: category,
-            setState: setCategory,
-            title: "Category",
+            state: type,
+            setState: setType,
+            title: "Type",
             selectItems: [
               { key: "PCD", value: "PCD" },
               { key: "Third Party", value: "THIRDPARTY" },

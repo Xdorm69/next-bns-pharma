@@ -1,53 +1,34 @@
-import type { Metadata } from "next";
-import AnimatedHeading from "./_components/AnimatedHeading";
-import AnimatedParagraph from "./_components/AnimatedParagraph";
-import AnimatedCard from "./_components/AnimatedCard";
-import AnimatedTimelineItem from "./_components/AnimatedTimeline";
-import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "About Us | Bns Pharma",
-  description:
-    "Learn about Bns Pharma's mission, vision, and journey in delivering innovative, safe, and high-quality pharmaceutical products.",
-  keywords: [
-    "About Bns Pharma",
-    "pharmaceutical company mission",
-    "healthcare innovation",
-    "trusted pharma",
-  ],
-  openGraph: {
-    title: "About Us | Bns Pharma",
-    description:
-      "Discover Bns Pharma's vision, mission, and journey in advancing healthcare worldwide.",
-    url: "https://bnspharmaceuticals.com/about",
-    siteName: "Bns Pharma",
-    type: "website",
-  },
-  alternates: {
-    canonical: "https://bnspharmaceuticals.com/about",
-  },
-};
+"use client";
 
-export default function AboutPage() {
+import { motion } from "framer-motion";
+import React from "react";
+
+const AboutPageClient = () => {
   return (
     <div>
-      {/* Hero */}
       <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="cont text-center">
-          <AnimatedHeading className="text-4xl md:text-6xl font-bold">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-6xl font-bold"
+          >
             Improving Lives Through Healthcare Innovation
-          </AnimatedHeading>
-          <AnimatedParagraph
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
             className="mt-6 text-lg md:text-xl text-gray-600"
-            delay={0.2}
           >
             At BNS Pharmaceuticals, we are committed to advancing healthcare
             through science, innovation, and unwavering dedication to quality.
-          </AnimatedParagraph>
+          </motion.p>
         </div>
       </section>
-
-      {/* Mission & Vision */}
+      ;{/* Mission & Vision */}
       <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
@@ -65,8 +46,7 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
-
-      {/* Values */}
+      ;{/* Values */}
       <section className="bg-gray-50 py-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-12">Our Core Values</h2>
@@ -85,43 +65,30 @@ export default function AboutPage() {
                 desc: "We build lasting relationships with patients, partners, and healthcare providers.",
               },
             ].map((val, i) => (
-              <AnimatedCard
+              <motion.div
                 key={i}
-                delay={i * 0.2}
-                title={val.title}
-                desc={val.desc}
-              />
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+                className="p-6 bg-white rounded-2xl shadow-md hover:shadow-lg transition"
+              >
+                <h3 className="text-xl font-semibold mb-2">{val.title}</h3>
+                <p className="text-gray-600">{val.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FACTORY */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div>
+      {/* FACTORY IMGS  */}
+      <section>
+        <div className="">
           <h1 className="text-3xl font-bold mb-12">Our Factory</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 auto-rows-min">
-            {Array.from({ length: 9 }).map((_, id) => {
-              return (
-                <div key={id} className="rounded shadow overflow-hidden">
-                  <Image
-                    key={id}
-                    src={
-                      id === 8 ? `/factory/9.jpg` : `/factory/${id + 1}.webp`
-                    }
-                    alt={`Factory ${id + 1}`}
-                    width={500}
-                    className="w-full h-full object-cover"
-                    height={500}
-                  />
-                </div>
-              );
-            })}
-          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
         </div>
       </section>
-
-      {/* Timeline */}
+      ;{/* Timeline */}
       <section className="max-w-5xl mx-auto px-6 py-16">
         <h2 className="text-3xl font-bold mb-8 text-center">Our Journey</h2>
         <div className="space-y-8">
@@ -143,17 +110,23 @@ export default function AboutPage() {
               event: "Innovating with biotech-driven healthcare solutions.",
             },
           ].map((item, i) => (
-            <AnimatedTimelineItem
+            <motion.div
               key={i}
-              year={item.year}
-              event={item.event}
-              index={i}
-            />
+              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="flex items-start gap-4"
+            >
+              <span className="text-xl font-bold text-primary">
+                {item.year}
+              </span>
+              <p className="text-gray-600">{item.event}</p>
+            </motion.div>
           ))}
         </div>
       </section>
-
-      {/* CTA */}
+      ;{/* CTA */}
       <section className="bg-primary py-16 text-center text-white">
         <h2 className="text-3xl font-bold mb-4">
           Partner with BNS Pharmaceuticals
@@ -168,6 +141,9 @@ export default function AboutPage() {
           Contact Us
         </a>
       </section>
+      ;
     </div>
   );
-}
+};
+
+export default AboutPageClient;

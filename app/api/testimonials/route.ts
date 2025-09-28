@@ -8,7 +8,8 @@ export async function POST(request: NextRequest){
     try {
         const testimonial = await prisma.testimonials.create({data: {name, email, message}});
         return NextResponse.json({success: true, message: "Testimonial created successfully", data: testimonial}, {status: 201});
-    } catch (error) {
+    } catch (err) {
+        console.error("Prisma create error:", err);
         return NextResponse.json({success: false, error: "Internal Server Error"}, {status: 500});
     }
 }

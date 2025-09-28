@@ -4,16 +4,6 @@ import { ProductCardRender } from "@/components/ProductCardRender";
 import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/Hooks/api";
 import { Product } from "@prisma/client";
-import { Input } from "./ui/input";
-import {
-  Select,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-} from "./ui/select"; // ✅ import everything from shadcn wrapper
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { PaginationBtns } from "./PaginationBtns";

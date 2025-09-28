@@ -7,7 +7,6 @@ import {
   AddProductSchema,
   AddProductSchemaType,
 } from "@/lib/validations/addprod";
-import { success } from "zod";
 import { ProductCatType, ProductTypes } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
@@ -96,6 +95,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, product });
   } catch (err) {
     console.error("Prisma create error:", err);
+
     return NextResponse.json(
       { success: false, error: "Failed to create product" },
       { status: 500 }
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = new URL(request.url).searchParams;
     const productType = searchParams.get("productType");
-    const category = searchParams.get("category") as ProductCatType;
+    const type = searchParams.get("type") as ProductCatType;
     const active = searchParams.get("active");
     const search = searchParams.get("search");
     const take = Number(searchParams.get("take")) || 10;
@@ -129,8 +129,8 @@ export async function GET(request: NextRequest) {
     const products = await prisma.product.findMany({
       where: {
         ...(productType && { ProductType: productType as ProductTypes }),
-        ...(category && {
-          type: category,
+        ...(type && {
+          type: type,
         }),
         ...(active && { isActive: active === "true" }),
         ...(search && {

@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       // Only handle Google sign-ins
       if (account?.provider === "google") {
         // Check if the user already exists
