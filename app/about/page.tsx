@@ -111,6 +111,7 @@ export default function AboutPage() {
                     }
                     alt={`Factory ${id + 1}`}
                     width={500}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                     height={500}
                   />
