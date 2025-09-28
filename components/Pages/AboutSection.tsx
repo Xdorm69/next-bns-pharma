@@ -80,7 +80,7 @@ export function AboutSection() {
             <div className="sec-image absolute z-30 inset-0 flex items-center justify-center">
               <div className="w-3/4 h-1/2 rounded-xl overflow-hidden">
                 <Image
-                  src="/sec-about.jpg"
+                  src="/sec-about-min.jpg"
                   alt="about hover"
                   width={600}
                   height={800}
@@ -92,7 +92,7 @@ export function AboutSection() {
             {/* Base image wrapper for blur */}
             <div className="image-wrapper w-full h-full">
               <Image
-                src={"/about.jpg"}
+                src={"/about-min.jpg"}
                 alt="about"
                 width={600}
                 height={800}
