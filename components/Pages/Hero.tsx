@@ -26,7 +26,7 @@ const Hero = () => {
             <div className="absolute top-0 left-0 w-4/5 h-4/5 z-20 rounded-full bg-primary/40" />
             <div className="hidden md:block rounded-xl w-full relative z-30 overflow-hidden hero-img">
               <Image
-                src="/hero.png"
+                src="/hero.webp"
                 width={900}
                 height={600}
                 priority
