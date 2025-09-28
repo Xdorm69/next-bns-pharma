@@ -24,7 +24,7 @@ export default function ProductPage() {
 
   if (isLoading)
     return (
-      <div className="cont">
+      <div className="cont py-24">
         <Skeleton className="h-8 w-3/4 mb-4" />
         <Skeleton className="h-64 w-full mb-4" />
         <Skeleton className="h-6 w-1/2" />
