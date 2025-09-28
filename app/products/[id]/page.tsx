@@ -49,11 +49,12 @@ export default function ProductPage() {
               className="object-contain"
             />
           </div>
-          <div className="flex gap-4 w-full mt-4">
+          {/* ADDITONAL IMG HOLDER  */}
+          {/* <div className="flex gap-4 w-full mt-4">
             <div className="bg-gray-500 w-20 h-20 rounded shadow" />
             <div className="bg-gray-500 w-20 h-20 rounded shadow" />
             <div className="bg-gray-500 w-20 h-20 rounded shadow" />
-          </div>
+          </div> */}
         </div>
 
         {/* Product Details */}
