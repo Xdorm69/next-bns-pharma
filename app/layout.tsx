@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
 import localFont from "next/font/local";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
 const equitanSans = localFont({
@@ -30,7 +31,6 @@ const brSonoma = localFont({
   ],
   variable: "--font-brsonoma",
 });
-
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bnspharmaceuticals.com"), // <-- your real domain
@@ -98,6 +98,7 @@ export default function RootLayout({
               <Toaster richColors duration={2000} />
             </ThemeProvider>
           </ReactQueryProvider>
+          <SpeedInsights />
         </SessionProviderWrapper>
       </body>
     </html>
