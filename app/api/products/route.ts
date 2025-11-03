@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
 
     data = parsed.data; // Use validated and parsed data
   } catch (err) {
+    console.error(err)
     const text = await request.text();
     console.error("Invalid JSON body:", text);
     return NextResponse.json(
