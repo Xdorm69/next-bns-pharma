@@ -67,9 +67,9 @@ export default function ProductPage() {
           )}
 
           {/* Price */}
-          {/* <p className="text-2xl font-semibold text-green-600">
+          <p className="text-2xl font-semibold text-green-600">
             ₹{data.price?.toFixed(2) ?? "N/A"}
-          </p> */}
+          </p>
 
           {/* Stats */}
           <div className="flex flex-wrap gap-4 text-gray-600 mt-2">
@@ -86,12 +86,12 @@ export default function ProductPage() {
                 {data.manufacturer || "Unknown"}
               </span>
             </Badge>
-            <Badge>
+            {/* <Badge>
               Stock:{" "}
               <span className="font-medium">
                 {data.stock ?? "Not specified"}
               </span>
-            </Badge>
+            </Badge> */}
             {/* <Badge variant={"destructive"}>
               Expiry:{" "}
               <span className="font-medium">
