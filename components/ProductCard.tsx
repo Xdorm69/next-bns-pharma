@@ -57,7 +57,7 @@ export function ProductCard({ data }: { data: Product }) {
       <CardFooter className="w-full flex justify-between items-center">
         {data.price && (
           <h1 className="font-mono font-bold text-lg text-primary">
-            Rs.{data.price}
+            MRP {data.price}
           </h1>
         )}
         <Button
