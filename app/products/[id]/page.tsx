@@ -68,7 +68,7 @@ export default function ProductPage() {
 
           {/* Price */}
           <p className="text-2xl font-semibold text-green-600">
-            ₹{data.price?.toFixed(2) ?? "N/A"}
+            MRP {data.price?.toFixed(2) ?? "N/A"}
           </p>
 
           {/* Stats */}
