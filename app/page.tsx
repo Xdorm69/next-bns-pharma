@@ -1,6 +1,6 @@
-
 import { AboutSection } from "@/components/Pages/AboutSection";
 import { BlogPreview } from "@/components/Pages/BlogSection";
+import BnsImageSection from "@/components/Pages/BnsImageSection";
 import { ContactForm } from "@/components/Pages/ContactForm";
 import { CTABanner } from "@/components/Pages/CTABanner";
 import HeroPage from "@/components/Pages/HeroPage";
@@ -37,6 +37,7 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <>
+      <BnsImageSection />
       <HeroPage />
       <AboutSection />
       <QualitiesSection />
