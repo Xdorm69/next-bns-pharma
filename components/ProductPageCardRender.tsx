@@ -7,7 +7,7 @@ export default async function ProductPageCardRender({
   searchParams,
   type,
 }: {
-  searchParams: any;
+  searchParams: { [key: string]: string | string[] | undefined };
   type: ProductCatType;
 }) {
   const search = searchParams?.search || "";
@@ -18,7 +18,10 @@ export default async function ProductPageCardRender({
 
   try {
     products = await prisma.product.findMany({
-      where: { type: type, name: { contains: search, mode: "insensitive" } },
+      where: {
+        type: type,
+        name: { contains: search as string, mode: "insensitive" },
+      },
       take,
       skip,
     });
