@@ -31,7 +31,7 @@ const page = () => {
         <div className="mt-4">
           <ProductPageCardRender
             type="PCD"
-            searchParams={{ take: 12, skip: 0 }}
+            searchParams={{ take: "12", skip: "0" }}
           />
         </div>
       </div>
