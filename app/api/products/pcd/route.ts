@@ -8,40 +8,32 @@ export async function GET(req: NextRequest) {
   const homepage = url.searchParams.get("homepage"); // ?homepage=true
   const session = await getServerSession(authOptions);
 
-  if (!session || homepage === "true") {
-    try {
-      const pcd = await prisma.product.findMany({
-        where: { type: 'PCD' },
-        take: 3,
-        orderBy: { clicks: "desc" },
-      });
-      return NextResponse.json({ success: true, data: pcd }, { status: 200 });
-    } catch (error) {
-      console.log(error);
-      return NextResponse.json(
-        { success: false, error: "Internal Server Error" },
-        { status: 500 }
-      );
-    }
-  }
+  // if (!session || homepage === "true") {
+  //   try {
+  //     const pcd = await prisma.product.findMany({
+  //       where: { type: 'PCD' },
+  //       take: 3,
+  //       orderBy: { clicks: "desc" },
+  //     });
+  //     return NextResponse.json({ success: true, data: pcd }, { status: 200 });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return NextResponse.json(
+  //       { success: false, error: "Internal Server Error" },
+  //       { status: 500 }
+  //     );
+  //   }
+  // }
   try {
     const searchParams = new URL(req.url).searchParams;
     const search = searchParams.get("search") as string;
-    const priceFilter = searchParams.get("price") as "asc" | "desc";
-    const expiryFilter = searchParams.get("expiry") as "asc" | "desc";
     const take = Number(searchParams.get("take")) || 10;
     const skip = Number(searchParams.get("skip")) || 0;
-
-    const orderBy: Array<{
-      price?: "asc" | "desc";
-      expiryDate?: "asc" | "desc";
-    }> = [];
-    if (priceFilter) orderBy.push({ price: priceFilter });
-    if (expiryFilter) orderBy.push({ expiryDate: expiryFilter });
-
+    
+    console.log("SEARCHPARAMS: " + searchParams);
+    
     const pcd = await prisma.product.findMany({
       where: { type: "PCD", name: { contains: search, mode: "insensitive" } },
-      orderBy: orderBy.length ? orderBy : undefined,
       take,
       skip,
     });

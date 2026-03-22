@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
   title: "Bns Pharma | Trusted Pharmaceutical Solutions",
   description:
     "Bns Pharma delivers high-quality pharmaceutical products with a focus on innovation, safety, and patient well-being. Explore our medicines, healthcare solutions, and research-driven products.",
-  icons: "/favicon.png",
+  icons: "/company_logo.png",
   keywords: [
     "Bns Pharma",
     "pharmaceutical company",
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
     siteName: "Bns Pharma",
     images: [
       {
-        url: "/favicon.png", // place your product/company logo in /public/logo.png
+        url: "/company_logo.png", // place your product/company logo in /public/logo.png
         width: 512,
         height: 512,
         alt: "Bns Pharma Logo",
@@ -82,11 +81,6 @@ export default function RootLayout({
       >
         <SessionProviderWrapper>
           <ReactQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem={false}
-            >
               <Navbar />
 
               <main className="font-sans">
@@ -96,7 +90,6 @@ export default function RootLayout({
               <Footer />
 
               <Toaster richColors duration={2000} />
-            </ThemeProvider>
           </ReactQueryProvider>
           <SpeedInsights />
         </SessionProviderWrapper>
