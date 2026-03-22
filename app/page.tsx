@@ -38,7 +38,7 @@ const Page = () => {
   return (
     <>
       <BnsImageSection />
-      <HeroPage />
+      {/* <HeroPage /> */}
       <AboutSection />
       <QualitiesSection />
       <ProductsPage />

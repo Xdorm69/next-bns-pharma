@@ -17,7 +17,6 @@ export function AboutSection() {
 
     const heading = containerRef.current.querySelector(".about-heading");
     const desc = containerRef.current.querySelector(".desc");
-    const image = containerRef.current.querySelector(".image");
     const innerImage =
       containerRef.current.querySelector<HTMLDivElement>(".sec-image");
 

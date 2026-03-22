@@ -1,4 +1,3 @@
-
 import { prisma } from "@/lib/prisma";
 import SearchBox from "./SearchBox";
 import { ProductCardRender } from "@/components/ProductCardRender";
@@ -15,7 +14,6 @@ export default async function ProductPageCardRender({
   const search = searchParams?.search || "";
   const take = Number(searchParams?.take) || 12;
   const skip = Number(searchParams?.skip) || 0;
-  
 
   let products: Product[] = [];
 
@@ -36,11 +34,7 @@ export default async function ProductPageCardRender({
         <SearchBox />
       </div>
 
-      <ProductCardRender
-        isAuthenticated={true}
-        isLoading={false}
-        data={products}
-      />
+      <ProductCardRender isLoading={false} data={products} />
     </div>
   );
 }

@@ -16,6 +16,7 @@ export default function Footer() {
               Committed to providing high-quality healthcare products with trust
               and innovation.
             </p>
+
             <div className="mt-4 text-sm text-muted-foreground">
               <p>(An ISO & GMP Certified Company)</p>
               <p>Ground Floor, Shop No. 19,</p>

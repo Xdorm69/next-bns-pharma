@@ -4,23 +4,18 @@ import { Product } from "@prisma/client";
 type ProductRenderType = {
   data: Product[];
   isLoading?: boolean;
-  isAuthenticated?: boolean;
 };
 
-export const ProductCardRender = ({
-  data,
-  isAuthenticated,
-  isLoading,
-}: ProductRenderType) => {
+export const ProductCardRender = ({ data, isLoading }: ProductRenderType) => {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* LOADING  */}
-        {isLoading && (
-          <ProductGridSkeleton isAuthenticated={isAuthenticated as boolean} />
-        )}
+        {isLoading && <ProductGridSkeleton />}
         {!isLoading && !data.length && (
-          <p className="text-muted-foreground text-2xl text-center col-span-1 sm:col-span-2 lg:col-span-3 my-16">No products found</p>
+          <p className="text-muted-foreground text-2xl text-center col-span-1 sm:col-span-2 lg:col-span-3 my-16">
+            No products found
+          </p>
         )}
         {!isLoading &&
           data.map((product: Product) => (
@@ -53,14 +48,10 @@ const ProductCardSkeleton = () => {
   );
 };
 
-export const ProductGridSkeleton = ({
-  isAuthenticated,
-}: {
-  isAuthenticated: boolean;
-}) => {
+export const ProductGridSkeleton = () => {
   return (
     <>
-      {Array.from({ length: isAuthenticated ? 9 : 3 }).map((_, i) => (
+      {Array.from({ length: 6 }).map((_, i) => (
         <ProductCardSkeleton key={i} />
       ))}
     </>
