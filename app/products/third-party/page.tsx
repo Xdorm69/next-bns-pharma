@@ -29,7 +29,7 @@ const page = () => {
   return (
     <section className="w-full min-h-screen my-10">
       <div className="cont">
-        <ProductPageCardRender type="third-party" searchParams={{}} />
+        <ProductPageCardRender type="THIRDPARTY" searchParams={{}} />
       </div>
     </section>
   );

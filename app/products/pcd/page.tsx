@@ -1,4 +1,3 @@
-
 import ProductPageCardRender from "@/components/ProductPageCardRender";
 import type { Metadata } from "next";
 
@@ -23,16 +22,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bnspharmaceuticals.com/pcd-products",
   },
-}
-
+};
 
 const page = () => {
-  
   return (
     <section className="w-full min-h-screen my-10">
       <div className="cont">
         <div className="mt-4">
-          <ProductPageCardRender type="pcd" searchParams={{take: 12, skip: 0}} />
+          <ProductPageCardRender
+            type="PCD"
+            searchParams={{ take: 12, skip: 0 }}
+          />
         </div>
       </div>
     </section>
