@@ -52,6 +52,7 @@ export const metadata: Metadata = {
       "Discover Bns Pharma's wide range of high-quality medicines and healthcare solutions trusted by professionals worldwide.",
     url: "https://bnspharmaceuticals.com",
     siteName: "Bns Pharma",
+    
     images: [
       {
         url: "/company_logo.png", // place your product/company logo in /public/logo.png
