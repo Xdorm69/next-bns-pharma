@@ -23,7 +23,7 @@ export function ProductCard({ data }: { data: Product }) {
           <Image
             src={data.thumbnail || data.image} // use thumbnail if available
             alt={data.name}
-            loading="lazy"
+            loading="eager"
             width={800}
             height={600}
             className="object-cover"

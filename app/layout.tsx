@@ -8,6 +8,7 @@ import SessionProviderWrapper from "@/components/providers/SessionProviderWrappe
 import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const equitanSans = localFont({
   src: [
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
       "Discover Bns Pharma's wide range of high-quality medicines and healthcare solutions trusted by professionals worldwide.",
     url: "https://bnspharmaceuticals.com",
     siteName: "Bns Pharma",
-    
+
     images: [
       {
         url: "/company_logo.png", // place your product/company logo in /public/logo.png
@@ -85,7 +86,9 @@ export default function RootLayout({
               <Navbar />
 
               <main className="font-sans">
-                {children}
+                <NuqsAdapter>
+                  {children}
+                </NuqsAdapter>
                 <Analytics />
               </main>
               <Footer />

@@ -1,12 +1,17 @@
 "use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Footer() {
+  const [year, setYear] = useState(2025);
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
-    <footer className="bg-card border-t border-gray-200 mt-12">
+    <footer className="bg-card border-t border-gray-200">
       <div className="cont py-10">
         <div className="flex flex-col md:flex-row justify-between gap-6">
           {/* Company */}
@@ -34,7 +39,7 @@ export default function Footer() {
               <ul className="space-y-1">
                 <li>
                   <Link
-                    href="/products/third-party"
+                    href="/products?type=THIRDPARTY"
                     className="text-muted-foreground/50 hover:text-primary"
                   >
                     Third Party
@@ -42,7 +47,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/products/pcd"
+                    href="/products?type=PCD"
                     className="text-muted-foreground/50 hover:text-primary"
                   >
                     PCD
@@ -102,8 +107,9 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
+
         <div className="border-t border-gray-200 mt-8 pt-4 text-center text-muted-foreground text-sm">
-          © {new Date().getFullYear()} BNS Pharmaceuticals. All rights reserved.
+          © {year} BNS Pharmaceuticals. All rights reserved.
         </div>
       </div>
     </footer>

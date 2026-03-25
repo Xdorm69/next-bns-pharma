@@ -43,7 +43,9 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
-          <ProductsDropdownMenu />
+          <Link href="/products" className="text-gray-700 hover:text-primary">
+            Products
+          </Link>
           <Link href="/about" className="text-gray-700 hover:text-primary">
             About
           </Link>
@@ -81,7 +83,9 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden flex flex-col space-y-2 px-4 pb-4">
-          <ProductsDropdownMenu />
+          <Link href="/products" className="text-gray-700 hover:text-primary">
+            Products
+          </Link>
           <Link href="/about" className="text-gray-700 hover:text-primary">
             About
           </Link>
@@ -104,24 +108,6 @@ export default function Navbar() {
 }
 
 /* --- Sub Components --- */
-
-const ProductsDropdownMenu = () => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="ghost" className="flex items-center gap-1">
-        Products <ChevronDown className="w-4 h-4" />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent>
-      <Link href="/products/third-party">
-        <DropdownMenuItem>Third Party</DropdownMenuItem>
-      </Link>
-      <Link href="/products/pcd">
-        <DropdownMenuItem>PCD</DropdownMenuItem>
-      </Link>
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
 
 const AdminDropdownMenu = () => {
   const router = useRouter();
