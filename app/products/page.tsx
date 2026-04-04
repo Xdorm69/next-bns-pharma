@@ -8,6 +8,7 @@ import ProductTypeFilter from "./_components/filters/ProductTypeFilter";
 import TypeFilter from "./_components/filters/TypeFilter";
 import PaginationBtns from "@/components/PaginationBtns";
 import { prisma } from "@/lib/prisma";
+import { getProducts } from "@/server/products";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -28,7 +29,12 @@ const Page = async ({ searchParams }: pageProps) => {
     updateTag("products");
   };
 
-  const countProducts = await prisma.product.count();
+  const products = await getProducts({
+    search,
+    productType,
+    type,
+    page: page || 1,
+  });
 
   return (
     <section className="min-h-screen bg-gray-100 flex">
@@ -47,12 +53,13 @@ const Page = async ({ searchParams }: pageProps) => {
               productType={productType}
               type={type}
               page={page ?? 1}
+              products={products}
             />
           </Suspense>
         </div>
         <div className="mt-4">
           <PaginationBtns
-            totalPages={Math.ceil(countProducts / ITEMS_PER_PAGE)}
+            totalPages={Math.ceil(products.length / ITEMS_PER_PAGE)}
           />
         </div>
       </main>

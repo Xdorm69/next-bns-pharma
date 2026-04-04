@@ -3,13 +3,13 @@ import { getProducts } from "@/server/products";
 import { Product } from "@prisma/client";
 
 type ProductListProps = {
+  products: Product[];
   search?: string;
   productType: string;
   type: string;
   page: number;
 };
-const ProductsList = async ({ search, productType, type, page }: ProductListProps) => {
-  const products = await getProducts({ search, productType, type, page });
+const ProductsList = async ({ search, productType, type, page, products }: ProductListProps) => {
   if (!products.length) {
     return (
       <div className="text-center py-12">
