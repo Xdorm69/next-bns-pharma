@@ -15,7 +15,7 @@ import { Copy } from "lucide-react";
 import { toast } from "sonner";
 import TableFilters from "@/components/TableFilters";
 import { useSession } from "next-auth/react";
-import { PaginationBtns } from "@/components/PaginationBtns";
+import PaginationBtns from "@/components/PaginationBtns";
 
 const RenderProductTable = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -170,11 +170,7 @@ const RenderProductTable = () => {
         loading={isLoading}
         error={isError ? (error as Error)?.message : null}
       />
-      <PaginationBtns
-        page={page}
-        setPage={setPage}
-        isLastPage={products.length < max}
-      />
+      <PaginationBtns totalPages={Math.ceil(products?.length || 0 / max)} />
     </div>
   );
 };
