@@ -1,4 +1,3 @@
-import React from "react";
 import RenderProductTable from "./_components/RenderProductTable";
 
 const page = () => {
