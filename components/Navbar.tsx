@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,9 +20,25 @@ import Image from "next/image";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileNav, setMobileNav] = useState(false);
   const session = useSession();
   const isAdmin = session?.data?.user?.role === "ADMIN";
   const router = useRouter();
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setMobileNav(window.innerWidth < 768);
+    };
+
+    // Set initial value
+    checkMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkMobile);
+
+    // Cleanup event listener
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -49,9 +65,12 @@ export default function Navbar() {
           <Link href="/about" className="text-gray-700 hover:text-primary">
             About
           </Link>
+          <Link href="/contact" className="text-gray-700 hover:text-primary">
+            Contact
+          </Link>
         </div>
 
-        {/* ADMING AND LOGOUT BTNS  */}
+        {/* ADMIN AND LOGOUT BTNS  */}
         <div className="flex gap-4 items-center">
           {isAdmin && <AdminDropdownMenu />}
 
@@ -65,7 +84,7 @@ export default function Navbar() {
               mobile
             />
           ) : (
-            <AuthBtns />
+            !mobileNav && <AuthBtns />
           )}
         </div>
 

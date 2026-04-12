@@ -5,31 +5,19 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
-import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Inter, Manrope } from "next/font/google";
 
-const equitanSans = localFont({
-  src: [
-    {
-      path: "/fonts/EquitanSans-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-  ],
-  variable: "--font-equitan",
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
-
-const brSonoma = localFont({
-  src: [
-    {
-      path: "/fonts/BRSonoma-SemiBold.otf",
-      weight: "600",
-      style: "normal",
-    },
-  ],
-  variable: "--font-brsonoma",
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
@@ -79,21 +67,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${equitanSans.variable} ${brSonoma.variable} antialiased`}
+        className={`${inter.variable} ${manrope.variable} antialiased font-sans`}
       >
         <SessionProviderWrapper>
           <ReactQueryProvider>
-              <Navbar />
+            <Navbar />
 
-              <main className="font-sans">
-                <NuqsAdapter>
-                  {children}
-                </NuqsAdapter>
-                <Analytics />
-              </main>
-              <Footer />
+            <NuqsAdapter>{children}</NuqsAdapter>
+            <Analytics />
 
-              <Toaster richColors duration={2000} />
+            <Footer />
+
+            <Toaster richColors duration={2000} />
           </ReactQueryProvider>
           <SpeedInsights />
         </SessionProviderWrapper>
