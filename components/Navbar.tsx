@@ -58,7 +58,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4 font-primary">
           <Link href="/products" className="text-gray-700 hover:text-primary">
             Products
           </Link>

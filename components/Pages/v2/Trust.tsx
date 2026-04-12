@@ -14,7 +14,7 @@ const data = [
   {
     id:2,
     author: "Dr. Maria",
-    dignitary: "Associate Professor of Chemistry",
+    dignitary: "Associate Professor",
     review:
       "BNS Pharma's state-of-the-art manufacturing facilities and rigorous quality control processes have consistently delivered high-quality products.",
   },
@@ -28,7 +28,7 @@ const data = [
   {
     id: 4,
     author: "Dr. Maria2",
-    dignitary: "Associate Professor of Chemistry",
+    dignitary: "Associate Professor",
     review:
       "BNS Pharma's state-of-the-art manufacturing facilities and rigorous quality control processes have consistently delivered high-quality products.",
   },
@@ -108,7 +108,7 @@ const Trust = () => {
                   ref={(el) => {
                     if (el) cardsRef.current[index] = el;
                   }}
-                  className="bg-muted-foreground/8 px-8 py-6 relative rounded-xl"
+                  className="bg-muted-foreground/8 px-8 py-6 relative rounded-xl flex flex-col justify-between"
                 >
                   <p className="italic">"{item.review}"</p>
 
@@ -127,7 +127,7 @@ const Trust = () => {
                       <h3 className="font-primary font-semibold">
                         {item.author}
                       </h3>
-                      <p className="text-muted-foreground -mt-1">
+                      <p className="text-muted-foreground text-xs -mt-1">
                         {item.dignitary}
                       </p>
                     </div>

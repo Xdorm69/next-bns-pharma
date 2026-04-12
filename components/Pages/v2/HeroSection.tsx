@@ -37,7 +37,7 @@ export const HeroSection = () => {
             width={500}
             height={500}
             loading="eager"
-            className="w-full h-full object-cover rounded-xs"
+            className="w-full h-full object-cover rounded-xs grayscale"
           />
 
           {/* PURITY BANNER */}
