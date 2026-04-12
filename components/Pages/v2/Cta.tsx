@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Cta = () => {
   return (
     <section className="bg-primary relative py-12 overflow-hidden">
@@ -12,12 +14,12 @@ const Cta = () => {
             Into Your HealthCare Network.
           </h1>
           <div className="flex gap-2 mt-4">
-            <button className="btn btn-secondary">
+            <Link href={'/contact'} className="btn btn-secondary">
               Request Institutional Portal
-            </button>
-            <button className="btn btn-outline text-white">
+            </Link>
+            <Link href={'/contact'} className="btn btn-outline text-white">
               Speak with Director
-            </button>
+            </Link>
           </div>
         </div>
       </div>
