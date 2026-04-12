@@ -2,12 +2,12 @@ const Cta = () => {
   return (
     <section className="bg-primary relative py-12 overflow-hidden">
       {/* LIGHTER TRI TOP-R */}
-      <div className="hidden md:block bg-white/20 absolute top-0 right-0 -rotate-45 w-44 h-44" />
+      <div className="bg-white/20 absolute top-0 right-0 -rotate-45 w-44 h-44" />
 
       <div className="container">
         {/* CONTENT  */}
         <div>
-          <h1 className="heading-1 text-white font-bold">
+          <h1 className="heading-1 text-white font-bold text-center md:text-left">
             Integrate Our Clinical Expertise <br />
             Into Your HealthCare Network.
           </h1>

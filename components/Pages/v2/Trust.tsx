@@ -16,7 +16,7 @@ const Trust = () => {
   return (
     <section className="py-12">
       <div className="container">
-        <div className="flex">
+        <div className="flex flex-col md:flex-row gap-2">
           {/* FIRST BLOCK INTRO  */}
           <div>
             <h2 className="heading-2">Institutional Trust</h2>
@@ -30,7 +30,7 @@ const Trust = () => {
           {/* OTHER CARDS  */}
           {data.map((item, index) => (
             <div
-              className="bg-muted-foreground/8 px-8 py-6 mr-2 relative"
+              className="bg-muted-foreground/8 px-8 py-6 relative"
               key={index}
             >
               <p className="italic">"{item.review}"</p>
