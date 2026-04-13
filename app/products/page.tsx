@@ -31,15 +31,15 @@ const Page = async ({ searchParams }: PageProps) => {
         </div>
 
         <div>
-          <ProductSkeletonFallback />
-          {/* <Suspense key={listKey} fallback={<ProductSkeletonFallback />}>
+          {/* <ProductSkeletonFallback /> */}
+          <Suspense key={listKey} fallback={<ProductSkeletonFallback />}>
             <ProductsList
               search={search}
               type={type}
               category={category}
               page={page as number}
             />
-          </Suspense> */}
+          </Suspense>
         </div>
       </div>
     </section>

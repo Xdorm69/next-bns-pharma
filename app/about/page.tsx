@@ -165,10 +165,10 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="bg-primary py-16 text-center text-white">
-        <h2 className="text-3xl font-bold mb-4 font-primary">
-          Partner with BNS Pharmaceuticals
+        <h2 className="heading-1 mb-4">
+          Partner with <br/> BNS Pharmaceuticals
         </h2>
-        <p className="mb-8 text-lg">
+        <p className="mb-8 text-md text-muted/60">
           Join us in shaping the future of healthcare with innovation and trust.
         </p>
         <Link
