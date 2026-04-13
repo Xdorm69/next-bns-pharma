@@ -1,3 +1,4 @@
+import { PageData } from "@/lib/Constants";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,30 +10,32 @@ export const HeroSection = () => {
         <div>
           {/* BANNER  */}
           <h4 className="uppercase px-4 py-2 bg-accent text-muted-foreground text-xs w-fit mx-auto md:mx-0">
-            institutional grade healthcare
+            {PageData.hero.banner}
           </h4>
           {/* HEADING  */}
           <h1 className="heading-1 mt-4 text-center md:text-left">
-            Delivering Quality Healthcare Solutions
+            {PageData.hero.heading}
           </h1>
           {/* DESCRIPTION  */}
           <p className="description mt-2 text-center md:text-left">
-            Advancing global health through rigrous clinical research, percision
-            manufacturing, and strategic therapeutic distribution. Our protocols
-            define next generation of medical excellence.
+            {PageData.hero.description}
           </p>
 
           {/* CTA  */}
           <div className="flex gap-4 mt-4 justify-center md:justify-start">
-            <Link href="/about" className="btn btn-primary">Get Started</Link>
-            <Link href="/contact" className="btn btn-secondary">Learn More</Link>
+            <Link href="/about" className="btn btn-primary">
+              Get Started
+            </Link>
+            <Link href="/contact" className="btn btn-secondary">
+              Learn More
+            </Link>
           </div>
         </div>
 
         {/* RIGHT  */}
         <div className="w-[900px] h-[400px] hidden md:block relative">
           <Image
-            src="/hero2.webp"
+            src={PageData.hero.image}
             alt="Hero"
             width={500}
             height={500}

@@ -1,7 +1,6 @@
-
-import { ITEMS_PER_PAGE } from "@/lib/constants";
+import { ITEMS_PER_PAGE } from "@/lib/Constants";
 import { prisma } from "@/lib/prisma";
-import { ProductCatType, ProductTypes } from "@prisma/client";
+import { Product, ProductCatType, ProductTypes } from "@prisma/client";
 import { cacheLife, cacheTag } from "next/cache";
 
 type FetchProductsProps = {
@@ -11,13 +10,18 @@ type FetchProductsProps = {
   page?: number;
 };
 
-function buildWhereClause({ search, type, category }: Omit<FetchProductsProps, "page">) {
+function buildWhereClause({
+  search,
+  type,
+  category,
+}: Omit<FetchProductsProps, "page">) {
   return {
     ...(search && {
       name: { contains: search, mode: "insensitive" as const },
     }),
     ...(type && type !== "all" && { type: type as ProductTypes }),
-    ...(category && category !== "all" && { category: category as ProductCatType }),
+    ...(category &&
+      category !== "all" && { category: category as ProductCatType }),
   };
 }
 
@@ -51,4 +55,21 @@ export async function getProducts({
   ]);
 
   return { products, total, totalPages: Math.ceil(total / ITEMS_PER_PAGE) };
+}
+
+export async function getProductById(id: string): Promise<Product | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product-${id}`);
+
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    return product;
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    throw error;
+  }
 }

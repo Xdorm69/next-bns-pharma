@@ -2,43 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
-
-const data = [
-  {
-    id: 1,
-    author: "Dr. Elena",
-    dignitary: "Professor of Pharmacology",
-    review:
-      "BNS Pharma's commitment to research and development has significantly advanced our understanding of drug delivery systems.",
-  },
-  {
-    id:2,
-    author: "Dr. Maria",
-    dignitary: "Associate Professor",
-    review:
-      "BNS Pharma's state-of-the-art manufacturing facilities and rigorous quality control processes have consistently delivered high-quality products.",
-  },
-  {
-    id: 3,
-    author: "Dr. Elena2",
-    dignitary: "Professor of Pharmacology",
-    review:
-      "BNS Pharma's commitment to research and development has significantly advanced our understanding of drug delivery systems.",
-  },
-  {
-    id: 4,
-    author: "Dr. Maria2",
-    dignitary: "Associate Professor",
-    review:
-      "BNS Pharma's state-of-the-art manufacturing facilities and rigorous quality control processes have consistently delivered high-quality products.",
-  },
-];
+import { PageData } from "@/lib/Constants";
 
 const ITEMS_PER_SLIDE = 2;
 
 const Trust = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardsRef = useRef<HTMLDivElement[]>([]);
+
+  const data = PageData.trust.testimonials;
 
   const totalSlides = Math.ceil(data.length / ITEMS_PER_SLIDE);
 
@@ -71,12 +43,8 @@ const Trust = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* LEFT INTRO */}
           <div className="max-w-sm">
-            <h2 className="heading-2">Institutional Trust</h2>
-            <p className="mt-4 text-sm">
-              Our partnerships with leading academic institutions and research
-              organizations demonstrate our commitment to scientific excellence
-              and innovation.
-            </p>
+            <h2 className="heading-2">{PageData.trust.heading}</h2>
+            <p className="mt-4 text-sm">{PageData.trust.description}</p>
 
             {/* BUTTONS */}
             <div className="flex gap-3 mt-6">

@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-card border-t border-gray-200">
-      <div className="cont py-10">
+      <div className="container py-10">
         <div className="flex flex-col md:flex-row justify-between gap-6">
           {/* Company */}
           <div>

@@ -4,6 +4,7 @@ import AnimatedParagraph from "./_components/AnimatedParagraph";
 import AnimatedCard from "./_components/AnimatedCard";
 import AnimatedTimelineItem from "./_components/AnimatedTimeline";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About Us | Bns Pharma",
@@ -30,15 +31,23 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div>
+    <div className="bg-background">
       {/* Hero */}
-      <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="cont text-center">
-          <AnimatedHeading className="text-4xl md:text-6xl font-bold">
+      <section className="py-20 relative">
+        <Image
+          src={"/about/bg.jpg"}
+          alt="bg"
+          width={800}
+          height={600}
+          priority
+          className="w-full h-full object-cover absolute left-0 top-0 z-0"
+        />
+        <div className="container text-center z-10 relative">
+          <AnimatedHeading className="text-4xl md:text-6xl font-bold text-white font-primary">
             Improving Lives Through Healthcare Innovation
           </AnimatedHeading>
           <AnimatedParagraph
-            className="mt-6 text-lg md:text-xl text-gray-600"
+            className="mt-6 text-lg md:text-xl text-gray-300"
             delay={0.2}
           >
             At BNS Pharmaceuticals, we are committed to advancing healthcare
@@ -48,7 +57,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12">
+      <section className="container py-12 grid md:grid-cols-2 gap-12">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
           <p className="text-gray-600 leading-relaxed">
@@ -67,8 +76,8 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="bg-gray-50 py-16">
-        <div className="max-w-6xl mx-auto px-6 text-center">
+      <section className="bg-gray-100 py-16">
+        <div className="container text-center">
           <h2 className="text-3xl font-bold mb-12">Our Core Values</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -97,7 +106,7 @@ export default function AboutPage() {
       </section>
 
       {/* FACTORY */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
+      <section className="container py-16">
         <div>
           <h1 className="text-3xl font-bold mb-12">Our Factory</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 auto-rows-min">
@@ -123,7 +132,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
+      <section className="container py-16">
         <h2 className="text-3xl font-bold mb-8 text-center">Our Journey</h2>
         <div className="space-y-8">
           {[
@@ -156,18 +165,18 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="bg-primary py-16 text-center text-white">
-        <h2 className="text-3xl font-bold mb-4">
+        <h2 className="text-3xl font-bold mb-4 font-primary">
           Partner with BNS Pharmaceuticals
         </h2>
         <p className="mb-8 text-lg">
           Join us in shaping the future of healthcare with innovation and trust.
         </p>
-        <a
+        <Link
           href="/contact"
-          className="px-6 py-3 bg-white text-primary rounded-full font-medium hover:bg-gray-100 transition"
+          className="btn btn-secondary"
         >
           Contact Us
-        </a>
+        </Link>
       </section>
     </div>
   );

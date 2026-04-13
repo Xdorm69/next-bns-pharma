@@ -1,95 +1,100 @@
-"use client";
 
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
-import { fetchApi } from "@/Hooks/api"; // your fetch wrapper
-import { Product } from "@prisma/client";
-import Skeleton from "@/components/ui/skeleton";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { getProductById } from "@/server/products";
+import { updateClick } from "./_actions/UpdateClick";
+import StarDisplay from "./_components/StarDisplay";
+import ReviewSkeleton from "./_components/ReviewSkeleton";
+import ReviewSection from "./_components/ReviewSection";
+import SuggestedSkeleton from "./_components/SuggestedSkeleton";
+import SuggestedProducts from "./_components/SuggestedProducts";
 
-export default function ProductPage() {
-  const { id } = useParams(); // get product id from URL
 
-  const { data, isLoading, isError } = useQuery<Product>({
-    queryKey: ["product", id],
-    queryFn: async () => {
-      const res = await fetchApi<Product>(`/api/products/${id}`);
-      if (!res.data) throw new Error("Product not found");
-      return res.data;
-    },
-    enabled: !!id, // only fetch if id exists
-  });
+type PageProps = { params: Promise<{ id: string }> };
 
-  if (isLoading)
-    return (
-      <div className="cont py-24">
-        <Skeleton className="h-8 w-3/4 mb-4" />
-        <Skeleton className="h-64 w-full mb-4" />
-        <Skeleton className="h-6 w-1/2" />
-      </div>
-    );
+export default async function ProductPage({ params }: PageProps) {
+  const { id } = await params;
+  const session = await getServerSession(authOptions);
 
-  if (isError || !data)
-    return <p className="text-center mt-8">Product not found</p>;
+  const product = await getProductById(id);
+
+  if (!product) return notFound();
+
+  await updateClick(id);
 
   return (
-    <section className="my-12 w-full pb-24 min-h-[90vh] flex justify-center items-start px-4">
-      <div className="cont w-full grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-        {/* Product Image */}
-        <div className="flex justify-center items-center h-full flex-col">
-          <div className="flex-1 h-[68vh] rounded shadow overflow-hidden">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-10">
+        {/* Product Hero */}
+        <div className="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row gap-8">
+          <div className="relative w-full md:w-96 h-72 rounded-xl overflow-hidden bg-gray-100 shrink-0">
             <Image
-              width={600}
-              height={500}
-              loading="lazy"
-              src={data.image}
-              alt={data.name}
-              className="object-contain"
+              src={product.thumbnail || product.image}
+              alt={product.name}
+              width={300}
+              height={300}
+              className="object-cover w-full h-full"
+              priority
             />
           </div>
-          {/* ADDITONAL IMG HOLDER  */}
-          {/* <div className="flex gap-4 w-full mt-4">
-            <div className="bg-gray-500 w-20 h-20 rounded shadow" />
-            <div className="bg-gray-500 w-20 h-20 rounded shadow" />
-            <div className="bg-gray-500 w-20 h-20 rounded shadow" />
-          </div> */}
-        </div>
 
-        {/* Product Details */}
-        <div className="flex flex-col gap-4">
-          <h1 className="text-4xl md:text-5xl font-bold font-mono">
-            {data.name}
-          </h1>
-          {data.description && (
-            <p className="text-gray-700 text-lg">{data.description}</p>
-          )}
+          <div className="flex-1 space-y-4">
+            <div>
+              <p className="text-sm text-gray-500 uppercase tracking-wide">
+                {product.category}
+              </p>
+              <h1 className="text-2xl font-bold mt-1">{product.name}</h1>
+              <p className="text-sm text-gray-400">{product.type}</p>
+            </div>
 
-
-          {/* Stats */}
-          <div className="flex flex-wrap gap-4 text-gray-600 mt-2">
-            <Badge>
-              Category:{" "}
-              <span className="font-medium">{data.category || "N/A"}</span>
-            </Badge>
-            <Badge>
-              Type: <span className="font-medium">{data.type}</span>
-            </Badge>
-          </div>
-
-          {/* Reviews */}
-          <div className="mt-4">
-            <p className="text-gray-800 font-medium">
-              Rating:{" "}
-              <span className="text-yellow-500">
-                {data.rating ?? "No ratings"}
+            {/* Star summary */}
+            <div className="flex items-center gap-2">
+              <StarDisplay rating={product.rating ?? 0} size="lg" />
+              <span className="text-sm text-gray-500">
+                {product.rating?.toFixed(1) ?? "No ratings"}{" "}
+                {product.reviewsCount
+                  ? `(${product.reviewsCount} reviews)`
+                  : ""}
               </span>
-            </p>
-            <p className="text-gray-600">Reviews: {data.reviewsCount}</p>
+            </div>
+
+            {product.description && (
+              <p className="text-gray-600 leading-relaxed">
+                {product.description}
+              </p>
+            )}
+
+            {product.ingredients && (
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-1">
+                  Ingredients
+                </p>
+                <p className="text-sm text-gray-500">{product.ingredients}</p>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Reviews — streamed */}
+        <Suspense fallback={<ReviewSkeleton />}>
+          <ReviewSection
+            productId={product.id}
+            userId={session?.user?.id}
+            userName={session?.user?.name}
+          />
+        </Suspense>
+
+        {/* Suggested — streamed */}
+        <Suspense fallback={<SuggestedSkeleton />}>
+          <SuggestedProducts
+            productId={product.id}
+            category={product.category}
+          />
+        </Suspense>
       </div>
-    </section>
+    </div>
   );
 }

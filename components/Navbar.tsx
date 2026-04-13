@@ -42,7 +42,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="cont flex justify-between h-16 items-center">
+      <div className="container flex justify-between h-16 items-center">
         {/* Logo */}
         <Link href="/" className="text-2xl font-bold font-mono">
           <div className="w-24 h-full">

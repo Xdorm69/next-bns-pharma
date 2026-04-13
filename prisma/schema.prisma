@@ -57,4 +57,18 @@ model Product {
   thumbnail     String?      // Optional: smaller image
   rating        Float?       // Optional: average rating
   reviewsCount  Int?         // Optional: number of reviews
+  reviews       Review[]     // Optional: array of reviews
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  productId String
+  userId    String
+  userName  String
+  rating    Int      // 1-5
+  comment   String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, userId]) // one review per user per product
 }
