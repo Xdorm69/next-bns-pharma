@@ -22,6 +22,7 @@ export default function Footer() {
                 src={"/company_logo.png"}
                 alt="logo"
                 width={100}
+                loading="eager"
                 height={100}
               />
               <p>BNS Pharmaceuticals</p>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,112 +11,115 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Menu, User } from "lucide-react";
+import { ChevronDown, Menu, User, X } from "lucide-react";
 import AuthBtns from "./AuthBtns";
 import { signOut, useSession } from "next-auth/react";
 import Skeleton from "./ui/skeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+const navbarLinks = [
+  { name: "Products", href: "/products" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileNav, setMobileNav] = useState(false);
   const session = useSession();
   const isAdmin = session?.data?.user?.role === "ADMIN";
-  const router = useRouter();
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setMobileNav(window.innerWidth < 768);
-    };
-
-    // Set initial value
-    checkMobile();
-
-    // Add event listener for window resize
-    window.addEventListener("resize", checkMobile);
-
-    // Cleanup event listener
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container flex justify-between h-16 items-center">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur">
+      <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold font-mono">
-          <div className="w-24 h-full">
-            <Image
-              src={"/company_logo.png"}
-              priority
-              width={90}
-              height={90}
-              alt="logo"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/company_logo.png"
+            alt="logo"
+            width={90}
+            height={90}
+            className="object-contain"
+            priority
+          />
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-4 font-primary">
-          <Link href="/products" className="text-gray-700 hover:text-primary">
-            Products
-          </Link>
-          <Link href="/about" className="text-gray-700 hover:text-primary">
-            About
-          </Link>
-          <Link href="/contact" className="text-gray-700 hover:text-primary">
-            Contact
-          </Link>
+        {/* Desktop Links */}
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+          {navbarLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="text-gray-600 hover:text-primary transition"
+            >
+              {link.name}
+            </Link>
+          ))}
         </div>
 
-        {/* ADMIN AND LOGOUT BTNS  */}
-        <div className="flex gap-4 items-center">
+        {/* Right Section */}
+        <div className="flex items-center gap-3">
           {isAdmin && <AdminDropdownMenu />}
 
-          {/* User / Auth */}
+          {/* Auth */}
           {session.status === "loading" ? (
             <Skeleton className="w-10 h-10 rounded-full" />
           ) : session.status === "authenticated" ? (
             <UserMenu
               user={session.data.user}
-              onLogout={() => signOut({ callbackUrl: "/" })} // optional: redirect to home after logout
-              mobile
+              onLogout={() => signOut({ callbackUrl: "/" })}
             />
           ) : (
-            !mobileNav && <AuthBtns />
+            <div className="hidden md:block">
+              <AuthBtns />
+            </div>
           )}
-        </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden">
+          {/* Mobile Toggle */}
           <Button
             variant="ghost"
+            size="icon"
+            className="md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            <Menu className="w-6 h-6" />
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </Button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden flex flex-col space-y-2 px-4 pb-4">
-          <Link href="/products" className="text-gray-700 hover:text-primary">
-            Products
-          </Link>
-          <Link href="/about" className="text-gray-700 hover:text-primary">
-            About
-          </Link>
+        <div className="md:hidden border-t bg-white px-4 py-4 space-y-4 animate-in fade-in slide-in-from-top-2">
+          {/* Links */}
+          {navbarLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-gray-700 hover:text-primary"
+            >
+              {link.name}
+            </Link>
+          ))}
+
+          {/* Admin */}
           {isAdmin && <AdminDropdownMenu />}
+
+          {/* Auth */}
           {session.status === "loading" ? (
             <Skeleton className="w-full h-10 rounded" />
           ) : session.status === "authenticated" ? (
-            <UserMenu
-              user={session.data.user}
-              onLogout={() => router.push("/auth/logout")}
-              mobile
-            />
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              Logout
+            </Button>
           ) : (
             <AuthBtns />
           )}
@@ -130,14 +133,15 @@ export default function Navbar() {
 
 const AdminDropdownMenu = () => {
   const router = useRouter();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center gap-1">
+        <Button variant="ghost" className="flex items-center gap-1 text-sm">
           Admin <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => router.push("/admin/add-product")}>
           Add Product
         </DropdownMenuItem>
@@ -155,27 +159,26 @@ const AdminDropdownMenu = () => {
 const UserMenu = ({
   user,
   onLogout,
-  mobile = false,
 }: {
-  user: { name: string; email: string; id: string };
+  user: { name?: string; email?: string };
   onLogout: () => void;
-  mobile?: boolean;
 }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button
         variant="outline"
-        className="rounded-full w-10 h-10 p-0 overflow-hidden"
+        size="icon"
+        className="rounded-full overflow-hidden"
       >
-        <User className="w-6 h-6" />
+        <User className="w-5 h-5" />
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent className={mobile ? "w-full" : "w-48"} align="end">
+    <DropdownMenuContent align="end" className="w-48">
       <DropdownMenuLabel>
         {user?.name || user?.email || "User"}
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem variant="destructive" onClick={onLogout}>
+      <DropdownMenuItem onClick={onLogout} className="text-red-500">
         Logout
       </DropdownMenuItem>
     </DropdownMenuContent>
