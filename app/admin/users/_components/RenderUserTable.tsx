@@ -117,19 +117,6 @@ const RenderUserTable = () => {
               />
             ),
           },
-          {
-            column: "subscribed",
-            render: (row) =>
-              row.subscribed ? (
-                <div className="bg-emerald-500 text-white w-fit px-2 py-1 rounded">
-                  Yes
-                </div>
-              ) : (
-                <div className="bg-red-400 text-white w-fit px-2 py-1 rounded">
-                  No
-                </div>
-              ),
-          },
           { column: "provider", render: (row) => row.provider },
         ]}
         loading={isLoading}
