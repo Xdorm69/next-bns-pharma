@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/pages/v2/HeroSection";
 import ProductDisplay from "@/components/pages/v2/ProductDisplay";
 import Trust from "@/components/pages/v2/Trust";
 
+
 const Page = () => {
   return (
     <main className="min-h-screen bg-background">
