@@ -1,15 +1,14 @@
 import { ProductCard } from "@/components/ProductCard";
-import { getProducts } from "@/server/products";
 import { Product } from "@prisma/client";
 
 type ProductListProps = {
   products: Product[];
   search?: string;
-  productType: string;
   type: string;
+  category: string;
   page: number;
 };
-const ProductsList = async ({ search, productType, type, page, products }: ProductListProps) => {
+const ProductsList = async ({ products }: ProductListProps) => {
   if (!products.length) {
     return (
       <div className="text-center py-12">

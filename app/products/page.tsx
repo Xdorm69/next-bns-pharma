@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import SearchFilter from "./_components/SearchFilter";
-import { updateTag } from "next/cache";
 import ProductsList from "./_components/ProductList";
 import { loadSearchParams } from "@/server/nuqs/NuqsLoader";
 import { SearchParams } from "nuqs/server";
@@ -8,6 +7,7 @@ import ProductTypeFilter from "./_components/filters/ProductTypeFilter";
 import TypeFilter from "./_components/filters/TypeFilter";
 import PaginationBtns from "@/components/PaginationBtns";
 import { getProducts } from "@/server/products";
+import RefetchProducts from "./_actions/RefetchProducts";
 
 type pageProps = {
   searchParams: Promise<SearchParams>;
@@ -18,39 +18,34 @@ export const ITEMS_PER_PAGE = 12;
 const Page = async ({ searchParams }: pageProps) => {
   const {
     search,
-    productType,
     type,
+    category,
     page = 1,
   } = await loadSearchParams(searchParams);
 
-  const refetchProducts = async () => {
-    "use server";
-    updateTag("products");
-  };
-
   const products = await getProducts({
     search,
-    productType,
     type,
+    category,
     page: page || 1,
   });
 
   return (
     <section className="min-h-screen bg-gray-100 flex">
-      <Sidebar refetchProducts={refetchProducts} />
+      <Sidebar refetchProducts={RefetchProducts} />
 
       {/* Main Content */}
-      <main className="p-6 ">
+      <div className="p-6 ">
         <div className="mb-4 flex flex-col sm:flex-row justify-between">
-          <SearchFilter refetchProducts={refetchProducts} />
+          <SearchFilter refetchProducts={RefetchProducts} />
         </div>
 
         <div className="bg-white rounded-2xl shadow p-6">
           <Suspense fallback={<ProductSkeletonFallback />}>
             <ProductsList
               search={search}
-              productType={productType}
               type={type}
+              category={category}
               page={page ?? 1}
               products={products}
             />
@@ -61,7 +56,7 @@ const Page = async ({ searchParams }: pageProps) => {
             totalPages={Math.ceil(products.length / ITEMS_PER_PAGE)}
           />
         </div>
-      </main>
+      </div>
     </section>
   );
 };

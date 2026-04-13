@@ -1,21 +1,24 @@
 import { ITEMS_PER_PAGE } from "@/app/products/page";
 import { prisma } from "@/lib/prisma";
 import { ProductCatType, ProductTypes } from "@prisma/client";
+import { cacheLife } from "next/cache";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 type fnProps = {
   search?: string;
-  productType?: string;
   type?: string;
+  category?: string;
   page?: number;
 };
+
 export async function getProducts({
   search,
-  productType,
   type,
+  category,
   page = 1,
 }: fnProps) {
   "use cache";
+  cacheLife("hours");
   cacheTag("products");
 
   // ✅ sanitize page
@@ -27,9 +30,8 @@ export async function getProducts({
         contains: search,
         mode: "insensitive",
       },
-      ProductType:
-        productType !== "all" ? (productType as ProductTypes) : undefined,
-      type: type !== "all" ? (type as ProductCatType) : undefined,
+      type: type !== "all" ? (type as ProductTypes) : undefined,
+      category: category !== "all" ? (category as ProductCatType) : undefined,
     },
     skip: (safePage - 1) * ITEMS_PER_PAGE,
     take: ITEMS_PER_PAGE,
