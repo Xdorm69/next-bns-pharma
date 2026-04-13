@@ -66,10 +66,6 @@ export default function ProductPage() {
             <p className="text-gray-700 text-lg">{data.description}</p>
           )}
 
-          {/* Price */}
-          <p className="text-2xl font-semibold text-green-600">
-            MRP {data.price?.toFixed(2) ?? "N/A"}
-          </p>
 
           {/* Stats */}
           <div className="flex flex-wrap gap-4 text-gray-600 mt-2">
@@ -78,28 +74,8 @@ export default function ProductPage() {
               <span className="font-medium">{data.category || "N/A"}</span>
             </Badge>
             <Badge>
-              Type: <span className="font-medium">{data.ProductType}</span>
+              Type: <span className="font-medium">{data.type}</span>
             </Badge>
-            <Badge>
-              Manufacturer:{" "}
-              <span className="font-medium">
-                {data.manufacturer || "Unknown"}
-              </span>
-            </Badge>
-            {/* <Badge>
-              Stock:{" "}
-              <span className="font-medium">
-                {data.stock ?? "Not specified"}
-              </span>
-            </Badge> */}
-            {/* <Badge variant={"destructive"}>
-              Expiry:{" "}
-              <span className="font-medium">
-                {data.expiryDate
-                  ? new Date(data.expiryDate).toLocaleDateString()
-                  : "N/A"}
-              </span>
-            </Badge> */}
           </div>
 
           {/* Reviews */}
@@ -110,7 +86,7 @@ export default function ProductPage() {
                 {data.rating ?? "No ratings"}
               </span>
             </p>
-            <p className="text-gray-600">Reviews: {data.reviewsCount ?? 0}</p>
+            <p className="text-gray-600">Reviews: {data.reviewsCount}</p>
           </div>
         </div>
       </div>
