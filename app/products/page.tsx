@@ -7,8 +7,6 @@ import MobileSidebar from "./_components/MobileSidebar";
 import TypeFilter from "./_components/filters/TypeFilter";
 import CategoryFilter from "./_components/filters/CategoryFilter";
 import { Filter } from "lucide-react";
-import ProductResults from "./_components/ProductResults";
-import { Button } from "@/components/ui/button";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -17,13 +15,7 @@ type PageProps = {
 const Page = async ({ searchParams }: PageProps) => {
   const { search, type, category, page } = await loadSearchParams(searchParams);
 
-  // DEBUG 1 — paste this, check terminal on every filter change
-  console.log("🔍 PAGE PARAMS:", { search, type, category, page });
-
   const listKey = `${search ?? ""}-${type ?? "all"}-${category ?? "all"}-${page}`;
-
-  // DEBUG 2 — if this doesn't change when you filter, Suspense key won't remount
-  console.log("🔑 LIST KEY:", listKey);
 
   return (
     <section className="min-h-screen bg-gray-100 flex">
@@ -39,15 +31,15 @@ const Page = async ({ searchParams }: PageProps) => {
         </div>
 
         <div>
-          {/* <ProductSkeletonFallback /> */}
-          <Suspense key={listKey} fallback={<ProductSkeletonFallback />}>
+          <ProductSkeletonFallback />
+          {/* <Suspense key={listKey} fallback={<ProductSkeletonFallback />}>
             <ProductsList
               search={search}
               type={type}
               category={category}
               page={page as number}
             />
-          </Suspense>
+          </Suspense> */}
         </div>
       </div>
     </section>
@@ -81,17 +73,19 @@ const DesktopSidebar = () => {
 // ---- Skeleton ----
 const ProductSkeletonFallback = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {[...Array(8)].map((_, index) => (
-        <div key={index} className="bg-white rounded-sm shadow p-6 w-full">
-          <div className="animate-pulse">
-            <div className="h-64 bg-gray-200 rounded-sm" />
-            <div className="h-4 bg-gray-200 rounded mt-4" />
-            <div className="h-4 bg-gray-200 rounded mt-2" />
-            <div className="h-4 bg-gray-200 rounded mt-2" />
+    <div className="mt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {[...Array(8)].map((_, index) => (
+          <div key={index} className="bg-white rounded-sm shadow p-6 w-full">
+            <div className="animate-pulse">
+              <div className="h-64 bg-gray-200 rounded-sm" />
+              <div className="h-4 bg-gray-200 rounded mt-4" />
+              <div className="h-4 bg-gray-200 rounded mt-2" />
+              <div className="h-4 bg-gray-200 rounded mt-2" />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
