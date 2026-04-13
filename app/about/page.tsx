@@ -35,7 +35,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="py-20 relative">
         <Image
-          src={"/about/bg.jpg"}
+          src={"/about/bg2.jpg"}
           alt="bg"
           width={800}
           height={600}
