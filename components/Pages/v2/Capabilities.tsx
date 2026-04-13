@@ -88,6 +88,7 @@ const Capabilities = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-8">
           {data.map((item, index) => (
             <div
+            key={index}
               className={cn(
                 "bg-white shadow-sm rounded-xs px-4 py-8 flex gap-4",
                 (index === 0 || index === 3) && "md:col-span-2",

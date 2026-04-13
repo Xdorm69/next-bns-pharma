@@ -7,7 +7,6 @@ import { SearchParams } from "nuqs/server";
 import ProductTypeFilter from "./_components/filters/ProductTypeFilter";
 import TypeFilter from "./_components/filters/TypeFilter";
 import PaginationBtns from "@/components/PaginationBtns";
-import { prisma } from "@/lib/prisma";
 import { getProducts } from "@/server/products";
 
 type pageProps = {

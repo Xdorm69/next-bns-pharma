@@ -55,11 +55,6 @@ export function ProductCard({ data }: { data: Product }) {
 
       {/* Footer */}
       <CardFooter className="w-full flex justify-between items-center">
-        {data.price && (
-          <h1 className="font-mono font-bold text-lg text-primary">
-            MRP {data.price}
-          </h1>
-        )}
         <Button
           variant={"outline"}
           onClick={() => {

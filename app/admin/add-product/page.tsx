@@ -13,7 +13,7 @@ const page = async () => {
         </div>
       </div>
     </section>
-  );
+  );  
 }
 
 export default page
