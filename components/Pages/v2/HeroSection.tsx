@@ -32,7 +32,7 @@ export const HeroSection = () => {
         {/* RIGHT  */}
         <div className="w-[900px] h-[400px] hidden md:block relative">
           <Image
-            src="/hero2.jpeg"
+            src="/hero2.webp"
             alt="Hero"
             width={500}
             height={500}
