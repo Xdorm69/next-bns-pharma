@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function Footer() {
   const [year, setYear] = useState(2025);
@@ -16,7 +17,15 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between gap-6">
           {/* Company */}
           <div>
-            <h2 className="text-2xl font-bold mb-2">BNS Pharmaceuticals</h2>
+            <div className="text-2xl font-bold mb-2">
+              <Image
+                src={"/company_logo.png"}
+                alt="logo"
+                width={100}
+                height={100}
+              />
+              <p>BNS Pharmaceuticals</p>
+            </div>
             <p className="text-muted-foreground max-w-sm">
               Committed to providing high-quality healthcare products with trust
               and innovation.

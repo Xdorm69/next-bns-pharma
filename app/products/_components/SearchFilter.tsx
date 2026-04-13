@@ -23,6 +23,7 @@ const SearchFilter = () => {
       <Input
         type="text"
         placeholder="Search"
+        className="bg-white min-w-[19rem]"
         defaultValue={search}
         onChange={(e) => handleChange(e.target.value)}
       />

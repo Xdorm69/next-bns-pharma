@@ -1,69 +1,58 @@
-"use client";
-
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Product } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function ProductCard({ data }: { data: Product }) {
-  const router = useRouter();
   return (
-    <Card className="w-full max-w-sm shadow-lg gap-4">
+    <div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden transition hover:shadow-lg">
       {/* Image */}
-      <CardHeader>
-        <div className="relative w-full h-48 rounded-md overflow-hidden bg-gray-100">
-          <Image
-            src={data.thumbnail || data.image} // use thumbnail if available
-            alt={data.name}
-            loading="eager"
-            width={800}
-            height={600}
-            className="object-cover"
-          />
-        </div>
-        <CardTitle className="text-lg font-semibold font-mono">
-          {data.name}
-        </CardTitle>
-        <CardDescription>
-          {data.type && (
-            <p className="text-sm text-muted-foreground">{data.type}</p>
-          )}
-        </CardDescription>
-      </CardHeader>
+      <div className="relative w-full h-48 sm:h-56 md:h-60 bg-gray-100">
+        <Image
+          src={data.image}
+          alt={data.name}
+          fill
+          className="object-contain p-4"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+        />
+      </div>
 
       {/* Content */}
-      <CardContent className="space-y-2">
-        {data.description && (
-          <p className=" line-clamp-2">{data.description}</p>
-        )}
+      <div className="p-4 flex flex-col gap-3">
+        {/* Title + Type */}
+        <div>
+          <h2 className="text-base sm:text-lg font-semibold line-clamp-1">
+            {data.name}
+          </h2>
+          {data.type && (
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              {data.type}
+            </p>
+          )}
+        </div>
 
-        {(data.rating !== undefined || data.reviewsCount !== undefined) && (
-          <p className="text-xs text-yellow-500">
-            {data.rating ? `⭐ ${data.rating.toFixed(1)}` : ""}{" "}
-            {data.reviewsCount ? `(${data.reviewsCount} reviews)` : ""}
+        {/* Description */}
+        {data.description && (
+          <p className="text-sm text-gray-600 line-clamp-2">
+            {data.description}
           </p>
         )}
-      </CardContent>
 
-      {/* Footer */}
-      <CardFooter className="w-full flex justify-between items-center">
-        <Button
-          variant={"outline"}
-          onClick={() => {
-            router.push(`/products/${data.id}`);
-          }}
+        {/* Rating */}
+        {(data.rating !== undefined || data.reviewsCount !== undefined) && (
+          <p className="text-xs text-yellow-500">
+            {data.rating ? `⭐ ${data.rating.toFixed(1)}` : ""}
+            {data.reviewsCount ? ` (${data.reviewsCount} reviews)` : ""}
+          </p>
+        )}
+
+        {/* Footer */}
+        <Link
+          href={`/products/${data.id}`}
+          className="mt-auto w-full text-center bg-primary text-white py-2 rounded-md text-sm hover:opacity-90 transition"
         >
           View More
-        </Button>
-      </CardFooter>
-    </Card>
+        </Link>
+      </div>
+    </div>
   );
 }

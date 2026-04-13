@@ -68,17 +68,19 @@ const DesktopSidebar = () => {
 // ---- Skeleton ----
 const ProductSkeletonFallback = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {[...Array(6)].map((_, index) => (
-        <div key={index} className="bg-white rounded-2xl shadow p-6 w-full">
-          <div className="animate-pulse">
-            <div className="h-96 bg-gray-200 rounded-lg" />
-            <div className="h-4 bg-gray-200 rounded mt-4" />
-            <div className="h-4 bg-gray-200 rounded mt-2" />
-            <div className="h-4 bg-gray-200 rounded mt-2" />
+    <div className="container">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {[...Array(6)].map((_, index) => (
+          <div key={index} className="bg-white rounded-2xl shadow p-6 w-full">
+            <div className="animate-pulse">
+              <div className="h-96 bg-gray-200 rounded-lg" />
+              <div className="h-4 bg-gray-200 rounded mt-4" />
+              <div className="h-4 bg-gray-200 rounded mt-2" />
+              <div className="h-4 bg-gray-200 rounded mt-2" />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

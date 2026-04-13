@@ -28,7 +28,7 @@ const ContactUsPage = () => {
   ];
   return (
     <div className="min-h-screen py-10">
-      <div className="cont">
+      <div className="container">
         <h1 className="text-3xl font-bold">Contact Us page</h1>
 
         {/* CARDS  */}
