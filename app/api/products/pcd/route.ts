@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     
     
     const pcd = await prisma.product.findMany({
-      where: { type: "PCD", name: { contains: search, mode: "insensitive" } },
+      where: { category: "PCD", name: { contains: search, mode: "insensitive" } },
       take,
       skip,
     });
