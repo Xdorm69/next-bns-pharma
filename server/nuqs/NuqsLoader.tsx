@@ -1,10 +1,18 @@
-import { parseAsInteger } from "nuqs";
-import { parseAsString, createLoader } from "nuqs/server";
+import { parseAsInteger, parseAsString, createLoader } from "nuqs/server";
 
 export const coordinatesSearchParams = {
-  search: parseAsString.withDefault(""),
-  type: parseAsString.withDefault("all"),
-  category: parseAsString.withDefault("all"),
-  page: parseAsInteger,
+  search: parseAsString
+    .withDefault("")
+    .withOptions({ shallow: false, scroll: false }),
+  type: parseAsString
+    .withDefault("all")
+    .withOptions({ shallow: false, scroll: true }),
+  category: parseAsString
+    .withDefault("all")
+    .withOptions({ shallow: false, scroll: true }),
+  page: parseAsInteger
+    .withDefault(1)
+    .withOptions({ shallow: false, scroll: true }),
 };
+
 export const loadSearchParams = createLoader(coordinatesSearchParams);

@@ -1,5 +1,5 @@
 "use client";
-import { useQueryState } from "nuqs";
+
 import {
   Select,
   SelectContent,
@@ -7,36 +7,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProductCatType } from "@prisma/client";
+import { ProductTypes } from "@prisma/client";
+import { useQueryState, parseAsStringEnum } from "nuqs";
 
-type filterProps = {
-  refetchProducts: () => void;
-};
-const TypeFilter = ({ refetchProducts }: filterProps) => {
-  const [type, setType] = useQueryState("type", { defaultValue: "all" });
-  const handleTypeChange = (t: ProductCatType) => {
-    setType(t);
-    refetchProducts();
+export default function TypeFilter() {
+  const [type, setType] = useQueryState(
+    "type",
+    parseAsStringEnum([...Object.values(ProductTypes), "all"])
+      .withDefault("all")
+      .withOptions({ shallow: false }),
+  );
+
+  const handleTypeChange = (value: ProductTypes | "all") => {
+    setType(value);
   };
+
   return (
     <div className="flex items-center justify-between">
-      <h1>Type</h1>
+      <h2>Product</h2>
 
       <Select value={type} onValueChange={handleTypeChange}>
         <SelectTrigger>
           <SelectValue placeholder="All Types" />
         </SelectTrigger>
+
         <SelectContent>
           <SelectItem value="all">All Types</SelectItem>
-          {["PCD", "THIRDPARTY"].map((type) => (
+          {Object.values(ProductTypes).map((type) => (
             <SelectItem key={type} value={type}>
-              {type.charAt(0).toUpperCase() + type.slice(1)}
+              {type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
     </div>
   );
-};
-
-export default TypeFilter;
+}

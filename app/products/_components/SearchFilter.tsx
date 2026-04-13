@@ -1,40 +1,30 @@
 "use client";
-import { useQueryState } from "nuqs";
+
+import { useQueryState, parseAsString } from "nuqs";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
-type SearchFilterProps = {
-  refetchProducts: () => void;
-};
+const SearchFilter = () => {
+  const [search, setSearch] = useQueryState(
+    "search",
+    parseAsString.withDefault("").withOptions({
+      shallow: false, // ← triggers full server re-render, skeleton shows
+      throttleMs: 500,
+    }),
+  );
 
-const SearchFilter = ({ refetchProducts }: SearchFilterProps) => {
-  const [search, setSearch] = useQueryState("search", {
-    defaultValue: "",
-  });
-
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
-
-  // ⏳ Debounce logic
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  // 🔄 Refetch when debounced value updates
-  useEffect(() => {
-    refetchProducts();
-  }, [debouncedSearch]);
+  // use-debounce is cleaner than useEffect chains
+  const handleChange = useDebouncedCallback((value: string) => {
+    setSearch(value);
+  }, 500);
 
   return (
     <div className="w-1/4">
       <Input
         type="text"
         placeholder="Search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        defaultValue={search}
+        onChange={(e) => handleChange(e.target.value)}
       />
     </div>
   );

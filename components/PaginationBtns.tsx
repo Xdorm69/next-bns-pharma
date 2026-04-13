@@ -16,12 +16,45 @@ type Props = {
 };
 
 export default function PaginationBtns({ totalPages }: Props) {
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [page, setPage] = useQueryState(
+    "page",
+    parseAsInteger.withDefault(1).withOptions({ shallow: false }),
+  );
+
+  if (totalPages <= 1) return null;
 
   const goToPage = (p: number) => {
     if (p < 1 || p > totalPages) return;
     setPage(p);
   };
+
+  // Build visible page numbers with ellipsis markers
+  const getPageNumbers = (): (number | "ellipsis")[] => {
+    // Show all pages if 7 or fewer
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const pages: (number | "ellipsis")[] = [1];
+
+    // Left ellipsis needed when current page is far from start
+    if (page > 3) pages.push("ellipsis");
+
+    // Window of pages around current
+    const start = Math.max(2, page - 1);
+    const end = Math.min(totalPages - 1, page + 1);
+
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    // Right ellipsis needed when current page is far from end
+    if (page < totalPages - 2) pages.push("ellipsis");
+
+    pages.push(totalPages);
+
+    return pages;
+  };
+
+  const pageNumbers = getPageNumbers();
 
   return (
     <Pagination>
@@ -30,26 +63,31 @@ export default function PaginationBtns({ totalPages }: Props) {
         <PaginationItem>
           <PaginationPrevious
             onClick={() => goToPage(page - 1)}
-            className={page === 1 ? "pointer-events-none opacity-50" : ""}
+            className={
+              page === 1
+                ? "pointer-events-none opacity-50 cursor-default"
+                : "cursor-pointer"
+            }
           />
         </PaginationItem>
 
-        {/* Page Numbers */}
-        {Array.from({ length: totalPages }, (_, i) => i + 1)
-          .slice(Math.max(0, page - 2), Math.min(totalPages, page + 1))
-          .map((p) => (
+        {/* Page numbers + ellipses */}
+        {pageNumbers.map((p, i) =>
+          p === "ellipsis" ? (
+            <PaginationItem key={`ellipsis-${i}`}>
+              <PaginationEllipsis />
+            </PaginationItem>
+          ) : (
             <PaginationItem key={p}>
-              <PaginationLink isActive={p === page} onClick={() => goToPage(p)}>
+              <PaginationLink
+                isActive={p === page}
+                onClick={() => goToPage(p)}
+                className="cursor-pointer"
+              >
                 {p}
               </PaginationLink>
             </PaginationItem>
-          ))}
-
-        {/* Ellipsis */}
-        {page + 2 < totalPages && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
+          ),
         )}
 
         {/* Next */}
@@ -57,7 +95,9 @@ export default function PaginationBtns({ totalPages }: Props) {
           <PaginationNext
             onClick={() => goToPage(page + 1)}
             className={
-              page === totalPages ? "pointer-events-none opacity-50" : ""
+              page === totalPages
+                ? "pointer-events-none opacity-50 cursor-default"
+                : "cursor-pointer"
             }
           />
         </PaginationItem>
