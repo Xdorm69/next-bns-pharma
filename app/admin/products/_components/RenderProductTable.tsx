@@ -107,11 +107,9 @@ const RenderProductTable = () => {
                 "-"
               ),
           },
-          { column: "price", render: (row) => row.price || "-" },
-          { column: "type", render: (row) => row.ProductType as ProductTypes },
-          { column: "type", render: (row) => row.type as ProductCatType },
+          { column: "type", render: (row) => row.type as ProductTypes },
+          { column: "category", render: (row) => row.category as ProductCatType },
           { column: "clicks", render: (row) => row.clicks || "0" },
-          { column: "category", render: (row) => row.category || "-" },
           {
             column: "Ingredients",
             render: (row) =>
@@ -120,25 +118,6 @@ const RenderProductTable = () => {
               ) : (
                 "-"
               ),
-          },
-          { column: "Manufacturer", render: (row) => row.manufacturer || "-" },
-          {
-            column: "Expiry Date",
-            render: (row) => {
-              return row.expiryDate ? (
-                <CopyHoverCard
-                  data={new Date(row.expiryDate).toString()}
-                  tag="Expiry Date"
-                />
-              ) : (
-                <div>NA</div>
-              );
-            },
-          },
-          { column: "stock", render: (row) => row.stock },
-          {
-            column: "isActive",
-            render: (row) => (row.isActive ? "Yes" : "No"),
           },
           {
             column: "image",
