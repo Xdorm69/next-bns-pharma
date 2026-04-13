@@ -24,7 +24,7 @@ export default function TypeFilter() {
 
   return (
     <div className="flex items-center justify-between">
-      <h2>Product</h2>
+      <h2 className="font-primary font-bold">Product</h2>
 
       <Select value={type} onValueChange={handleTypeChange}>
         <SelectTrigger>

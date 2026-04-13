@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function ProductCard({ data }: { data: Product }) {
   return (
-    <div className="w-full max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden transition hover:shadow-lg">
+    <div className="w-full max-w-sm mx-auto bg-white rounded-sm shadow-md overflow-hidden">
       {/* Image */}
       <div className="relative w-full h-48 sm:h-56 md:h-60 bg-gray-100">
         <Image
@@ -17,7 +17,7 @@ export function ProductCard({ data }: { data: Product }) {
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col gap-3">
+      <div className="p-4 flex flex-col gap-3 justify-between">
         {/* Title + Type */}
         <div>
           <h2 className="text-base sm:text-lg font-semibold line-clamp-1">
@@ -48,7 +48,7 @@ export function ProductCard({ data }: { data: Product }) {
         {/* Footer */}
         <Link
           href={`/products/${data.id}`}
-          className="mt-auto w-full text-center bg-primary text-white py-2 rounded-md text-sm hover:opacity-90 transition"
+          className="text-center btn btn-primary "
         >
           View More
         </Link>

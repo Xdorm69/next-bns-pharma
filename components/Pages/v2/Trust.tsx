@@ -78,7 +78,7 @@ const Trust = () => {
                   }}
                   className="bg-muted-foreground/8 px-8 py-6 relative rounded-xl flex flex-col justify-between"
                 >
-                  <p className="italic">"{item.review}"</p>
+                  <p className="italic lime-clamp-5">"{item.review}"</p>
 
                   {/* QUOTE MARK */}
                   <div className="absolute top-4 right-4 text-8xl text-muted-foreground/20">

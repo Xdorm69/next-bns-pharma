@@ -21,7 +21,7 @@ const CategoryFilter = () => {
   };
   return (
     <div className="flex items-center justify-between">
-      <h1>Type</h1>
+      <h2 className="font-primary font-bold">Type</h2>
 
       <Select value={category} onValueChange={handleCategoryChange}>
         <SelectTrigger>

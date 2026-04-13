@@ -6,6 +6,9 @@ import ProductsList from "./_components/ProductList";
 import MobileSidebar from "./_components/MobileSidebar";
 import TypeFilter from "./_components/filters/TypeFilter";
 import CategoryFilter from "./_components/filters/CategoryFilter";
+import { Filter } from "lucide-react";
+import ProductResults from "./_components/ProductResults";
+import { Button } from "@/components/ui/button";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -35,7 +38,8 @@ const Page = async ({ searchParams }: PageProps) => {
           <SearchFilter />
         </div>
 
-        <div className="bg-white rounded-2xl shadow p-4 md:p-6">
+        <div>
+          {/* <ProductSkeletonFallback /> */}
           <Suspense key={listKey} fallback={<ProductSkeletonFallback />}>
             <ProductsList
               search={search}
@@ -56,10 +60,19 @@ export default Page;
 const DesktopSidebar = () => {
   return (
     <aside className="hidden md:flex w-64 shrink-0 h-screen sticky top-0 bg-white shadow-lg border-r flex-col">
-      <div className="p-6 text-xl font-bold border-b">Filters</div>
-      <div className="px-6 py-4 overflow-y-auto flex-1">
+      <div className="p-6 text-xl font-bold border-b flex gap-2">
+        <Filter /> Filters
+      </div>
+      <div className="px-6 py-4 overflow-y-auto flex flex-col gap-2">
         <TypeFilter />
         <CategoryFilter />
+
+        {/* CLEAR FILTER BTN  */}
+        {/* <Button className="w-full" variant={'destructive'}>Clear Filters</Button> */}
+        <div className="border-l-4 border-primary bg-gray-100 text-xs font-primary px-4 mt-4 py-2">
+          Accessing the institutional catalouge required validated credentials.
+          Some molecules may have regional complaince restrictions.
+        </div>
       </div>
     </aside>
   );
@@ -68,19 +81,17 @@ const DesktopSidebar = () => {
 // ---- Skeleton ----
 const ProductSkeletonFallback = () => {
   return (
-    <div className="container">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {[...Array(6)].map((_, index) => (
-          <div key={index} className="bg-white rounded-2xl shadow p-6 w-full">
-            <div className="animate-pulse">
-              <div className="h-96 bg-gray-200 rounded-lg" />
-              <div className="h-4 bg-gray-200 rounded mt-4" />
-              <div className="h-4 bg-gray-200 rounded mt-2" />
-              <div className="h-4 bg-gray-200 rounded mt-2" />
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {[...Array(8)].map((_, index) => (
+        <div key={index} className="bg-white rounded-sm shadow p-6 w-full">
+          <div className="animate-pulse">
+            <div className="h-64 bg-gray-200 rounded-sm" />
+            <div className="h-4 bg-gray-200 rounded mt-4" />
+            <div className="h-4 bg-gray-200 rounded mt-2" />
+            <div className="h-4 bg-gray-200 rounded mt-2" />
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };
