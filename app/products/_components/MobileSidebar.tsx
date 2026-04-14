@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { X, SlidersHorizontal } from "lucide-react";
-import ProductTypeFilter from "./filters/TypeFilter";
-import TypeFilter from "./filters/CategoryFilter";
+import TypeFilter from "./filters/TypeFilter";
 import CategoryFilter from "./filters/CategoryFilter";
 
 export default function MobileSidebar() {
@@ -45,8 +44,13 @@ export default function MobileSidebar() {
         </div>
 
         <div className="px-6 py-4 overflow-y-auto h-full pb-20">
-          <CategoryFilter />
           <TypeFilter />
+          <CategoryFilter />
+          <div className="border-l-4 border-primary bg-gray-100 text-xs font-primary px-4 mt-4 py-2">
+            Accessing the institutional catalouge required validated
+            credentials. Some molecules may have regional complaince
+            restrictions.
+          </div>
         </div>
       </aside>
     </>
