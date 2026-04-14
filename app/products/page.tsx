@@ -1,12 +1,12 @@
-import { Suspense } from "react";
-import { SearchParams } from "nuqs/server";
-import { loadSearchParams } from "@/server/nuqs/NuqsLoader";
 import SearchFilter from "./_components/SearchFilter";
-import ProductsList, { ProductsListWrapper } from "./_components/ProductList";
 import MobileSidebar from "./_components/MobileSidebar";
 import TypeFilter from "./_components/filters/TypeFilter";
 import CategoryFilter from "./_components/filters/CategoryFilter";
+import ProductsList from "./_components/ProductList";
 import { Filter } from "lucide-react";
+import { Suspense } from "react";
+import { SearchParams } from "nuqs/server";
+import { loadSearchParams } from "@/server/nuqs/NuqsLoader";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
@@ -14,31 +14,27 @@ type PageProps = {
 
 const Page = async ({ searchParams }: PageProps) => {
   const { search, type, category, page } = await loadSearchParams(searchParams);
-
-  const listKey = `${search ?? ""}-${type ?? "all"}-${category ?? "all"}-${page}`;
+  const uniqueKey = `${search}-${type}-${category}-${page}`;
 
   return (
     <section className="min-h-screen bg-gray-100 flex">
-      {/* Desktop Sidebar */}
       <DesktopSidebar />
 
-      {/* Main Content */}
       <div className="flex-1 p-4 md:p-6 min-w-0">
         <div className="mb-4 flex items-center gap-3">
-          {/* Mobile sidebar trigger */}
           <MobileSidebar />
           <SearchFilter />
         </div>
 
         <div>
-          {/* <ProductSkeletonFallback /> */}
-
-          <ProductsListWrapper
-            search={search}
-            type={type}
-            category={category}
-            page={page as number}
-          />
+          <Suspense key={uniqueKey} fallback={<ProductSkeletonFallback />}>
+            <ProductsList
+              search={search}
+              type={type}
+              category={category}
+              page={page as number}
+            />
+          </Suspense>
         </div>
       </div>
     </section>
@@ -47,7 +43,6 @@ const Page = async ({ searchParams }: PageProps) => {
 
 export default Page;
 
-// ---- Sidebar (desktop only) ----
 const DesktopSidebar = () => {
   return (
     <aside className="hidden md:flex w-64 shrink-0 h-screen sticky top-0 bg-white shadow-lg border-r flex-col">
@@ -57,9 +52,6 @@ const DesktopSidebar = () => {
       <div className="px-6 py-4 overflow-y-auto flex flex-col gap-2">
         <TypeFilter />
         <CategoryFilter />
-
-        {/* CLEAR FILTER BTN  */}
-        {/* <Button className="w-full" variant={'destructive'}>Clear Filters</Button> */}
         <div className="border-l-4 border-primary bg-gray-100 text-xs font-primary px-4 mt-4 py-2">
           Accessing the institutional catalouge required validated credentials.
           Some molecules may have regional complaince restrictions.
@@ -69,7 +61,6 @@ const DesktopSidebar = () => {
   );
 };
 
-// ---- Skeleton ----
 export const ProductSkeletonFallback = () => {
   return (
     <div className="mt-16">

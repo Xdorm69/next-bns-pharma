@@ -4,26 +4,12 @@ import { getProducts } from "@/server/products";
 import { Product } from "@prisma/client";
 import ProductResults from "./ProductResults";
 
-
-// ProductsListWrapper.tsx
-import { Suspense } from "react";
-import { ProductSkeletonFallback } from "../page";
-
-
 type ProductListProps = {
   search?: string;
   type: string;
   category: string;
   page: number;
 };
-
-export const ProductsListWrapper = (props: ProductListProps) => {
-  return (
-    <Suspense fallback={<ProductSkeletonFallback />}>
-      <ProductsList {...props} />
-    </Suspense>
-  );
-}
 
 const ProductsList = async ({
   search,
@@ -61,7 +47,6 @@ const ProductsList = async ({
             <ProductCard key={product.id} data={product} />
           ))}
         </div>
-        {/* Moved outside grid so it spans full width */}
         <div className="mt-6">
           <PaginationBtns totalPages={totalPages} />
         </div>
