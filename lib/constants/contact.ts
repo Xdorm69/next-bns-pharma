@@ -23,20 +23,28 @@ const CardData = [
 
 const faqs = [
   {
-    q: "How do I book an appointment?",
-    a: "You can book an appointment by calling us at (+91) 7696291637, sending an email to bnspharma@gmail.com, or by filling the contact form above. We usually respond within a few hours.",
+    q: "What is PCD Pharma Franchise?",
+    a: "PCD Pharma Franchise is a business model where a pharmaceutical company grants rights to distributors or individuals to promote and sell its products in a specific area.",
   },
   {
-    q: "Do you offer home delivery for medicines?",
-    a: "Yes, we offer home delivery within select areas in Zirakpur and the Tricity region. Please contact us to check availability in your area.",
+    q: "Do you offer monopoly rights?",
+    a: "Yes, we provide monopoly-based PCD pharma franchise to our partners, ensuring exclusive marketing rights in their area.",
   },
   {
-    q: "Which insurance plans do you accept?",
-    a: "We work with most major health insurance providers. Please bring your insurance card when you visit or contact us in advance to verify coverage.",
+    q: "What products do you offer?",
+    a: "We offer a wide range of pharmaceutical products including tablets, capsules, syrups, injections, ointments, and more across multiple therapeutic segments.",
   },
   {
-    q: "Can I get a prescription refill online?",
-    a: "For refills, simply email your prescription to bnspharma@gmail.com or WhatsApp us. We'll confirm availability before preparing your order.",
+    q: "Is your company WHO-GMP certified?",
+    a: "Yes, our products are manufactured in WHO-GMP certified facilities, ensuring high quality and safety standards.",
+  },
+  {
+    q: "What is the minimum order requirement?",
+    a: "The minimum order depends on product selection, but we offer flexible and affordable investment options for new distributors.",
+  },
+  {
+    q: "Do you provide promotional support?",
+    a: "Yes, we provide promotional materials like visual aids, MR bags, product cards, and other marketing support.",
   },
 ];
 
