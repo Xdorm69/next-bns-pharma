@@ -5,7 +5,8 @@ import AnimatedCard from "./_components/AnimatedCard";
 import AnimatedTimelineItem from "./_components/AnimatedTimeline";
 import Image from "next/image";
 import Link from "next/link";
-import { PageData } from "@/lib/Constants";
+import { about } from "@/lib/constants/about";
+
 
 export const metadata: Metadata = {
   title: "About Us | Bns Pharma",
@@ -36,7 +37,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="py-20 relative">
         <Image
-          src={PageData.about.image}
+          src={about.image}
           alt="bg"
           width={800}
           height={600}

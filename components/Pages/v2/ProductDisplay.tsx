@@ -1,4 +1,5 @@
-import { PageData } from "@/lib/Constants";
+
+import { productDisplay } from "@/lib/constants/productDisplay";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +25,7 @@ const ProductDisplay = () => {
 
         {/* PRODUCTS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          {PageData.productDisplay.products.map((product, index) => (
+          {productDisplay.products.map((product, index) => (
             <div
               key={index}
               className="bg-white p-6 rounded-xs shadow relative"

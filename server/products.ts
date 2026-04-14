@@ -1,4 +1,4 @@
-import { ITEMS_PER_PAGE } from "@/lib/Constants";
+import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 import { Product, ProductCatType, ProductTypes } from "@prisma/client";
 import { cacheLife, cacheTag } from "next/cache";

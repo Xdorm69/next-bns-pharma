@@ -17,7 +17,7 @@ import { signOut, useSession } from "next-auth/react";
 import Skeleton from "./ui/skeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Images } from "@/lib/Constants";
+import { images } from "@/lib/constants/images";
 
 const navbarLinks = [
   { name: "Products", href: "/products" },
@@ -36,7 +36,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src={Images.shared.logo}
+            src={images.shared.logo}
             alt="logo"
             width={90}
             height={90}

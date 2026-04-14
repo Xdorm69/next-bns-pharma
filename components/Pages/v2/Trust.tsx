@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
-import { PageData } from "@/lib/Constants";
+import { trust } from "@/lib/constants/trust";
 
 const ITEMS_PER_SLIDE = 2;
 
@@ -10,7 +10,7 @@ const Trust = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardsRef = useRef<HTMLDivElement[]>([]);
 
-  const data = PageData.trust.testimonials;
+  const data = trust.testimonials;
 
   const totalSlides = Math.ceil(data.length / ITEMS_PER_SLIDE);
 
@@ -43,8 +43,8 @@ const Trust = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* LEFT INTRO */}
           <div className="max-w-sm">
-            <h2 className="heading-2">{PageData.trust.heading}</h2>
-            <p className="mt-4 text-sm">{PageData.trust.description}</p>
+            <h2 className="heading-2">{trust.heading}</h2>
+            <p className="mt-4 text-sm">{trust.description}</p>
 
             {/* BUTTONS */}
             <div className="flex gap-3 mt-6">

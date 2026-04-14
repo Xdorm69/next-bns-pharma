@@ -1,4 +1,4 @@
-import { PageData } from "@/lib/Constants";
+import { hero } from "@/lib/constants/hero";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,15 +10,15 @@ export const HeroSection = () => {
         <div>
           {/* BANNER  */}
           <h4 className="uppercase px-4 py-2 bg-accent text-muted-foreground text-xs w-fit mx-auto md:mx-0">
-            {PageData.hero.banner}
+            {hero.banner}
           </h4>
           {/* HEADING  */}
           <h1 className="heading-1 mt-4 text-center md:text-left">
-            {PageData.hero.heading}
+            {hero.heading}
           </h1>
           {/* DESCRIPTION  */}
           <p className="description mt-2 text-center md:text-left">
-            {PageData.hero.description}
+            {hero.description}
           </p>
 
           {/* CTA  */}
@@ -35,7 +35,7 @@ export const HeroSection = () => {
         {/* RIGHT  */}
         <div className="w-[900px] h-[400px] hidden md:block relative">
           <Image
-            src={PageData.hero.image}
+            src={hero.image}
             alt="Hero"
             width={500}
             height={500}
