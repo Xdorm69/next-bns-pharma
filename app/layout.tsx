@@ -1,15 +1,19 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Toaster } from "sonner";
-import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
+
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Inter, Manrope } from "next/font/google";
+
+import type { Metadata } from "next";
 import StructuredData from "./StructuredData";
+import { Inter, Manrope } from "next/font/google";
+
+import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
+import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
+import { Toaster } from "sonner";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -109,7 +113,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://bnspharmaceuticals.com",
   },
-
 };
 
 export default function RootLayout({

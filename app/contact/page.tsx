@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, MapPin, Phone } from "lucide-react";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const CardData = [
@@ -259,8 +260,8 @@ export default function ContactUsPage() {
                 <p className="text-muted-foreground text-sm mb-4">
                   Dhakoli, Zirakpur, Punjab
                 </p>
-                <a
-                  href="https://maps.google.com/?q=Dhakoli+Zirakpur+Punjab"
+                <Link
+                  href="https://www.google.com/maps/place/City+Court,+5,+National+Highway,+Gulmohar+Complex,+Guru+Gobind+Singh+Nagar,+Dhakoli,+Zirakpur,+Punjab+160104/data=!4m2!3m1!1s0x390f94b4320df62b:0x44e1016d809e40ac!18m1!1e1?entry=gps&coh=192189&g_ep=CAESBzI2LjE0LjkYACCenQoqlAEsOTQyNjc3MjcsOTQyOTIxOTUsOTQyOTk1MzIsMTAwNzk2NDk4LDEwMDc5Nzc1NywxMDA3OTY1MzUsOTQyODQ0NzIsOTQyODA1NzYsOTQyMDczOTQsOTQyMDc1MDYsOTQyMDg1MDYsOTQyMTg2NTMsOTQyMjk4MzksOTQyNzUxNjgsOTQyNzk2MTksMTAwNzk5MjQ2QgJJTg%3D%3D&skid=231b3f97-912c-49e8-aa3e-0e1efadab772&g_st=aw"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-white text-primary text-xs font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all"
@@ -278,7 +279,7 @@ export default function ContactUsPage() {
                     <line x1="10" y1="14" x2="21" y2="3" />
                   </svg>
                   Open in Google Maps
-                </a>
+                </Link>
               </div>
             </div>
 
