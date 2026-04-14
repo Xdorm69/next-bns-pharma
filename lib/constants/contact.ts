@@ -41,13 +41,13 @@ const faqs = [
 ];
 
 const hours = [
-  { day: "Monday – Friday", time: "9:00 AM – 7:00 PM", closed: false },
-  { day: "Saturday", time: "10:00 AM – 5:00 PM", closed: false },
+  { day: "Monday – Friday", time: "9:00 AM – 6:00 PM", closed: false },
+  { day: "Saturday", time: "9:00 AM – 5:00 PM", closed: false },
   { day: "Sunday", time: "Closed", closed: true },
 ];
 
 export const contact = {
-  availability: "Available Mon–Sat · 9AM – 7PM",
+  availability: "Available Mon–Fri · 9AM – 6PM",
   title: "We're Here to Help You Feel Better, Faster",
   description:
     "Reach out to our medical team — whether you have questions, need to book an appointment, or want to learn more about our services.",
