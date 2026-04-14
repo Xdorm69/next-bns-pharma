@@ -51,20 +51,22 @@ export async function getProducts({
 
   console.log("📦 getProducts called:", { where, safePage });
 
-  const products = await prisma.product.findMany({
-    where,
-    take: ITEMS_PER_PAGE,
-    skip: (safePage - 1) * ITEMS_PER_PAGE,
-    orderBy: { createdAt: "desc" },
-  });
+  const [products, count] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      take: ITEMS_PER_PAGE,
+      skip: (safePage - 1) * ITEMS_PER_PAGE,
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.product.count({ where }),
+  ]);
 
   return {
     products,
-    total: products.length, // ⚡ avoid count
-    totalPages: Math.ceil(products.length / ITEMS_PER_PAGE),
+    total: count,
+    totalPages: Math.ceil(count / ITEMS_PER_PAGE),
   };
 }
-
 
 export async function getProductById(id: string): Promise<Product | null> {
   "use cache";
