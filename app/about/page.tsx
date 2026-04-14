@@ -5,6 +5,7 @@ import AnimatedCard from "./_components/AnimatedCard";
 import AnimatedTimelineItem from "./_components/AnimatedTimeline";
 import Image from "next/image";
 import Link from "next/link";
+import { PageData } from "@/lib/Constants";
 
 export const metadata: Metadata = {
   title: "About Us | Bns Pharma",
@@ -35,7 +36,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="py-20 relative">
         <Image
-          src={"/about/bg2.jpg"}
+          src={PageData.about.image}
           alt="bg"
           width={800}
           height={600}
@@ -166,15 +167,12 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="bg-primary py-16 text-center text-white">
         <h2 className="heading-1 mb-4">
-          Partner with <br/> BNS Pharmaceuticals
+          Partner with <br /> BNS Pharmaceuticals
         </h2>
         <p className="mb-8 text-md text-muted/60">
           Join us in shaping the future of healthcare with innovation and trust.
         </p>
-        <Link
-          href="/contact"
-          className="btn btn-secondary"
-        >
+        <Link href="/contact" className="btn btn-secondary">
           Contact Us
         </Link>
       </section>

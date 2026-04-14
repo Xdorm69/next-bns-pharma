@@ -35,27 +35,36 @@ export async function getProducts({
   cacheLife("hours");
   cacheTag("products");
 
-  // Coerce safely — never trust incoming values
   const safePage = Math.max(1, Number(page) || 1);
-  const where = buildWhereClause({ search, type, category });
 
-  // DEBUG 3 — if this logs on EVERY request, cache is not working
-  // If it only logs once then stops, cache IS working
-  console.log("📦 getProducts called (cache miss):", { where, safePage });
-
-  // Run both queries in parallel
-  const [products, total] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      skip: (safePage - 1) * ITEMS_PER_PAGE,
-      take: ITEMS_PER_PAGE,
-      orderBy: { createdAt: "desc" },
+  const where = {
+    ...(search && {
+      name: {
+        startsWith: search, // 🔥 faster
+        mode: "insensitive" as const,
+      },
     }),
-    prisma.product.count({ where }),
-  ]);
+    ...(type && type !== "all" && { type: type as ProductTypes }),
+    ...(category &&
+      category !== "all" && { category: category as ProductCatType }),
+  };
 
-  return { products, total, totalPages: Math.ceil(total / ITEMS_PER_PAGE) };
+  console.log("📦 getProducts called:", { where, safePage });
+
+  const products = await prisma.product.findMany({
+    where,
+    take: ITEMS_PER_PAGE,
+    skip: (safePage - 1) * ITEMS_PER_PAGE,
+    orderBy: { createdAt: "desc" },
+  });
+
+  return {
+    products,
+    total: products.length, // ⚡ avoid count
+    totalPages: Math.ceil(products.length / ITEMS_PER_PAGE),
+  };
 }
+
 
 export async function getProductById(id: string): Promise<Product | null> {
   "use cache";

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Images } from "@/lib/Constants";
 
 export default function Footer() {
   const [year, setYear] = useState(2025);
@@ -19,11 +20,12 @@ export default function Footer() {
           <div>
             <div className="text-2xl font-bold mb-2">
               <Image
-                src={"/company_logo.png"}
+                src={Images.shared.logo}
                 alt="logo"
-                width={100}
-                loading="eager"
-                height={100}
+                width={150}
+                height={150}
+                loading="lazy"
+                className="w-18 h-18 object-cover"
               />
               <p>BNS Pharmaceuticals</p>
             </div>

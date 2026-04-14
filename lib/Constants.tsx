@@ -11,7 +11,12 @@ import Link from "next/link";
 export const ITEMS_PER_PAGE = 12;
 
 export const Images = {
-  hero: "/hero2.jpeg",
+  shared: {
+    logo: "https://ik.imagekit.io/amitoj24/BNS%20Pharma/About/company_logo.png?updatedAt=1776129856279",
+  },
+  hero: "https://ik.imagekit.io/amitoj24/BNS%20Pharma/Hero/hero.webp",
+  about:
+    "https://ik.imagekit.io/amitoj24/BNS%20Pharma/About/bg.jpg?updatedAt=1776130632277",
 };
 
 export const PageData = {
@@ -198,5 +203,8 @@ export const PageData = {
         ),
       },
     ],
+  },
+  about: {
+    image: Images.about,
   },
 };

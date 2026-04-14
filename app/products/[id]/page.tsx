@@ -17,13 +17,15 @@ type PageProps = { params: Promise<{ id: string }> };
 
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
-  const session = await getServerSession(authOptions);
-
-  const product = await getProductById(id);
+  const [session, product] = await Promise.all([
+    getServerSession(authOptions),
+    getProductById(id),
+  ]);
 
   if (!product) return notFound();
 
-  await updateClick(id);
+  // 🚀 non-blocking
+  void updateClick(id);
 
   return (
     <div className="min-h-screen bg-gray-50">

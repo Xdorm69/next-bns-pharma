@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { SearchParams } from "nuqs/server";
 import { loadSearchParams } from "@/server/nuqs/NuqsLoader";
 import SearchFilter from "./_components/SearchFilter";
-import ProductsList from "./_components/ProductList";
+import ProductsList, { ProductsListWrapper } from "./_components/ProductList";
 import MobileSidebar from "./_components/MobileSidebar";
 import TypeFilter from "./_components/filters/TypeFilter";
 import CategoryFilter from "./_components/filters/CategoryFilter";
@@ -32,14 +32,13 @@ const Page = async ({ searchParams }: PageProps) => {
 
         <div>
           {/* <ProductSkeletonFallback /> */}
-          <Suspense key={listKey} fallback={<ProductSkeletonFallback />}>
-            <ProductsList
-              search={search}
-              type={type}
-              category={category}
-              page={page as number}
-            />
-          </Suspense>
+
+          <ProductsListWrapper
+            search={search}
+            type={type}
+            category={category}
+            page={page as number}
+          />
         </div>
       </div>
     </section>
@@ -71,7 +70,7 @@ const DesktopSidebar = () => {
 };
 
 // ---- Skeleton ----
-const ProductSkeletonFallback = () => {
+export const ProductSkeletonFallback = () => {
   return (
     <div className="mt-16">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

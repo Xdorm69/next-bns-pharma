@@ -58,6 +58,10 @@ model Product {
   rating        Float?       // Optional: average rating
   reviewsCount  Int?         // Optional: number of reviews
   reviews       Review[]     // Optional: array of reviews
+
+  @@index([type])
+  @@index([category])
+  @@index([createdAt])
 }
 
 model Review {
