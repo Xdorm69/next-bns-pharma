@@ -119,10 +119,10 @@ export default function LoginPage() {
               </Button>
             </CardContent>
 
-            <CardFooter className="flex flex-col space-y-4">
+            <CardFooter className="flex flex-col space-y-4 mt-4">
               <Button
                 type="submit"
-                className="w-full bg-white text-black hover:bg-white/90"
+                className="w-full bg-white text-black hover:bg-white/90 "
                 disabled={isPending}
               >
                 {isPending ? "Logging in..." : "Login"}
