@@ -17,96 +17,127 @@ import { signIn } from "next-auth/react";
 import { LoginMutation } from "./_mutations/loginMutation";
 import Image from "next/image";
 
-
-
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Mutation for login
   const { mutate, isPending } = LoginMutation();
 
-  //handling submit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutate({ email, password });
   };
 
   return (
-    <div className="h-[calc(100vh-3rem)] flex items-center justify-center">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center font-semibold font-mono">Login Form</CardTitle>
-          <CardDescription className="text-muted-foreground text-center">
-            Enter your email and password to login. <br />If you don&apos;t have an account,
-            please <Link href="/auth/sign-up">sign up</Link>.
-          </CardDescription>
-        </CardHeader>
+    <div className="relative min-h-screen w-full overflow-hidden">
+      {/* 🌄 FULL BACKGROUND */}
+      <Image
+        src="/auth/bg.jpg"
+        alt="Background"
+        fill
+        priority
+        className="object-cover"
+      />
 
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                className="mt-2"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                className="mt-2"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+      {/* 🌫️ Overlay */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
 
-            {/* Social providers (Google, GitHub, etc.) */}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full mb-2 flex items-center gap-2"
-              onClick={() => signIn("google", { callbackUrl: "/" })}
-            >
-              <Image
-                width={20}
-                height={20}
-                alt="google"
-                src={"/google_auth.png"}
-              />{" "}
-              <p>Continue with Google</p>
-            </Button>
-          </CardContent>
-
-          <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full text-white"
-              disabled={isPending}
-            >
-              {isPending ? "Logging in..." : "Login"}
-            </Button>
-            <p className="text-sm text-center text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="text-blue-400 hover:underline"
-              >
-                Sign Up
+      {/* 🧊 CONTENT */}
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
+        {/* GLASS CARD */}
+        <Card
+          className="
+          w-full max-w-md
+          bg-white/10 backdrop-blur-xl
+          border border-white/20
+          shadow-2xl
+          text-white
+        "
+        >
+          <CardHeader>
+            <CardTitle className="text-2xl text-center font-semibold font-mono text-white">
+              Login Form
+            </CardTitle>
+            <CardDescription className="text-white/70 text-center">
+              Enter your email and password to login. <br />
+              If you don&apos;t have an account,{" "}
+              <Link href="/auth/sign-up" className="underline text-white">
+                sign up
               </Link>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
+              .
+            </CardDescription>
+          </CardHeader>
+
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              {/* Email */}
+              <div>
+                <Label htmlFor="email" className="text-white">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  className="mt-2 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <Label htmlFor="password" className="text-white">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  className="mt-2 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Google */}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full flex items-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+              >
+                <Image
+                  width={20}
+                  height={20}
+                  alt="google"
+                  src="/google_auth.png"
+                />
+                Continue with Google
+              </Button>
+            </CardContent>
+
+            <CardFooter className="flex flex-col space-y-4">
+              <Button
+                type="submit"
+                className="w-full bg-white text-black hover:bg-white/90"
+                disabled={isPending}
+              >
+                {isPending ? "Logging in..." : "Login"}
+              </Button>
+
+              <p className="text-sm text-center text-white/70">
+                Don&apos;t have an account?{" "}
+                <Link href="/auth/sign-up" className="text-white underline">
+                  Sign Up
+                </Link>
+              </p>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
