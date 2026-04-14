@@ -31,8 +31,9 @@ export async function submitContactForm(formData: FormData) {
 
 
     await resend.emails.send({
-      from: "BNS Pharma <onboarding@resend.dev>",
+      from: "BNS Pharmaceuticals <noreply@contact.bnspharmaceuticals.com>",
       to: receiverMail,
+      replyTo: data.email,
       subject: `New Contact: ${data.topic}`,
       html: contactEmailTemplate(data),
     });
