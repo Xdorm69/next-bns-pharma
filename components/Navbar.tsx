@@ -18,12 +18,7 @@ import Skeleton from "./ui/skeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { images } from "@/lib/constants/images";
-
-const navbarLinks = [
-  { name: "Products", href: "/products" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
-];
+import { navbar } from "@/lib/constants/navbar";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -47,7 +42,7 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-          {navbarLinks.map((link) => (
+          {navbar.links.map((link) => (
             <Link
               key={link.name}
               href={link.href}
@@ -96,7 +91,7 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t bg-white px-4 py-4 space-y-4 animate-in fade-in slide-in-from-top-2">
           {/* Links */}
-          {navbarLinks.map((link) => (
+          {navbar.links.map((link) => (
             <Link
               key={link.name}
               href={link.href}

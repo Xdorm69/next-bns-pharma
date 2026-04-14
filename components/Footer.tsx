@@ -1,10 +1,18 @@
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
 import { images } from "@/lib/constants/images";
+import { footer } from "@/lib/constants/footer";
+import { ProductCatType } from "@prisma/client";
+import { navbar } from "@/lib/constants/navbar";
 
+
+const socialIconMap = {
+  "Twitter": <Twitter/>,
+  "LinkedIn": <Linkedin/>,
+  "GitHub": <Github/>
+}
 export default function Footer() {
   return (
     <footer className="bg-card border-t border-gray-200">
@@ -24,15 +32,14 @@ export default function Footer() {
               <p>BNS Pharmaceuticals</p>
             </div>
             <p className="text-muted-foreground max-w-sm">
-              Committed to providing high-quality healthcare products with trust
-              and innovation.
+              {footer.description}
             </p>
 
             <div className="mt-4 text-sm text-muted-foreground">
-              <p>(An ISO & GMP Certified Company)</p>
-              <p>Ground Floor, Shop No. 19,</p>
-              <p>Wadhawa Nagar, Dhakoli,</p>
-              <p>Zirakpur SAS Nagar, Punjab - 140603</p>
+              <p>{footer.certification}</p>
+              <p>{footer.address.line1}</p>
+              <p>{footer.address.line2}</p>
+              <p>{footer.address.line3}</p>
             </div>
           </div>
 
@@ -43,22 +50,17 @@ export default function Footer() {
                 Products
               </h3>
               <ul className="space-y-1">
-                <li>
-                  <Link
-                    href="/products?category=THIRDPARTY"
-                    className="text-muted-foreground/50 hover:text-primary"
-                  >
-                    Third Party
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/products?category=PCD"
-                    className="text-muted-foreground/50 hover:text-primary"
-                  >
-                    PCD
-                  </Link>
-                </li>
+                {Object.values(ProductCatType).map((category) => (
+                  <li key={category}>
+                    <Link
+                      href={`/products?category=${category}`}
+                      className="text-muted-foreground/50 hover:text-primary"
+                    >
+                      {category.charAt(0).toUpperCase() +
+                        category.slice(1).toLowerCase()}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -67,22 +69,16 @@ export default function Footer() {
                 Company
               </h3>
               <ul className="space-y-1">
-                <li>
-                  <Link
-                    href="/about"
-                    className="text-muted-foreground/50 hover:text-primary"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="text-muted-foreground/50 hover:text-primary"
-                  >
-                    Contact
-                  </Link>
-                </li>
+                {navbar.links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-muted-foreground/50 hover:text-primary"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -93,21 +89,13 @@ export default function Footer() {
               Follow Us
             </h3>
             <div className="flex gap-3">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="https://twitter.com" target="_blank">
-                  <Twitter className="w-5 h-5 text-primary" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="https://linkedin.com" target="_blank">
-                  <Linkedin className="w-5 h-5 text-primary" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="https://github.com" target="_blank">
-                  <Github className="w-5 h-5 text-primary" />
-                </Link>
-              </Button>
+              {footer.socials.map((social) => (
+                <Button variant="ghost" size="icon" asChild key={social.name}>
+                  <Link href={social.url} target="_blank" className="bg-muted text-primary">
+                    {socialIconMap[social.name as keyof typeof socialIconMap]}
+                  </Link>
+                </Button>
+              ))}
             </div>
           </div>
         </div>
@@ -115,7 +103,7 @@ export default function Footer() {
         {/* Divider */}
 
         <div className="border-t border-gray-200 mt-8 pt-4 text-center text-muted-foreground text-sm">
-          © 2026 BNS Pharmaceuticals. All rights reserved.
+          {footer.copyright}
         </div>
       </div>
     </footer>
