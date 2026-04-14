@@ -1,18 +1,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Twitter } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import Image from "next/image";
 import { images } from "@/lib/constants/images";
 import { footer } from "@/lib/constants/footer";
 import { ProductCatType } from "@prisma/client";
 import { navbar } from "@/lib/constants/navbar";
 
-
 const socialIconMap = {
-  "Twitter": <Twitter/>,
-  "LinkedIn": <Linkedin/>,
-  "GitHub": <Github/>
-}
+  Instagram: <Instagram />,
+  Facebook: <Facebook />,
+};
+
 export default function Footer() {
   return (
     <footer className="bg-card border-t border-gray-200">
@@ -91,7 +90,11 @@ export default function Footer() {
             <div className="flex gap-3">
               {footer.socials.map((social) => (
                 <Button variant="ghost" size="icon" asChild key={social.name}>
-                  <Link href={social.url} target="_blank" className="bg-muted text-primary">
+                  <Link
+                    href={social.url}
+                    target="_blank"
+                    className="bg-muted text-primary"
+                  >
                     {socialIconMap[social.name as keyof typeof socialIconMap]}
                   </Link>
                 </Button>

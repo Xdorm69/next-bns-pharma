@@ -1,61 +1,18 @@
-"use client";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import { contact } from "@/lib/constants/contact";
+import { ContactForm } from "./_components/ContactForm";
+import React from "react";
+import { FaqSection } from "./_components/FaqSection";
 
-const CardData = [
-  {
-    icon: <MapPin className="w-5 h-5" />,
-    title: "Corporate Office 1",
-    description: "13 No. Second Floor, City Court, Dhakoli, Zirakpur, Punjab",
-  },
-  {
-    icon: <MapPin className="w-5 h-5" />,
-    title: "Corporate Office 2",
-    description: "Ground Floor – Shop No. 19 Wadhawa Nagar, Dhakoli",
-  },
-  {
-    icon: <Phone className="w-5 h-5" />,
-    title: "Phone",
-    description: "(+91) 7696291637\n7696779637",
-  },
-  {
-    icon: <Mail className="w-5 h-5" />,
-    title: "Email",
-    description: "bnspharma@gmail.com",
-  },
-];
-
-const faqs = [
-  {
-    q: "How do I book an appointment?",
-    a: "You can book an appointment by calling us at (+91) 7696291637, sending an email to bnspharma@gmail.com, or by filling the contact form above. We usually respond within a few hours.",
-  },
-  {
-    q: "Do you offer home delivery for medicines?",
-    a: "Yes, we offer home delivery within select areas in Zirakpur and the Tricity region. Please contact us to check availability in your area.",
-  },
-  {
-    q: "Which insurance plans do you accept?",
-    a: "We work with most major health insurance providers. Please bring your insurance card when you visit or contact us in advance to verify coverage.",
-  },
-  {
-    q: "Can I get a prescription refill online?",
-    a: "For refills, simply email your prescription to bnspharma@gmail.com or WhatsApp us. We'll confirm availability before preparing your order.",
-  },
-];
-
-const hours = [
-  { day: "Monday – Friday", time: "9:00 AM – 7:00 PM", closed: false },
-  { day: "Saturday", time: "10:00 AM – 5:00 PM", closed: false },
-  { day: "Sunday", time: "Closed", closed: true },
-];
+const contactIconMap = {
+  MapPin: <MapPin className="w-5 h-5" />,
+  Phone: <Phone className="w-5 h-5" />,
+  Mail: <Mail className="w-5 h-5" />,
+};
 
 export default function ContactUsPage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
   return (
     <div className="min-h-screen bg-muted/20">
       {/* ── HERO ─────────────────────────────────────── */}
@@ -68,16 +25,15 @@ export default function ContactUsPage() {
           {/* live badge */}
           <span className="inline-flex items-center gap-2 bg-green-500/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full mb-5 border border-green-400/30">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            Available Mon–Sat · 9AM – 7PM
+            {contact.availability}
           </span>
 
           <h1 className="font-primary text-4xl md:text-5xl font-bold leading-tight mb-5">
-            We're Here to Help You <br className="hidden md:block" />
-            Feel Better, Faster
+            {contact.title.slice(0, 18)} <br className="hidden md:block" />{" "}
+            {contact.title.slice(18)}
           </h1>
           <p className="text-primary-foreground/75 text-base md:text-lg max-w-lg mx-auto mb-8 leading-relaxed">
-            Reach out to our medical team — whether you have questions, need to
-            book an appointment, or want to learn more about our services.
+            {contact.description}
           </p>
 
           <div className="flex flex-wrap gap-3 justify-center">
@@ -100,7 +56,7 @@ export default function ContactUsPage() {
       {/* ── INFO CARDS ────────────────────────────────── */}
       <section className="container max-w-5xl mx-auto px-4 -mt-8 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {CardData.map((card, index) => (
+          {contact.cards.map((card, index) => (
             <Card
               key={index}
               className="group border border-border/60 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden"
@@ -109,7 +65,7 @@ export default function ContactUsPage() {
               <div className="h-0.5 w-0 bg-primary group-hover:w-full transition-all duration-300" />
               <CardHeader className="pb-2">
                 <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center text-primary mb-3 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                  {card.icon}
+                  {contactIconMap[card.icon as keyof typeof contactIconMap]}
                 </div>
                 <CardTitle className="font-primary text-base font-semibold">
                   {card.title}
@@ -128,96 +84,8 @@ export default function ContactUsPage() {
       {/* ── CONTACT FORM + MAP ───────────────────────── */}
       <section className="container max-w-5xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          {/* FORM */}
-          <div>
-            <p className="uppercase tracking-widest text-xs text-primary font-semibold mb-2">
-              Send a Message
-            </p>
-            <h2 className="font-primary text-3xl font-bold mb-2">
-              Get In Touch
-            </h2>
-            <p className="text-muted-foreground mb-8 leading-relaxed">
-              Have a question or want to book an appointment? Fill out the form
-              and our team will get back to you within 24 hours.
-            </p>
-
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium">First Name</label>
-                  <input
-                    type="text"
-                    placeholder="Rajesh"
-                    className="w-full px-4 py-3 border border-border rounded-xl text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
-                  />
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium">Last Name</label>
-                  <input
-                    type="text"
-                    placeholder="Kumar"
-                    className="w-full px-4 py-3 border border-border rounded-xl text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium">Email Address</label>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-3 border border-border rounded-xl text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium">Phone Number</label>
-                <input
-                  type="tel"
-                  placeholder="+91 00000 00000"
-                  className="w-full px-4 py-3 border border-border rounded-xl text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium">Subject</label>
-                <select className="w-full px-4 py-3 border border-border rounded-xl text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all text-muted-foreground appearance-none">
-                  <option value="" disabled>
-                    Select a topic
-                  </option>
-                  <option>Appointment Booking</option>
-                  <option>Prescription Enquiry</option>
-                  <option>Product / Medicine Info</option>
-                  <option>Billing & Insurance</option>
-                  <option>General Query</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium">Message</label>
-                <textarea
-                  rows={4}
-                  placeholder="Tell us how we can help you..."
-                  className="w-full px-4 py-3 border border-border rounded-xl text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50 resize-none"
-                />
-              </div>
-
-              <button className="self-start inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-7 py-3 rounded-xl text-sm hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
-                Send Message
-                <svg
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </button>
-            </div>
-          </div>
+          {/* CONTACT FORM  */}
+          <ContactForm />
 
           {/* MAP + HOURS */}
           <div className="flex flex-col gap-5">
@@ -291,7 +159,7 @@ export default function ContactUsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
-                {hours.map((h, i) => (
+                {contact.hours.map((h, i) => (
                   <div
                     key={i}
                     className="flex justify-between items-center text-sm border-b border-border/40 last:border-0 pb-3 last:pb-0"
@@ -315,51 +183,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────── */}
-      <section className="bg-muted/40 py-20 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="uppercase tracking-widest text-xs text-primary font-semibold mb-2">
-              FAQ
-            </p>
-            <h2 className="font-primary text-3xl md:text-4xl font-bold mb-3">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Quick answers to the questions we hear most often.
-            </p>
-          </div>
-
-          <Card className="border border-border/60">
-            <CardContent className="p-0 divide-y divide-border/60">
-              {faqs.map((faq, i) => (
-                <div
-                  key={i}
-                  className="px-6 py-5 cursor-pointer"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                >
-                  <div className="flex justify-between items-center gap-4">
-                    <h4 className="font-semibold text-sm">{faq.q}</h4>
-                    <svg
-                      className={`w-5 h-5 text-primary flex-shrink-0 transition-transform duration-300 ${openFaq === i ? "rotate-180" : ""}`}
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </div>
-                  {openFaq === i && (
-                    <p className="text-muted-foreground text-sm leading-relaxed mt-3">
-                      {faq.a}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      <FaqSection />
 
       {/* ── CTA STRIP ────────────────────────────────── */}
       <section className="bg-primary text-primary-foreground py-16 px-4 text-center relative overflow-hidden">
