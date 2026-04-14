@@ -23,10 +23,10 @@ export const HeroSection = () => {
 
           {/* CTA  */}
           <div className="flex gap-4 mt-4 justify-center md:justify-start">
-            <Link href="/about" className="btn btn-primary">
+            <Link href="/contact" className="btn btn-primary">
               Get Started
             </Link>
-            <Link href="/contact" className="btn btn-secondary">
+            <Link href="/about" className="btn btn-secondary">
               Learn More
             </Link>
           </div>
