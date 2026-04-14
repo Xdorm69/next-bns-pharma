@@ -110,12 +110,6 @@ export const metadata: Metadata = {
     canonical: "https://bnspharmaceuticals.com",
   },
 
-  // ── Verification ────────────────────────────────────────────────────────────
-  // Get these from: Google Search Console → Add Property → HTML tag method
-  verification: {
-    google: "PASTE_GOOGLE_SEARCH_CONSOLE_CODE_HERE",
-    // yandex: "...",
-  },
 };
 
 export default function RootLayout({
