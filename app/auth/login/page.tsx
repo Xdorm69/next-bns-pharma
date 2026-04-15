@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,19 +14,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { LoginMutation } from "./_mutations/loginMutation";
 import Image from "next/image";
 import { images } from "@/lib/constants/images";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate, isPending } = LoginMutation();
-
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ email, password });
+
+    startTransition(async () => {
+      try {
+        const res = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (res?.error) {
+          console.error(res.error);
+          return;
+        }
+
+        router.push("/");
+      } catch (err) {
+        console.error("Login failed", err);
+        toast.error("Failed to login");
+      }
+    });
   };
 
   return (

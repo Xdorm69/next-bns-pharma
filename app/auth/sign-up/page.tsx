@@ -22,15 +22,15 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupDataType, signupSchema } from "@/lib/validations/auth";
-import { useRegisterMutation } from "./_mutations/registerMutation";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Eye } from "lucide-react";
 import { images } from "@/lib/constants/images";
+import { toast } from "sonner";
 
 export default function SignupPage() {
-  const { mutate, isPending } = useRegisterMutation();
+  const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<SignupDataType>({
@@ -43,7 +43,27 @@ export default function SignupPage() {
   });
 
   function onSubmit(values: SignupDataType) {
-    mutate(values);
+    startTransition(async () => {
+      try {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to register");
+        }
+
+        const data = await res.json();
+        console.log(data);
+      } catch (err) {
+        toast.error((err as Error).message || "Failed to create user");
+        console.error("Registration failed", err);
+      }
+    });
     form.reset();
   }
 
