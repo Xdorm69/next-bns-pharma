@@ -62,4 +62,7 @@ export const contact = {
   cards: CardData,
   faqs: faqs,
   hours: hours,
+  mapLink:
+    "https://www.google.com/maps/place/City+Court,+5,+National+Highway,+Gulmohar+Complex,+Guru+Gobind+Singh+Nagar,+Dhakoli,+Zirakpur,+Punjab+160104/data=!4m2!3m1!1s0x390f94b4320df62b:0x44e1016d809e40ac!18m1!1e1?entry=gps&coh=192189&g_ep=CAESBzI2LjE0LjkYACCenQoqlAEsOTQyNjc3MjcsOTQyOTIxOTUsOTQyOTk1MzIsMTAwNzk2NDk4LDEwMDc5Nzc1NywxMDA3OTY1MzUsOTQyODQ0NzIsOTQyODA1NzYsOTQyMDczOTQsOTQyMDc1MDYsOTQyMDg1MDYsOTQyMTg2NTMsOTQyMjk4MzksOTQyNzUxNjgsOTQyNzk2MTksMTAwNzk5MjQ2QgJJTg%3D%3D&skid=231b3f97-912c-49e8-aa3e-0e1efadab772&g_st=aw",
+  mobile: "+91 7696291637",
 };

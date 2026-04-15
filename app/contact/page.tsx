@@ -129,7 +129,7 @@ export default function ContactUsPage() {
                   Dhakoli, Zirakpur, Punjab
                 </p>
                 <Link
-                  href="https://www.google.com/maps/place/City+Court,+5,+National+Highway,+Gulmohar+Complex,+Guru+Gobind+Singh+Nagar,+Dhakoli,+Zirakpur,+Punjab+160104/data=!4m2!3m1!1s0x390f94b4320df62b:0x44e1016d809e40ac!18m1!1e1?entry=gps&coh=192189&g_ep=CAESBzI2LjE0LjkYACCenQoqlAEsOTQyNjc3MjcsOTQyOTIxOTUsOTQyOTk1MzIsMTAwNzk2NDk4LDEwMDc5Nzc1NywxMDA3OTY1MzUsOTQyODQ0NzIsOTQyODA1NzYsOTQyMDczOTQsOTQyMDc1MDYsOTQyMDg1MDYsOTQyMTg2NTMsOTQyMjk4MzksOTQyNzUxNjgsOTQyNzk2MTksMTAwNzk5MjQ2QgJJTg%3D%3D&skid=231b3f97-912c-49e8-aa3e-0e1efadab772&g_st=aw"
+                  href={contact.mapLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-white text-primary text-xs font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all"
@@ -196,10 +196,10 @@ export default function ContactUsPage() {
             Our expert team is just a call or click away.
           </p>
           <a
-            href="tel:+917696291637"
+            href={`tel:${contact.mobile}`}
             className="inline-block bg-white text-primary font-bold px-8 py-3.5 rounded-xl text-sm hover:shadow-xl hover:-translate-y-0.5 transition-all"
           >
-            📞 +91 7696291637
+            📞 {contact.mobile}
           </a>
         </div>
       </section>

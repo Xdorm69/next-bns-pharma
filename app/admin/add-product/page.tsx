@@ -1,4 +1,3 @@
-import React from 'react'
 import AddProductsForm from '../_components/AddProductsForm';
 import { ProtectAdmin } from '@/lib/utils/protectAdmin';
 

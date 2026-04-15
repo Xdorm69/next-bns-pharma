@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { about } from "@/lib/constants/about";
 
-
 export const metadata: Metadata = {
   title: "About Us | Bns Pharma",
   description:
@@ -29,6 +28,10 @@ export const metadata: Metadata = {
   },
 };
 
+const getFactoryImage = (id: number) => {
+  return id === 8 ? `/factory/9.jpg` : `/factory/${id + 1}.webp`;
+};
+
 export default function AboutPage() {
   return (
     <div className="bg-background">
@@ -43,14 +46,9 @@ export default function AboutPage() {
           className="w-full h-full object-cover absolute left-0 top-0 z-0"
         />
         <div className="container text-center z-10 relative">
-          <h2 className="heading-1 text-background">
-            Improving Lives Through Healthcare Innovation
-          </h2>
-          <p
-            className="mt-6 text-lg md:text-xl text-gray-300"
-          >
-            At BNS Pharmaceuticals, we are committed to advancing healthcare
-            through science, innovation, and unwavering dedication to quality.
+          <h2 className="heading-1 text-background">{about.title} </h2>
+          <p className="mt-6 text-lg md:text-xl text-gray-300">
+            {about.description}
           </p>
         </div>
       </section>
@@ -59,18 +57,11 @@ export default function AboutPage() {
       <section className="container py-12 grid md:grid-cols-2 gap-12">
         <div>
           <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
-          <p className="text-gray-600 leading-relaxed">
-            To provide safe, effective, and affordable medicines that improve
-            patient outcomes and enhance quality of life worldwide.
-          </p>
+          <p className="text-gray-600 leading-relaxed">{about.mission}</p>
         </div>
         <div>
           <h2 className="text-2xl font-semibold mb-4">Our Vision</h2>
-          <p className="text-gray-600 leading-relaxed">
-            To become a trusted global leader in pharmaceuticals by consistently
-            innovating and embracing cutting-edge technologies in healthcare
-            delivery.
-          </p>
+          <p className="text-gray-600 leading-relaxed">{about.vision}</p>
         </div>
       </section>
 
@@ -79,25 +70,8 @@ export default function AboutPage() {
         <div className="container text-center">
           <h2 className="text-3xl font-bold mb-12">Our Core Values</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Innovation",
-                desc: "We embrace research and technology to deliver breakthrough healthcare solutions.",
-              },
-              {
-                title: "Quality",
-                desc: "Every product is developed with precision, adhering to global safety standards.",
-              },
-              {
-                title: "Trust",
-                desc: "We build lasting relationships with patients, partners, and healthcare providers.",
-              },
-            ].map((val, i) => (
-              <AnimatedCard
-                key={i}
-                title={val.title}
-                desc={val.desc}
-              />
+            {about.values.map((val, i) => (
+              <AnimatedCard key={i} title={val.title} desc={val.desc} />
             ))}
           </div>
         </div>
@@ -113,14 +87,12 @@ export default function AboutPage() {
                 <div key={id} className="rounded shadow overflow-hidden">
                   <Image
                     key={id}
-                    src={
-                      id === 8 ? `/factory/9.jpg` : `/factory/${id + 1}.webp`
-                    }
+                    src={getFactoryImage(id)}
                     alt={`Factory ${id + 1}`}
                     width={500}
+                    height={500}
                     loading="lazy"
                     className="w-full h-full object-cover"
-                    height={500}
                   />
                 </div>
               );
@@ -133,24 +105,7 @@ export default function AboutPage() {
       <section className="container py-16">
         <h2 className="text-3xl font-bold mb-8 text-center">Our Journey</h2>
         <div className="space-y-8">
-          {[
-            {
-              year: "2015",
-              event: "Founded with a vision to make healthcare accessible.",
-            },
-            {
-              year: "2018",
-              event: "Expanded product line with advanced generics.",
-            },
-            {
-              year: "2022",
-              event: "Launched research collaborations with global partners.",
-            },
-            {
-              year: "2025",
-              event: "Innovating with biotech-driven healthcare solutions.",
-            },
-          ].map((item, i) => (
+          {about.journey.map((item, i) => (
             <AnimatedTimelineItem
               key={i}
               year={item.year}

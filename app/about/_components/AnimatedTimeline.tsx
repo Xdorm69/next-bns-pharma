@@ -1,6 +1,3 @@
-
-
-
 export default function AnimatedTimelineItem({
   year,
   event,
@@ -11,8 +8,7 @@ export default function AnimatedTimelineItem({
   index: number;
 }) {
   return (
-    <div      className="flex items-start gap-4"
-    >
+    <div className="flex items-start gap-4">
       <span className="text-xl font-bold text-primary">{year}</span>
       <p className="text-gray-600">{event}</p>
     </div>

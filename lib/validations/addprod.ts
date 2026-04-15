@@ -17,14 +17,32 @@ const ProductCatTypeEnum = z.enum([
 ]);
 
 // Zod schema for product
-export const AddProductSchema = z.object({
+
+export const baseProductSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   description: z.string().optional(),
-  type: ProductTypesEnum,
-  category: ProductCatTypeEnum,
+  type: z
+    .string()
+    .min(1, "Type required")
+    .transform((val) => val as keyof typeof ProductTypesEnum),
+
+  category: z
+    .string()
+    .min(1, "Category required")
+    .transform((val) => val as keyof typeof ProductCatTypeEnum),
+
   ingredients: z.string().optional(),
-  image: z.string().min(1, "Image URL is required"),
   thumbnail: z.string().optional(),
+});
+
+export const AddProductSchema = baseProductSchema.extend({
+  image: z.string().min(1, "Image URL is required"),
+});
+
+export const AddProductClientSchema = baseProductSchema.extend({
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size > 0, "Image is required"),
 });
 
 export type AddProductSchemaType = z.infer<typeof AddProductSchema>;
