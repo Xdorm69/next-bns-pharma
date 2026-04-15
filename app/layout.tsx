@@ -7,7 +7,6 @@ import type { Metadata } from "next";
 import StructuredData from "./StructuredData";
 import { Inter, Manrope } from "next/font/google";
 
-import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 import SessionProviderWrapper from "@/components/providers/SessionProviderWrapper";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
@@ -127,7 +126,7 @@ export default function RootLayout({
         className={`${inter.variable} ${manrope.variable} antialiased font-sans`}
       >
         <SessionProviderWrapper>
-          <ReactQueryProvider>
+
             <Navbar />
             <NuqsAdapter>
               <StructuredData />
@@ -136,7 +135,7 @@ export default function RootLayout({
             <Analytics />
             <Footer />
             <Toaster richColors duration={2000} />
-          </ReactQueryProvider>
+        
           <SpeedInsights />
         </SessionProviderWrapper>
       </body>
