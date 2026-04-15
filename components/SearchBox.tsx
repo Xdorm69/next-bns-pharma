@@ -3,7 +3,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useDebounce } from "@/Hooks/useDebounce";
+import { useDebounce } from "use-debounce";
 
 export default function SearchBox() {
   const searchParams = useSearchParams();
@@ -12,7 +12,7 @@ export default function SearchBox() {
   const initialSearch = searchParams.get("search") || "";
   const [search, setSearch] = useState(initialSearch);
 
-  const debounced = useDebounce(search, 500);
+  const [debounced] = useDebounce(search, 500);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
