@@ -1,10 +1,11 @@
-import { authOptions } from "@/lib/auth";
+
+
+import { isAdmin } from "@/lib/auth";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { imagekit } from "@/lib/imagekit";
 import { prisma } from "@/lib/prisma";
 import { AddProductSchema } from "@/lib/validations/addprod";
 import { Product, ProductCatType, ProductTypes } from "@prisma/client";
-import { getServerSession } from "next-auth";
 import { updateTag } from "next/cache";
 import { cacheLife, cacheTag } from "next/cache";
 
@@ -41,11 +42,6 @@ function buildWhereClause({
     ...(category &&
       category !== "all" && { category: category as ProductCatType }),
   };
-}
-
-async function isAdmin(): Promise<boolean> {
-  const session = await getServerSession(authOptions);
-  return session?.user?.role === "ADMIN";
 }
 
 export async function getProducts({

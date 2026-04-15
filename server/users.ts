@@ -1,7 +1,8 @@
-import { authOptions } from "@/lib/auth";
+"use server";
+import { isAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { User } from "@prisma/client";
-import { getServerSession } from "next-auth";
+import { ActionResponse } from "@/types/actions";
+import { User, userRole } from "@prisma/client";
 
 interface getUserProps {
   search?: string;
@@ -21,31 +22,87 @@ export async function getUsers({
   page,
   take,
   skip,
-}: getUserProps): Promise<{
-  success: boolean;
-  users?: User[];
-  error?: string;
-}> {
+}: getUserProps): Promise<ActionResponse<User[]>> {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.role) {
-      throw new Error("Unauthorized");
+    const isAdminUser = await isAdmin();
+    if (!isAdminUser) {
+      return {
+        success: false,
+        error: "Unauthorized",
+      };
     }
-    if (session.user.role !== "admin") {
-      throw new Error("Unauthorized");
-    }
-    
+
     const users = await prisma.user.findMany({
       skip,
       take,
     });
 
-    return { success: true, users };
+    return { success: true, data: users};
   } catch (error) {
     console.log(error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to fetch users",
+    };
+  }
+}
+
+export async function updateUserRole(
+  id: string,
+  role: userRole,
+): Promise<ActionResponse<User>> {
+  const isAdminUser = await isAdmin();
+
+  if (!isAdminUser) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
+  try {
+    const user = await prisma.user.update({
+      where: { id },
+      data: { role },
+    });
+
+    return { success: true, data: user };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to update user role",
+    };
+  }
+}
+
+export async function deleteUser(
+  id: string,
+): Promise<ActionResponse<User>> {
+  const isAdminUser = await isAdmin();
+
+  if (!isAdminUser) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
+  try {
+    const user = await prisma.user.delete({
+      where: { id },
+    });
+
+    return { success: true, data: user };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to update user role",
     };
   }
 }

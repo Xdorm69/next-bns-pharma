@@ -55,7 +55,7 @@ export default function Navbar() {
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
-          {isAdmin && <AdminDropdownMenu />}
+          {isAdmin && <AdminBtn />}
 
           {/* Auth */}
           {session.status === "loading" ? (
@@ -103,7 +103,7 @@ export default function Navbar() {
           ))}
 
           {/* Admin */}
-          {isAdmin && <AdminDropdownMenu />}
+          {isAdmin && <AdminBtn />}
 
           {/* Auth */}
           {session.status === "loading" ? (
@@ -127,28 +127,11 @@ export default function Navbar() {
 
 /* --- Sub Components --- */
 
-const AdminDropdownMenu = () => {
-  const router = useRouter();
-
+const AdminBtn = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center gap-1 text-sm">
-          Admin <ChevronDown className="w-4 h-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => router.push("/admin/add-product")}>
-          Add Product
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push("/admin/users")}>
-          Users
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push("/admin/products")}>
-          Products
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Link href="/admin">
+      <Button>Admin</Button>
+    </Link>
   );
 };
 

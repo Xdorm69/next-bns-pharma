@@ -4,7 +4,9 @@ import { ArrowLeft, Users } from "lucide-react";
 import Link from "next/link";
 
 const page = async () => {
-  const initialUsers = await fetchUsersAction({ page: 0, take: 8 });
+  const res = await fetchUsersAction({ page: 0, take: 8 });
+
+  const initialUsers = res.success ? res.data : [];
 
   return (
     <section className="min-h-screen py-12 px-4">
@@ -31,7 +33,7 @@ const page = async () => {
           </div>
         </div>
 
-        <RenderUserTable initialUsers={initialUsers ?? []} />
+        <RenderUserTable initialUsers={initialUsers} />
       </div>
     </section>
   );

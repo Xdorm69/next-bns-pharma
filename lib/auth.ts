@@ -134,3 +134,8 @@ export const authOptions: NextAuthOptions = {
 //   "use cache";
 //   return await getServerSession(authOptions);
 // };
+
+export async function isAdmin(): Promise<boolean> {
+  const session = await getServerSession(authOptions);
+  return session?.user?.role === "ADMIN";
+}

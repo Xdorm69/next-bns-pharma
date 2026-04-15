@@ -18,7 +18,7 @@ const page = async () => {
           Back to Admin
         </Link>
 
-        <p className="text-sm text-muted-foreground mb-1">
+        <p className="text-sm text-muted-foreground mb-1 text-center">
           Logged in as{" "}
           <span className="font-medium text-foreground">{session?.user?.name}</span>
         </p>
