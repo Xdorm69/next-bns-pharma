@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 };
 
 const page = async () => {
-  // Initial server-side fetch — no loading state on first render
-  const initialProducts = await fetchProductsAction({ page: 0, take: 8 });
+  const initialProducts = await fetchProductsAction({ take: 100 });
 
   return (
     <section className="min-h-screen py-12 px-4">

@@ -6,8 +6,12 @@ import { ProductTypes, ProductCatType } from "@prisma/client";
 import { toast } from "sonner";
 import { AddProductClientSchema } from "@/lib/validations/addprod";
 import { addProductAction } from "../_actions/productActions";
-import { TextInput, TextAreaInput, SelectInput, FileInput } from "./FormInputs";
+
 import { Loader2, PackagePlus } from "lucide-react";
+import { TextInput } from "./TextInput";
+import { TextAreaInput } from "./TextAreaInput";
+import { SelectInput } from "./SelectInput";
+import { FileInput } from "./FileInput";
 
 export default function AddProductsForm() {
   const [isPending, startTransition] = useTransition();

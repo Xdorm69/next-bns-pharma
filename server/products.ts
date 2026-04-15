@@ -1,5 +1,3 @@
-
-
 import { isAdmin } from "@/lib/auth";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { imagekit } from "@/lib/imagekit";
@@ -51,7 +49,7 @@ export async function getProducts({
   category,
   active,
   page = 1,
-  skip = (page - 1) * take,
+  skip,
 }: FetchProductsProps) {
   "use cache";
   cacheLife("hours");
@@ -59,16 +57,18 @@ export async function getProducts({
 
   const safePage = Math.max(1, Number(page) || 1);
 
+  const safeSkip = (safePage - 1) * take;
+
   const where = {
     ...(search && {
       name: {
-        startsWith: search, // 🔥 faster
+        startsWith: search,
         mode: "insensitive" as const,
       },
     }),
-    ...(type && type !== "all" && { type: type as ProductTypes }),
+    ...(type && type != "all" && { type: type as ProductTypes }),
     ...(category &&
-      category !== "all" && { category: category as ProductCatType }),
+      category != "all" && { category: category as ProductCatType }),
     ...(active !== undefined && { isActive: active }),
   };
 
@@ -79,7 +79,7 @@ export async function getProducts({
     prisma.product.findMany({
       where,
       take,
-      skip,
+      skip: safeSkip,
       orderBy: { createdAt: "desc" },
     }),
     prisma.product.count({ where }),
@@ -195,7 +195,7 @@ export async function toggleProductActive(id: string, active: boolean) {
     //refresh cache
     updateTag("products");
     updateTag(`product-${id}`);
-    
+
     return product;
   } catch (error) {
     console.error("Error deleting product:", error);

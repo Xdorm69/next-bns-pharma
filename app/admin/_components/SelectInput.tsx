@@ -11,11 +11,13 @@ import {
 export function SelectInput({
   name,
   options,
+  label,
   placeholder,
   error,
   onChange,
 }: {
   name: string;
+  label:string;
   options: string[];
   placeholder: string;
   error?: string;

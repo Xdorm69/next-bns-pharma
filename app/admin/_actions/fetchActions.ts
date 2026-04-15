@@ -22,7 +22,7 @@ export type UserFilters = {
 };
 
 export async function fetchProductsAction(filters: ProductFilters) {
-  const { search = "", type = "", category = "", active = true, page = 0, take = 8 } = filters;
+  const { search = "", type = "", category = "", active = true, page = 1, take = 8 } = filters;
 
   return await getProducts({
     search,
@@ -30,7 +30,7 @@ export async function fetchProductsAction(filters: ProductFilters) {
     category,
     active,
     take,
-    skip: page * take,
+    skip: (page - 1) * take,
   });
 }
 

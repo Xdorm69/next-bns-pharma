@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Product, ProductCatType, ProductTypes } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,34 +43,31 @@ import {
   ToggleLeft,
   ToggleRight,
   Search,
-  RefreshCw,
-  Loader2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  fetchProductsAction,
   deleteProductAction,
   toggleProductActiveAction,
 } from "../../_actions/productActions";
 
-const MAX = 8;
+const PAGE_SIZE = 8;
+
+type ActiveFilter = "all" | "active" | "inactive";
 
 type Filters = {
   search: string;
   type: string;
   category: string;
-  active: boolean;
-  page: number;
+  active: ActiveFilter;
 };
 
 const INITIAL_FILTERS: Filters = {
   search: "",
-  type: "",
-  category: "",
-  active: false,
-  page: 0,
+  type: "all",
+  category: "all",
+  active: "all",
 };
 
 export default function RenderProductTable({
@@ -80,74 +77,80 @@ export default function RenderProductTable({
 }) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
-  const [totalCount, setTotalCount] = useState(initialProducts.length);
-  const [isFetching, startFetch] = useTransition();
-  const [isMutating, startMutate] = useTransition();
+  const [page, setPage] = useState(1);
+  const [isMutating, setIsMutating] = useState(false);
 
-  const refetch = useCallback(
-    (overrides?: Partial<Filters>) => {
-      const merged = { ...filters, ...overrides };
-      startFetch(async () => {
-        try {
-          const result = await fetchProductsAction({
-            search: merged.search,
-            type: merged.type,
-            category: merged.category,
-            active: merged.active,
-            page: merged.page,
-            take: MAX,
-          });
-          setProducts(result?.products ?? []);
-          setTotalCount(result?.total ?? 0);
-        } catch {
-          toast.error("Failed to fetch products");
-        }
-      });
-    },
-    [filters],
+  // ── Client-side filtering ──────────────────────────────────────────────────
+
+  const filtered = useMemo(() => {
+    return products.filter((p) => {
+      const matchSearch =
+        !filters.search ||
+        p.name.toLowerCase().includes(filters.search.toLowerCase());
+
+      const matchType =
+        filters.type === "all" || p.type === filters.type;
+
+      const matchCategory =
+        filters.category === "all" || p.category === filters.category;
+
+      const matchActive =
+        filters.active === "all" ||
+        (filters.active === "active" ? p.isActive : !p.isActive);
+
+      return matchSearch && matchType && matchCategory && matchActive;
+    });
+  }, [products, filters]);
+
+  // ── Pagination ─────────────────────────────────────────────────────────────
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const paginated = filtered.slice(
+    (safePage - 1) * PAGE_SIZE,
+    safePage * PAGE_SIZE,
   );
 
-  const updateFilter = (key: keyof Filters, value: string | number) => {
-    const newFilters = {
-      ...filters,
-      [key]: value,
-      page: key === "page" ? value : 0,
-    };
-    setFilters(newFilters as Filters);
-    refetch(newFilters as Partial<Filters>);
+  const updateFilter = <K extends keyof Filters>(key: K, value: Filters[K]) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1); // reset to page 1 on any filter change
   };
 
-  const handleDelete = (id: string) => {
-    startMutate(async () => {
-      try {
-        await deleteProductAction(id);
-        setProducts((prev) => prev.filter((p) => p.id !== id));
-        toast.success("Product deleted");
-      } catch {
-        toast.error("Failed to delete product");
-      }
-    });
+  // ── Mutations ──────────────────────────────────────────────────────────────
+
+  const handleDelete = async (id: string) => {
+    setIsMutating(true);
+    try {
+      await deleteProductAction(id);
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      toast.success("Product deleted");
+    } catch {
+      toast.error("Failed to delete product");
+    } finally {
+      setIsMutating(false);
+    }
   };
 
-  const handleToggleActive = (id: string, current: boolean) => {
-    startMutate(async () => {
-      try {
-        await toggleProductActiveAction(id, current);
-        setProducts((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, active: !current } : p)),
-        );
-        toast.success(`Product ${current ? "deactivated" : "activated"}`);
-      } catch {
-        toast.error("Failed to update product");
-      }
-    });
+  const handleToggleActive = async (id: string, current: boolean) => {
+    setIsMutating(true);
+    try {
+      await toggleProductActiveAction(id, current);
+      setProducts((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, isActive: !current } : p)),
+      );
+      toast.success(`Product ${current ? "deactivated" : "activated"}`);
+    } catch {
+      toast.error("Failed to update product");
+    } finally {
+      setIsMutating(false);
+    }
   };
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / MAX));
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-4">
-      {/* Filters bar */}
+      {/* Filters */}
       <div className="flex flex-wrap gap-3 items-center">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -164,14 +167,14 @@ export default function RenderProductTable({
           value={filters.type}
           onChange={(v) => updateFilter("type", v)}
           options={[
-            { key: "All", value: "" },
-            { key: "Tablet", value: "TABLET" },
-            { key: "Syrup", value: "SYRUP" },
-            { key: "Capsule", value: "CAPSULE" },
-            { key: "Injection", value: "INJECTION" },
-            { key: "Ointment", value: "OINTMENT" },
-            { key: "Drops", value: "DROPS" },
-            { key: "Other", value: "OTHER" },
+            { label: "All Types", value: "all" },
+            { label: "Tablet", value: "TABLET" },
+            { label: "Syrup", value: "SYRUP" },
+            { label: "Capsule", value: "CAPSULE" },
+            { label: "Injection", value: "INJECTION" },
+            { label: "Ointment", value: "OINTMENT" },
+            { label: "Drops", value: "DROPS" },
+            { label: "Other", value: "OTHER" },
           ]}
         />
 
@@ -180,32 +183,22 @@ export default function RenderProductTable({
           value={filters.category}
           onChange={(v) => updateFilter("category", v)}
           options={[
-            { key: "All", value: "" },
-            { key: "PCD", value: "PCD" },
-            { key: "Third Party", value: "THIRDPARTY" },
+            { label: "All Categories", value: "all" },
+            { label: "PCD", value: "PCD" },
+            { label: "Third Party", value: "THIRDPARTY" },
           ]}
         />
 
         <FilterSelect
-          placeholder="Active"
-          value={filters.active.toString()}
-          onChange={(v) => updateFilter("active", v)}
+          placeholder="Status"
+          value={filters.active}
+          onChange={(v) => updateFilter("active", v as ActiveFilter)}
           options={[
-            { key: "All", value: "" },
-            { key: "Active", value: "true" },
-            { key: "Inactive", value: "false" },
+            { label: "All", value: "all" },
+            { label: "Active", value: "active" },
+            { label: "Inactive", value: "inactive" },
           ]}
         />
-
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => refetch()}
-          disabled={isFetching}
-          title="Refresh"
-        >
-          <RefreshCw className={cn("w-4 h-4", isFetching && "animate-spin")} />
-        </Button>
       </div>
 
       {/* Table */}
@@ -225,13 +218,7 @@ export default function RenderProductTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {isFetching ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="py-16 text-center">
-                    <Loader2 className="w-6 h-6 animate-spin mx-auto text-muted-foreground" />
-                  </TableCell>
-                </TableRow>
-              ) : products.length === 0 ? (
+              {paginated.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={8}
@@ -241,7 +228,7 @@ export default function RenderProductTable({
                   </TableCell>
                 </TableRow>
               ) : (
-                products.map((product) => (
+                paginated.map((product) => (
                   <TableRow
                     key={product.id}
                     className="hover:bg-muted/30 transition-colors"
@@ -249,20 +236,25 @@ export default function RenderProductTable({
                     <TableCell>
                       <CopyHoverCard data={product.id} tag="ID" />
                     </TableCell>
+
                     <TableCell className="font-medium max-w-[160px] truncate">
                       {product.name}
                     </TableCell>
+
                     <TableCell>
                       <Badge variant="outline">
                         {product.type as ProductTypes}
                       </Badge>
                     </TableCell>
+
                     <TableCell>
                       <Badge variant="secondary">
                         {product.category as ProductCatType}
                       </Badge>
                     </TableCell>
+
                     <TableCell>{product.clicks ?? 0}</TableCell>
+
                     <TableCell>
                       <Badge
                         className={cn(
@@ -275,9 +267,11 @@ export default function RenderProductTable({
                         {product.isActive ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>
+
                     <TableCell className="text-muted-foreground text-sm">
                       {new Date(product.createdAt).toLocaleDateString()}
                     </TableCell>
+
                     <TableCell>
                       <div className="flex items-center justify-end gap-1">
                         {/* Toggle active */}
@@ -286,10 +280,7 @@ export default function RenderProductTable({
                           size="icon"
                           disabled={isMutating}
                           onClick={() =>
-                            handleToggleActive(
-                              product.id,
-                              product.isActive ?? false,
-                            )
+                            handleToggleActive(product.id, product.isActive ?? false)
                           }
                           title={product.isActive ? "Deactivate" : "Activate"}
                           className="text-muted-foreground hover:text-foreground"
@@ -315,14 +306,10 @@ export default function RenderProductTable({
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete product?
-                              </AlertDialogTitle>
+                              <AlertDialogTitle>Delete product?</AlertDialogTitle>
                               <AlertDialogDescription>
                                 This will permanently remove{" "}
-                                <span className="font-semibold">
-                                  {product.name}
-                                </span>{" "}
+                                <span className="font-semibold">{product.name}</span>{" "}
                                 from the database. This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
@@ -350,14 +337,16 @@ export default function RenderProductTable({
       {/* Pagination */}
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>
-          Page {filters.page + 1} of {totalPages}
+          {filtered.length === 0
+            ? "No results"
+            : `${(safePage - 1) * PAGE_SIZE + 1}–${Math.min(safePage * PAGE_SIZE, filtered.length)} of ${filtered.length}`}
         </span>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="sm"
-            disabled={filters.page === 0 || isFetching}
-            onClick={() => updateFilter("page", filters.page - 1)}
+            disabled={safePage <= 1}
+            onClick={() => setPage((p) => p - 1)}
           >
             <ChevronLeft className="w-4 h-4" />
             Prev
@@ -365,8 +354,8 @@ export default function RenderProductTable({
           <Button
             variant="outline"
             size="sm"
-            disabled={filters.page + 1 >= totalPages || isFetching}
-            onClick={() => updateFilter("page", filters.page + 1)}
+            disabled={safePage >= totalPages}
+            onClick={() => setPage((p) => p + 1)}
           >
             Next
             <ChevronRight className="w-4 h-4" />
@@ -388,17 +377,17 @@ function FilterSelect({
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
-  options: { key: string; value: string }[];
+  options: { label: string; value: string }[];
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         {options.map((opt) => (
-          <SelectItem key={opt.value || "_all"} value={opt.value || "_all"}>
-            {opt.key}
+          <SelectItem key={opt.value} value={opt.value}>
+            {opt.label}
           </SelectItem>
         ))}
       </SelectContent>
