@@ -49,7 +49,8 @@ export async function getProducts({
       category !== "all" && { category: category as ProductCatType }),
   };
 
-  console.log("📦 getProducts called:", { where, safePage });
+  if (process.env.NODE_ENV === "development")
+    console.log("📦 getProducts called:", { where, safePage });
 
   const [products, count] = await Promise.all([
     prisma.product.findMany({

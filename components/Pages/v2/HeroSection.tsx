@@ -39,6 +39,7 @@ export const HeroSection = () => {
             alt="Hero"
             width={500}
             height={500}
+            priority
             loading="eager"
             className="w-full h-full object-cover rounded-xs grayscale"
           />

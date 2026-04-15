@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import gsap from "gsap";
 import { trust } from "@/lib/constants/trust";
+import { useGSAP } from "@gsap/react";
 
 const ITEMS_PER_SLIDE = 2;
 
@@ -15,7 +16,7 @@ const Trust = () => {
   const totalSlides = Math.ceil(data.length / ITEMS_PER_SLIDE);
 
   // 👉 GSAP animation on slide change
-  useEffect(() => {
+  useGSAP(() => {
     gsap.fromTo(
       cardsRef.current,
       { opacity: 0, y: 40 },

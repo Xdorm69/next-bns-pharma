@@ -81,8 +81,9 @@ const Capabilities = () => {
                     <Image
                       src={item.image}
                       alt={item.title}
-                      fill
-                      className="object-cover"
+                      width={200}
+                      height={160}
+                      className="object-cover w-full h-full"
                     />
                     <Link
                       href="/about"
