@@ -96,6 +96,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   // 🚀 non-blocking
   void updateClick(id);
+  const compressedImageUrl = product.image + "?tr=q-75,f-auto,w-400";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -144,16 +145,15 @@ export default async function ProductPage({ params }: PageProps) {
             }),
           }}
         />
-        
+
         {/* Product Hero */}
         <div className="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row gap-8">
           <div className="relative w-full md:w-96 h-72 rounded-xl overflow-hidden bg-gray-100 shrink-0">
             <Image
-              src={product.thumbnail || product.image}
+              src={compressedImageUrl}
               alt={product.name}
-              width={300}
-              height={300}
-              className="object-cover w-full h-full"
+              fill
+              className="object-contain"
               priority
             />
           </div>
@@ -194,7 +194,6 @@ export default async function ProductPage({ params }: PageProps) {
             )}
           </div>
         </div>
-
         {/* Reviews — streamed */}
         <Suspense fallback={<ReviewSkeleton />}>
           <ReviewSection
@@ -203,7 +202,6 @@ export default async function ProductPage({ params }: PageProps) {
             userName={session?.user?.name}
           />
         </Suspense>
-
         {/* Suggested — streamed */}
         <Suspense fallback={<SuggestedSkeleton />}>
           <SuggestedProducts

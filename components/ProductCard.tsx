@@ -3,12 +3,13 @@ import { Product } from "@prisma/client";
 import Link from "next/link";
 
 export function ProductCard({ data }: { data: Product }) {
+  const compressedImageUrl = data.image + "?tr=q-75,f-auto,w-300";
   return (
     <div className="w-full max-w-sm mx-auto bg-white rounded-sm shadow-md overflow-hidden">
       {/* Image */}
-      <div className="relative w-full h-48 sm:h-56 md:h-60 bg-gray-100">
+      <div className="relative w-full h-48 sm:h-56 md:h-60 bg-gray-100 overflow-hidden">
         <Image
-          src={data.image}
+          src={compressedImageUrl}
           alt={data.name}
           fill
           className="object-contain p-4"
