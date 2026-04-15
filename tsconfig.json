@@ -35,7 +35,7 @@
     ".next/types/**/*.ts",
     "prisma/seed.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "lib/imgCompression.js"  ],
   "exclude": [
     "node_modules"
   ]

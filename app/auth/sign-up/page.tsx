@@ -27,6 +27,7 @@ import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { Eye } from "lucide-react";
+import { images } from "@/lib/constants/images";
 
 export default function SignupPage() {
   const { mutate, isPending } = useRegisterMutation();
@@ -50,7 +51,7 @@ export default function SignupPage() {
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* 🌄 FULL BACKGROUND */}
       <Image
-        src="/auth/bg.jpg"
+        src={images.auth}
         alt="Background"
         fill
         priority

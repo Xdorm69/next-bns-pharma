@@ -16,6 +16,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { LoginMutation } from "./_mutations/loginMutation";
 import Image from "next/image";
+import { images } from "@/lib/constants/images";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ export default function LoginPage() {
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* 🌄 FULL BACKGROUND */}
       <Image
-        src="/auth/bg.jpg"
+        src={images.auth}
         alt="Background"
         fill
         priority
