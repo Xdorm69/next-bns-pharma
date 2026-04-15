@@ -1,6 +1,10 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+const ReactQueryDevtools =
+  process.env.NODE_ENV === "development"
+    ? (await import("@tanstack/react-query-devtools")).ReactQueryDevtools
+    : () => null;
+
 import { useState } from "react";
 
 // 👇 Client wrapper so QueryClient is only created once

@@ -1,5 +1,7 @@
 // /lib/constants/capabilities.ts
 
+import { images } from "./images";
+
 export const capabilities = {
   data: [
     {
@@ -38,7 +40,7 @@ export const capabilities = {
         type: "list",
         items: ["Phase 3: CP-8041 (oncology)", "Phase 3: CP-8042 (neurology)"],
       },
-      image: "/hero2.webp",
+      image: images.hero,
     },
   ],
 };

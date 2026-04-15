@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import AnimatedHeading from "./_components/AnimatedHeading";
-import AnimatedParagraph from "./_components/AnimatedParagraph";
 import AnimatedCard from "./_components/AnimatedCard";
 import AnimatedTimelineItem from "./_components/AnimatedTimeline";
 import Image from "next/image";
@@ -45,16 +43,15 @@ export default function AboutPage() {
           className="w-full h-full object-cover absolute left-0 top-0 z-0"
         />
         <div className="container text-center z-10 relative">
-          <AnimatedHeading className="text-4xl md:text-6xl font-bold text-white font-primary">
+          <h2 className="heading-1 text-background">
             Improving Lives Through Healthcare Innovation
-          </AnimatedHeading>
-          <AnimatedParagraph
+          </h2>
+          <p
             className="mt-6 text-lg md:text-xl text-gray-300"
-            delay={0.2}
           >
             At BNS Pharmaceuticals, we are committed to advancing healthcare
             through science, innovation, and unwavering dedication to quality.
-          </AnimatedParagraph>
+          </p>
         </div>
       </section>
 
@@ -98,7 +95,6 @@ export default function AboutPage() {
             ].map((val, i) => (
               <AnimatedCard
                 key={i}
-                delay={i * 0.2}
                 title={val.title}
                 desc={val.desc}
               />
