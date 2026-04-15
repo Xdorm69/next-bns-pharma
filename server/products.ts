@@ -2,17 +2,20 @@ import { authOptions } from "@/lib/auth";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { imagekit } from "@/lib/imagekit";
 import { prisma } from "@/lib/prisma";
-import { devComment } from "@/lib/utils/devComment";
 import { AddProductSchema } from "@/lib/validations/addprod";
 import { Product, ProductCatType, ProductTypes } from "@prisma/client";
 import { getServerSession } from "next-auth";
+import { updateTag } from "next/cache";
 import { cacheLife, cacheTag } from "next/cache";
 
 type FetchProductsProps = {
   search?: string;
   type?: string;
   category?: string;
+  active?: boolean;
+  take?: number;
   page?: number;
+  skip?: number;
 };
 
 type addProductType = {
@@ -40,11 +43,19 @@ function buildWhereClause({
   };
 }
 
+async function isAdmin(): Promise<boolean> {
+  const session = await getServerSession(authOptions);
+  return session?.user?.role === "ADMIN";
+}
+
 export async function getProducts({
   search,
   type,
+  take = ITEMS_PER_PAGE,
   category,
+  active,
   page = 1,
+  skip = (page - 1) * take,
 }: FetchProductsProps) {
   "use cache";
   cacheLife("hours");
@@ -62,6 +73,7 @@ export async function getProducts({
     ...(type && type !== "all" && { type: type as ProductTypes }),
     ...(category &&
       category !== "all" && { category: category as ProductCatType }),
+    ...(active !== undefined && { isActive: active }),
   };
 
   if (process.env.NODE_ENV === "development")
@@ -70,8 +82,8 @@ export async function getProducts({
   const [products, count] = await Promise.all([
     prisma.product.findMany({
       where,
-      take: ITEMS_PER_PAGE,
-      skip: (safePage - 1) * ITEMS_PER_PAGE,
+      take,
+      skip,
       orderBy: { createdAt: "desc" },
     }),
     prisma.product.count({ where }),
@@ -80,7 +92,7 @@ export async function getProducts({
   return {
     products,
     total: count,
-    totalPages: Math.ceil(count / ITEMS_PER_PAGE),
+    totalPages: Math.ceil(count / take),
   };
 }
 
@@ -104,14 +116,8 @@ export async function getProductById(id: string): Promise<Product | null> {
 export async function addProduct(
   body: addProductType,
 ): Promise<{ success: boolean; product?: Product; error?: string }> {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    throw new Error("User unauthorized");
-  }
-
-  // ONLY ADMIN CAN ADD PRODUCTS
-  const isAdmin = session.user.role === "ADMIN";
-  if (!isAdmin) throw new Error("Unauthorized");
+  const isAdminUser = await isAdmin();
+  if (!isAdminUser) throw new Error("Unauthorized");
 
   const parsed = AddProductSchema.safeParse(body);
 
@@ -150,10 +156,53 @@ export async function addProduct(
       },
     });
 
+    //refresh cache
+    updateTag("products");
     return { success: true, product };
   } catch (err) {
     console.error("Prisma create error:", err);
 
     throw err;
+  }
+}
+
+export async function deleteProduct(id: string) {
+  try {
+    const isAdminUser = await isAdmin();
+    if (!isAdminUser) throw new Error("Unauthorized");
+
+    const product = await prisma.product.delete({
+      where: { id },
+    });
+
+    //refresh cache
+    updateTag("products");
+    return product;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+}
+
+export async function toggleProductActive(id: string, active: boolean) {
+  try {
+    const isAdminUser = await isAdmin();
+    if (!isAdminUser) throw new Error("Unauthorized");
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        isActive: active,
+      },
+    });
+
+    //refresh cache
+    updateTag("products");
+    updateTag(`product-${id}`);
+    
+    return product;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
   }
 }

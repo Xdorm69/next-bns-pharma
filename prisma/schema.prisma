@@ -62,6 +62,7 @@ model Product {
   @@index([type])
   @@index([category])
   @@index([createdAt])
+  @@index([isActive])
 }
 
 model Review {
