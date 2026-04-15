@@ -95,7 +95,7 @@ export default function RenderUserTable({
       const merged = { ...filters, ...overrides };
       startFetch(async () => {
         try {
-          const result = await fetchUsersAction({
+          const r = await fetchUsersAction({
             search: merged.search,
             role: merged.role,
             subscribed: merged.subscribed,
@@ -103,8 +103,9 @@ export default function RenderUserTable({
             page: merged.page,
             take: MAX,
           });
-          setUsers(result ?? []);
-          setTotalCount(result?.length ?? 0);
+          const data = r.success ? r.data : [];
+          setUsers(data);
+          setTotalCount(data.length);
         } catch {
           toast.error("Failed to fetch users");
         }
@@ -262,18 +263,7 @@ export default function RenderUserTable({
                         {user.provider ?? "—"}
                       </Badge>
                     </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          user.subscribed
-                            ? "bg-blue-500/10 text-blue-700 border-blue-200"
-                            : "text-muted-foreground"
-                        )}
-                      >
-                        {user.subscribed ? "Yes" : "No"}
-                      </Badge>
-                    </TableCell>
+                  
                     <TableCell className="text-muted-foreground text-sm">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </TableCell>
