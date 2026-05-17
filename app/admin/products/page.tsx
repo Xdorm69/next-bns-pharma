@@ -1,3 +1,6 @@
+
+
+
 import { Metadata } from "next";
 import RenderProductTable from "./_components/RenderProductTable";
 import { fetchProductsAction } from "../_actions/fetchActions";
@@ -42,5 +45,6 @@ const page = async () => {
     </section>
   );
 };
+
 
 export default page;

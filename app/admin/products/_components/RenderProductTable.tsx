@@ -1,5 +1,5 @@
-"use client";
 
+"use client";
 import { useState, useMemo } from "react";
 import { Product, ProductCatType, ProductTypes } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -53,16 +52,9 @@ import {
   deleteProductAction,
   toggleProductActiveAction,
 } from "../../_actions/productActions";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import EditProductDialog from "./EditProductDialog";
+import { useRouter } from "next/navigation";
+
 
 const PAGE_SIZE = 8;
 
@@ -156,6 +148,7 @@ export default function RenderProductTable({
       setIsMutating(false);
     }
   };
+
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
@@ -286,85 +279,8 @@ export default function RenderProductTable({
                     <TableCell>
                       <div className="flex items-center justify-end gap-1">
                         {/* EDIT  */}
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant={"ghost"}>
-                              <Edit className="text-primary" />
-                            </Button>
-                          </DialogTrigger>
+                        <EditProductDialog product={product}/>
 
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Edit Product</DialogTitle>
-                            </DialogHeader>
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                const formData = new FormData(e.currentTarget);
-
-                                const data = {
-                                  name: formData.get("name"),
-                                  type: formData.get("type"),
-                                  category: formData.get("category"),
-                                };
-                                console.log(data);
-                              }}
-                            >
-                              {/* ID  */}
-                              <span className="text-muted-foreground text-xs">
-                                ID: {product.id}
-                              </span>
-
-                              <Label>Name</Label>
-                              <Input
-                                name="name"
-                                type="text"
-                                defaultValue={product.name}
-                              />
-
-                              <Label>Type</Label>
-                              <Select name="type">
-                                <SelectTrigger className="w-[180px]">
-                                  <SelectValue placeholder={product.type} />
-                                </SelectTrigger>
-
-                                <SelectContent>
-                                  <SelectGroup>
-                                    {Object.values(ProductTypes).map((type) => (
-                                      <SelectItem key={type} value={type}>
-                                        {type}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
-
-                              <Label>Category</Label>
-                              <Select name="category">
-                                <SelectTrigger className="w-[180px]">
-                                  <SelectValue placeholder={product.category} />
-                                </SelectTrigger>
-
-                                <SelectContent>
-                                  <SelectGroup>
-                                    {Object.values(ProductCatType).map(
-                                      (category) => (
-                                        <SelectItem
-                                          key={category}
-                                          value={category}
-                                        >
-                                          {category}
-                                        </SelectItem>
-                                      ),
-                                    )}
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
-                              <Button type="submit">Save</Button>
-                            </form>
-                           
-                          </DialogContent>
-                        </Dialog>
                         {/* Toggle active */}
                         <Button
                           variant="ghost"
@@ -527,3 +443,5 @@ function CopyHoverCard({ data, tag }: { data: string; tag: string }) {
     </HoverCard>
   );
 }
+
+
