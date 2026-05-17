@@ -136,6 +136,11 @@ export const authOptions: NextAuthOptions = {
 // };
 
 export async function isAdmin(): Promise<boolean> {
-  const session = await getServerSession(authOptions);
-  return session?.user?.role === "ADMIN";
+  try {
+    const session = await getServerSession(authOptions);
+    return session?.user?.role === "ADMIN";
+  } catch (error) {
+    console.error("FAILED TO FETCH SESSION, " + error);
+    return false;
+  }
 }

@@ -3,7 +3,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { imagekit } from "@/lib/imagekit";
 import { prisma } from "@/lib/prisma";
 import { AddProductSchema } from "@/lib/validations/addprod";
-import { Product, ProductCatType, ProductTypes } from "@prisma/client";
+import { Product, ProductCatType, ProductTypes, User } from "@prisma/client";
 import { updateTag } from "next/cache";
 import { cacheLife, cacheTag } from "next/cache";
 
@@ -27,19 +27,19 @@ type addProductType = {
   thumbnail: string;
 };
 
-function buildWhereClause({
-  search,
-  type,
-  category,
-}: Omit<FetchProductsProps, "page">) {
-  return {
-    ...(search && {
-      name: { contains: search, mode: "insensitive" as const },
-    }),
-    ...(type && type !== "all" && { type: type as ProductTypes }),
-    ...(category &&
-      category !== "all" && { category: category as ProductCatType }),
-  };
+type getProductsResponse = {
+  success: boolean,
+  message?: string,
+  products: Product[],
+  total: number,
+  totalPages: number,
+}
+
+type adminPageResponseType = {
+  success: boolean,
+  message?: string,
+  totalProducts: number,
+  totalUsers: number
 }
 
 export async function getProducts({
@@ -50,7 +50,7 @@ export async function getProducts({
   active,
   page = 1,
   skip,
-}: FetchProductsProps) {
+}: FetchProductsProps): Promise<getProductsResponse> {
   "use cache";
   cacheLife("hours");
   cacheTag("products");
@@ -75,21 +75,33 @@ export async function getProducts({
   if (process.env.NODE_ENV === "development")
     console.log("📦 getProducts called:", { where, safePage });
 
-  const [products, count] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      take,
-      skip: safeSkip,
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.product.count({ where }),
-  ]);
+  try {
+    const [products, count] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        take,
+        skip: safeSkip,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.product.count({ where }),
+    ]);
 
-  return {
-    products,
-    total: count,
-    totalPages: Math.ceil(count / take),
-  };
+    return {
+      success: true,
+      products,
+      total: count,
+      totalPages: Math.ceil(count / take),
+    };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return {
+      success: false,
+      message: (error as Error).message,
+      products: [],
+      total: 0,
+      totalPages: 0,
+    };
+  }
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
@@ -201,4 +213,34 @@ export async function toggleProductActive(id: string, active: boolean) {
     console.error("Error deleting product:", error);
     throw error;
   }
+}
+
+export async function adminPageDetails(): Promise<adminPageResponseType> {
+  const isAdminUser = await isAdmin();
+
+  if (!isAdminUser) return {
+    success: false,
+    message: "Unauthorized",
+    totalProducts: 0,
+    totalUsers: 0
+  }
+
+  try {
+    const [totalProducts, totalUsers] = await Promise.all([
+      prisma.product.count(),
+      prisma.user.count(),
+    ]);
+
+    return { success: true, totalProducts, totalUsers };
+  } catch (error) {
+    console.error("Error getting admin page details:", error);
+    
+    return {
+      success: false,
+      message: (error as Error).message,
+      totalProducts: 0,
+      totalUsers: 0
+    }
+  }
+  
 }

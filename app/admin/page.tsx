@@ -1,7 +1,15 @@
-import { authOptions } from "@/lib/auth";
+import { authOptions, isAdmin } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { Package, Users, PlusCircle, BarChart3, ShieldCheck } from "lucide-react";
+import {
+  Package,
+  Users,
+  PlusCircle,
+  BarChart3,
+  ShieldCheck,
+} from "lucide-react";
+import { adminPageDetails } from "@/server/products";
+import { toast } from "sonner";
 
 const adminLinks = [
   {
@@ -31,7 +39,33 @@ const adminLinks = [
 ];
 
 export default async function AdminPage() {
+  //fallback for when session is not available
   const session = await getServerSession(authOptions);
+  const isAdminUser = session?.user?.role === "ADMIN";
+
+  if (!isAdminUser) {
+    return (
+      <section className="min-h-screen py-12 px-4">
+        <div className="container max-w-5xl mx-auto">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4 text-red-500">
+              Access Denied
+            </h1>
+            <p className="text-muted-foreground">
+              You do not have permission to access this page.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  //fetching admin page details
+  const { success, message, totalProducts, totalUsers } =
+    await adminPageDetails();
+
+  //showing admin the error for details not loaded
+  if (!success) toast.error(message);
 
   return (
     <section className="min-h-screen py-12 px-4">
@@ -55,8 +89,16 @@ export default async function AdminPage() {
         {/* Stat strip */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           {[
-            { label: "Total Products", icon: Package, value: "—" },
-            { label: "Total Users", icon: Users, value: "—" },
+            {
+              label: "Total Products",
+              icon: Package,
+              value: String(totalProducts) || "—",
+            },
+            {
+              label: "Total Users",
+              icon: Users,
+              value: String(totalUsers) || "—",
+            },
             { label: "Analytics", icon: BarChart3, value: "—" },
           ].map(({ label, icon: Icon, value }) => (
             <div
@@ -79,21 +121,25 @@ export default async function AdminPage() {
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {adminLinks.map(({ href, label, description, icon: Icon, color, border }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`group rounded-xl border ${border} bg-card p-6 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5`}
-            >
-              <div className={`inline-flex p-2.5 rounded-lg ${color} mb-4`}>
-                <Icon className="w-5 h-5" />
-              </div>
-              <h3 className="font-semibold text-base group-hover:text-primary transition-colors">
-                {label}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">{description}</p>
-            </Link>
-          ))}
+          {adminLinks.map(
+            ({ href, label, description, icon: Icon, color, border }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`group rounded-xl border ${border} bg-card p-6 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5`}
+              >
+                <div className={`inline-flex p-2.5 rounded-lg ${color} mb-4`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-semibold text-base group-hover:text-primary transition-colors">
+                  {label}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {description}
+                </p>
+              </Link>
+            ),
+          )}
         </div>
       </div>
     </section>

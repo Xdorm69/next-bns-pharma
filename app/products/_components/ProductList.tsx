@@ -17,17 +17,17 @@ const ProductsList = async ({
   category,
   page,
 }: ProductListProps) => {
-  const { products, totalPages, total } = await getProducts({
+  const { success, message, products, totalPages, total } = await getProducts({
     search,
     type,
     category,
     page: page || 1,
   });
 
-  if (!products.length) {
+  if (!success || !products.length) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No products found</p>
+        <p className="text-gray-500">{message || "No products found"}</p>
       </div>
     );
   }

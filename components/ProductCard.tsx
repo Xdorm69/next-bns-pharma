@@ -11,7 +11,8 @@ export function ProductCard({ data }: { data: Product }) {
         <Image
           src={compressedImageUrl}
           alt={data.name}
-          fill
+          fill 
+          loading="eager"
           className="object-contain p-4"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
         />
