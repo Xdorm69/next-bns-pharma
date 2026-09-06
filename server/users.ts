@@ -1,6 +1,6 @@
 "use server";
-import { prisma } from "@/lib/prisma";
 import { withAdminAuth } from "@/lib/auth/withAdminAuth";
+import * as userService from "@/lib/services/users";
 import { ActionResponse } from "@/types/actions";
 import { User, userRole } from "@prisma/client";
 
@@ -19,32 +19,21 @@ export const getUsers = withAdminAuth(
     skip,
     take,
   }: getUserProps): Promise<ActionResponse<User[]>> => {
-    const users = await prisma.user.findMany({
-      skip,
-      take,
-    });
-
+    const users = await userService.listUsers({ skip, take });
     return { success: true, data: users };
   },
 );
 
 export const updateUserRole = withAdminAuth(
   async (id: string, role: userRole): Promise<ActionResponse<User>> => {
-    const user = await prisma.user.update({
-      where: { id },
-      data: { role },
-    });
-
+    const user = await userService.setUserRole(id, role);
     return { success: true, data: user };
   },
 );
 
 export const deleteUser = withAdminAuth(
   async (id: string): Promise<ActionResponse<User>> => {
-    const user = await prisma.user.delete({
-      where: { id },
-    });
-
+    const user = await userService.removeUser(id);
     return { success: true, data: user };
   },
 );

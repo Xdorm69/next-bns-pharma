@@ -24,7 +24,7 @@ export async function addProductAction(formData: FormData) {
 
   const base64 = `data:image/webp;base64,${compressed.toString("base64")}`;
 
-  await addProduct({
+  const result = await addProduct({
     name: formData.get("name") as string,
     description: (formData.get("description") as string) || "",
     type: formData.get("type") as ProductTypes,
@@ -34,16 +34,20 @@ export async function addProductAction(formData: FormData) {
     thumbnail: "",
   });
 
+  if (!result.success) throw new Error(result.error);
+
   revalidatePath("/admin/products");
 }
 
 export async function deleteProductAction(id: string) {
-  await deleteProduct(id);
+  const result = await deleteProduct(id);
+  if (!result.success) throw new Error(result.error);
   revalidatePath("/admin/products");
 }
 
 export async function toggleProductActiveAction(id: string, active: boolean) {
-  await toggleProductActive(id, !active);
+  const result = await toggleProductActive(id, !active);
+  if (!result.success) throw new Error(result.error);
   revalidatePath("/admin/products");
 }
 

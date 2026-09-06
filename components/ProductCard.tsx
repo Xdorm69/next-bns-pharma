@@ -49,7 +49,7 @@ export function ProductCard({ data }: { data: Product }) {
 
         {/* Footer */}
         <Link
-          href={`/products/${data.id}`}
+          href={`/products/${data.slug}`}
           className="text-center btn btn-primary "
         >
           View More

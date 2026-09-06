@@ -53,24 +53,15 @@ export default function EditProductDialog({ product}: { product: Product}) {
     };
 
     startTransition(async () => {
-      const {
-        success,
-        message,
-        product: updatedProduct,
-      } = await editProduct(product.id, data);
+      const result = await editProduct(product.id, data);
 
-      if (!success) {
-        toast.error(
-          `Failed to update product ${product.name}: ${
-            updatedProduct?.name || message
-          }`,
-        );
-
+      if (!result.success) {
+        toast.error(`Failed to update product ${product.name}: ${result.error}`);
         return;
       }
 
-      toast.success(`Product ${updatedProduct.name} updated successfully`);
-      
+      toast.success(`Product ${result.data.name} updated successfully`);
+
       setOpen(false);
     });
   }

@@ -1,14 +1,22 @@
 
 "use server";
 
-import { isAdmin } from "@/lib/auth";
-import { ITEMS_PER_PAGE } from "@/lib/constants";
-import { imagekit } from "@/lib/imagekit";
-import { prisma } from "@/lib/prisma";
-import { AddProductSchema } from "@/lib/validations/addprod";
-import { Product, ProductCatType, ProductTypes, User } from "@prisma/client";
-import { revalidatePath, updateTag } from "next/cache";
+import { withAdminAuth } from "@/lib/auth/withAdminAuth";
+import * as productService from "@/lib/services/products";
+import * as userService from "@/lib/services/users";
+import { Product, ProductCatType, ProductTypes } from "@prisma/client";
+import { updateTag } from "next/cache";
 import { cacheLife, cacheTag } from "next/cache";
+import { ActionResponse } from "@/types/actions";
+import { prisma } from "@/lib/prisma";
+
+/**
+ * This file is the Next.js boundary for products: "use server", cache
+ * tags/lifetimes, admin-auth gating, and cache invalidation on mutation.
+ * The actual Prisma queries and business rules live in
+ * lib/services/products.ts, which knows nothing about any of that — so the
+ * same logic is reusable from a route handler, a script, or a test.
+ */
 
 type FetchProductsProps = {
   search?: string;
@@ -30,6 +38,9 @@ type addProductType = {
   thumbnail: string;
 };
 
+// getProducts/getProductById are public, cached reads (not admin-gated), so
+// they intentionally keep their own paginated-result shape rather than
+// ActionResponse<T> — that type is for admin mutations below.
 type getProductsResponse = {
   success: boolean;
   message?: string;
@@ -38,64 +49,32 @@ type getProductsResponse = {
   totalPages: number;
 };
 
-type adminPageResponseType = {
-  success: boolean;
-  message?: string;
-  totalProducts: number;
-  totalUsers: number;
-};
-
 export async function getProducts({
   search,
   type,
-  take = ITEMS_PER_PAGE,
   category,
   active,
+  take,
   page = 1,
-  skip,
 }: FetchProductsProps): Promise<getProductsResponse> {
   "use cache";
   cacheLife("hours");
-  
   cacheTag("products");
 
-  const safePage = Math.max(1, Number(page) || 1);
-
-  const safeSkip = (safePage - 1) * take;
-
-  const where = {
-    ...(search && {
-      name: {
-        startsWith: search,
-        mode: "insensitive" as const,
-      },
-    }),
-    ...(type && type != "all" && { type: type as ProductTypes }),
-    ...(category &&
-      category != "all" && { category: category as ProductCatType }),
-    ...(active !== undefined && { isActive: active }),
-  };
-
   if (process.env.NODE_ENV === "development")
-    console.log("📦 getProducts called:", { where, safePage });
+    console.log("📦 getProducts called:", { search, type, category, active, page });
 
   try {
-    const [products, count] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        take,
-        skip: safeSkip,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.product.count({ where }),
-    ]);
+    const { products, total, totalPages } = await productService.listProducts({
+      search,
+      type,
+      category,
+      active,
+      take,
+      page,
+    });
 
-    return {
-      success: true,
-      products,
-      total: count,
-      totalPages: Math.ceil(count / take),
-    };
+    return { success: true, products, total, totalPages };
   } catch (error) {
     console.error("Error fetching products:", error);
     return {
@@ -114,8 +93,21 @@ export async function getProductById(id: string): Promise<Product | null> {
   cacheTag(`product-${id}`);
 
   try {
+    return await productService.findProductById(id);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    throw error;
+  }
+}
+
+export async function getProductBySlug(slug: string) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`product-${slug}`);
+
+  try {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { slug },
     });
 
     return product;
@@ -125,180 +117,60 @@ export async function getProductById(id: string): Promise<Product | null> {
   }
 }
 
-export async function addProduct(
-  body: addProductType,
-): Promise<{ success: boolean; product?: Product; error?: string }> {
-  const isAdminUser = await isAdmin();
-  if (!isAdminUser) throw new Error("Unauthorized");
+// ── Admin mutations below ────────────────────────────────────────────────
+// Every one of these is wrapped with withAdminAuth, which runs the
+// isAdmin() check once and converts any thrown error into a consistent
+// ActionResponse failure.
 
-  const parsed = AddProductSchema.safeParse(body);
-
-  if (!parsed.success) {
-    const errors = parsed.error.issues.map((issue) => issue.message).join(", ");
-    throw new Error(errors);
-  }
-
-  const data = parsed.data; // Use validated and parsed data
-
-  // 4️⃣ Upload image to ImageKit
-  let imageUrl = "";
-  try {
-    const uploadResponse = await imagekit.upload({
-      file: data.image, // base64 string
-      fileName: `${data.name}-${Date.now()}.jpg`,
-      folder: "/products",
-    });
-    imageUrl = uploadResponse.url;
-  } catch (err) {
-    console.error("Image upload error:", err);
-    throw new Error("Image upload failed");
-  }
-
-  // 5️⃣ Save product in database
-  try {
-    const product = await prisma.product.create({
-      data: {
-        name: data.name,
-        description: data.description,
-        type: data.type as ProductTypes,
-        category: data.category as ProductCatType,
-        ingredients: data.ingredients,
-        image: imageUrl,
-        thumbnail: data.thumbnail,
-      },
-    });
-
-    //refresh cache
+export const addProduct = withAdminAuth(
+  async (body: addProductType): Promise<ActionResponse<Product>> => {
+    const product = await productService.createProduct(body);
     updateTag("products");
-    return { success: true, product };
-  } catch (err) {
-    console.error("Prisma create error:", err);
+    return { success: true, data: product };
+  },
+);
 
-    throw err;
-  }
-}
-
-export async function deleteProduct(id: string) {
-  try {
-    const isAdminUser = await isAdmin();
-    if (!isAdminUser) throw new Error("Unauthorized");
-
-    const product = await prisma.product.delete({
-      where: { id },
-    });
-
-    //refresh cache
+export const deleteProduct = withAdminAuth(
+  async (id: string): Promise<ActionResponse<Product>> => {
+    const product = await productService.removeProduct(id);
     updateTag("products");
-    return product;
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    throw error;
-  }
-}
+    return { success: true, data: product };
+  },
+);
 
-export async function toggleProductActive(id: string, active: boolean) {
-  try {
-    const isAdminUser = await isAdmin();
-    if (!isAdminUser) throw new Error("Unauthorized");
-
-    const product = await prisma.product.update({
-      where: { id },
-      data: {
-        isActive: active,
-      },
-    });
-
-    //refresh cache
+export const toggleProductActive = withAdminAuth(
+  async (id: string, active: boolean): Promise<ActionResponse<Product>> => {
+    const product = await productService.setProductActive(id, active);
     updateTag("products");
     updateTag(`product-${id}`);
+    return { success: true, data: product };
+  },
+);
 
-    return product;
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    throw error;
-  }
-}
-
-export async function adminPageDetails(): Promise<adminPageResponseType> {
-  const isAdminUser = await isAdmin();
-
-  if (!isAdminUser)
-    return {
-      success: false,
-      message: "Unauthorized",
-      totalProducts: 0,
-      totalUsers: 0,
-    };
-
-  try {
+export const adminPageDetails = withAdminAuth(
+  async (): Promise<
+    ActionResponse<{ totalProducts: number; totalUsers: number }>
+  > => {
     const [totalProducts, totalUsers] = await Promise.all([
-      prisma.product.count(),
-      prisma.user.count(),
+      productService.countProducts(),
+      userService.countUsers(),
     ]);
 
-    return { success: true, totalProducts, totalUsers };
-  } catch (error) {
-    console.error("Error getting admin page details:", error);
-
-    return {
-      success: false,
-      message: (error as Error).message,
-      totalProducts: 0,
-      totalUsers: 0,
-    };
-  }
-}
-
-type editProductResponse = {
-  success: boolean;
-  message: string;
-  product: Product;
-};
-
-export async function editProduct(
-  id: string,
-  data: {
-    name: string;
-    type: ProductTypes;
-    category: ProductCatType;
+    return { success: true, data: { totalProducts, totalUsers } };
   },
-): Promise<editProductResponse> {
-  //verifying admin
-  const isAdminUser = await isAdmin();
-  if (!isAdminUser) {
-    return {
-      success: false,
-      message: "Unauthorized",
-      product: {} as Product,
-    };
-  }
+);
 
-  try {
-    //updating my product;
-    const p = await prisma.product.update({
-      where: { id },
-      data: {
-        name: data.name,
-        type: data.type,
-        category: data.category,
-      },
-    });
-
-    //updating cache
+export const editProduct = withAdminAuth(
+  async (
+    id: string,
+    data: {
+      name: string;
+      type: ProductTypes;
+      category: ProductCatType;
+    },
+  ): Promise<ActionResponse<Product>> => {
+    const product = await productService.updateProductInfo(id, data);
     updateTag("products");
-
-    return {
-      success: true,
-      message: "Product updated successfully",
-      product: p,
-    };
-
-  } catch (error) {
-    console.log("ERROR WHILE UPDATING PRODUCT, " + error);
-    return {
-      success: false,
-      message: "Error while updating product",
-      product: {} as Product,
-    };
-  }
-}
+    return { success: true, data: product };
+  },
+);

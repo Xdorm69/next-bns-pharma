@@ -45,6 +45,7 @@ enum ProductCatType {
 model Product {
   id            String       @id @default(uuid())
   name          String
+  slug          String       @unique
   description   String?      // Detailed info about the product
   type          ProductTypes // Enum for structured type
   category      ProductCatType // Enum for product category
@@ -63,6 +64,7 @@ model Product {
   @@index([category])
   @@index([createdAt])
   @@index([isActive])
+  @@index([slug])
 }
 
 model Review {

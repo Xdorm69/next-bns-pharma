@@ -2,9 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function updateClick(id: string) {
+export async function updateClick(slug: string) {
   await prisma.product.update({
-    where: { id },
+    where: { slug },
     data: { clicks: { increment: 1 } },
   });
 }

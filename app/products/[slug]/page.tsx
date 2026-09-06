@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getProductById } from "@/server/products";
+import { getProductById, getProductBySlug } from "@/server/products";
 import { updateClick } from "./_actions/UpdateClick";
 import StarDisplay from "./_components/StarDisplay";
 import ReviewSkeleton from "./_components/ReviewSkeleton";
@@ -12,7 +12,7 @@ import SuggestedSkeleton from "./_components/SuggestedSkeleton";
 import SuggestedProducts from "./_components/SuggestedProducts";
 import { Metadata, ResolvingMetadata } from "next";
 
-type PageProps = { params: Promise<{ id: string }> };
+type PageProps = { params: Promise<{ slug: string }> };
 
 // ─── DYNAMIC METADATA ────────────────────────────────────────────────────────
 // Runs server-side for every product. Google indexes each product page with
@@ -21,8 +21,8 @@ export async function generateMetadata(
   { params }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { id } = await params;
-  const product = await getProductById(id);
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
 
   // If product not found, return minimal metadata (page will 404 anyway)
   if (!product) {
@@ -58,13 +58,13 @@ export async function generateMetadata(
     ],
 
     alternates: {
-      canonical: `https://bnspharmaceuticals.com/products/${id}`,
+      canonical: `https://bnspharmaceuticals.com/products/${slug}`,
     },
 
     openGraph: {
       title: `${product.name} | BNS Pharma`,
       description,
-      url: `https://bnspharmaceuticals.com/products/${id}`,
+      url: `https://bnspharmaceuticals.com/products/${slug}`,
       images: [
         {
           url: product.image, // ImageKit URL from your DB
@@ -86,16 +86,16 @@ export async function generateMetadata(
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = await params;
+  const { slug } = await params;
   const [session, product] = await Promise.all([
     getServerSession(authOptions),
-    getProductById(id),
+    getProductBySlug(slug),
   ]);
 
   if (!product) return notFound();
 
   // 🚀 non-blocking
-  void updateClick(id);
+  void updateClick(slug);
   const compressedImageUrl = product.image + "?tr=q-75,f-auto,w-400";
 
   return (
@@ -152,7 +152,8 @@ export default async function ProductPage({ params }: PageProps) {
             <Image
               src={compressedImageUrl}
               alt={product.name}
-              fill
+              width={800}
+              height={600}
               className="object-contain"
               priority
             />
@@ -213,3 +214,4 @@ export default async function ProductPage({ params }: PageProps) {
     </div>
   );
 }
+

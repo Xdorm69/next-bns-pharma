@@ -61,11 +61,15 @@ export default async function AdminPage() {
   }
 
   //fetching admin page details
-  const { success, message, totalProducts, totalUsers } =
-    await adminPageDetails();
+  const detailsResult = await adminPageDetails();
 
   //showing admin the error for details not loaded
-  if (!success) toast.error(message);
+  if (!detailsResult.success) toast.error(detailsResult.error);
+
+  const totalProducts = detailsResult.success
+    ? detailsResult.data.totalProducts
+    : 0;
+  const totalUsers = detailsResult.success ? detailsResult.data.totalUsers : 0;
 
   return (
     <section className="min-h-screen py-12 px-4">
