@@ -1,0 +1,313 @@
+diff --git a/app/api/auth/register/route.ts b/app/api/auth/register/route.ts
+index a7c9eed..c4e4673 100644
+--- a/app/api/auth/register/route.ts
++++ b/app/api/auth/register/route.ts
+@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
+ import { NextRequest, NextResponse } from "next/server";
+ import bcrypt from "bcrypt";
+ import { signupSchema } from "@/lib/validations/auth";
++import { logger } from "@/lib/logger";
+ 
+ export async function POST(request: NextRequest) {
+   try {
+@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
+       { status: 201 }
+     );
+   } catch (error: unknown) {
+-    console.error("User creation failed:", error);
++    logger.error("User creation failed", error);
+     return NextResponse.json(
+       { success: false, error: "Internal Server Error" },
+       { status: 500 }
+diff --git a/app/auth/login/page.tsx b/app/auth/login/page.tsx
+index 29f6918..25201d6 100644
+--- a/app/auth/login/page.tsx
++++ b/app/auth/login/page.tsx
+@@ -18,6 +18,7 @@ import Image from "next/image";
+ import { images } from "@/lib/constants/images";
+ import { useRouter } from "next/navigation";
+ import { toast } from "sonner";
++import { logger } from "@/lib/logger";
+ 
+ export default function LoginPage() {
+   const [email, setEmail] = useState("");
+@@ -37,13 +38,13 @@ export default function LoginPage() {
+         });
+ 
+         if (res?.error) {
+-          console.error(res.error);
++          logger.error("Login failed", res.error);
+           return;
+         }
+ 
+         router.push("/");
+       } catch (err) {
+-        console.error("Login failed", err);
++        logger.error("Login failed", err);
+         toast.error("Failed to login");
+       }
+     });
+diff --git a/app/auth/sign-up/page.tsx b/app/auth/sign-up/page.tsx
+index 4a536ac..6384219 100644
+--- a/app/auth/sign-up/page.tsx
++++ b/app/auth/sign-up/page.tsx
+@@ -28,6 +28,7 @@ import { useState, useTransition } from "react";
+ import { Eye } from "lucide-react";
+ import { images } from "@/lib/constants/images";
+ import { toast } from "sonner";
++import { logger } from "@/lib/logger";
+ 
+ export default function SignupPage() {
+   const [isPending, startTransition] = useTransition();
+@@ -58,10 +59,10 @@ export default function SignupPage() {
+         }
+ 
+         const data = await res.json();
+-        console.log(data);
++        logger.debug("Registration succeeded", data);
+       } catch (err) {
+         toast.error((err as Error).message || "Failed to create user");
+-        console.error("Registration failed", err);
++        logger.error("Registration failed", err);
+       }
+     });
+     form.reset();
+diff --git a/app/contact/_actions/submitContactForm.ts b/app/contact/_actions/submitContactForm.ts
+index a7198a8..b2c8453 100644
+--- a/app/contact/_actions/submitContactForm.ts
++++ b/app/contact/_actions/submitContactForm.ts
+@@ -3,6 +3,7 @@
+ import { contactSchema } from "@/lib/validations/contact";
+ import { Resend } from "resend";
+ import { contactEmailTemplate } from "../_components/ContactEmailTemplate";
++import { logger } from "@/lib/logger";
+ 
+ const resend = new Resend(process.env.RESEND_API_KEY);
+ 
+@@ -40,7 +41,7 @@ export async function submitContactForm(formData: FormData) {
+ 
+     return { success: true };
+   } catch (error) {
+-    console.error("❌ Contact form error:", error);
++    logger.error("Contact form submission failed", error);
+ 
+     return {
+       success: false,
+diff --git a/app/sitemap.ts b/app/sitemap.ts
+index 32502c7..88b87b5 100644
+--- a/app/sitemap.ts
++++ b/app/sitemap.ts
+@@ -4,6 +4,7 @@
+ 
+ import { MetadataRoute } from "next";
+ import { prisma } from "@/lib/prisma";
++import { logger } from "@/lib/logger";
+ 
+ const BASE_URL = "https://bnspharmaceuticals.com";
+ 
+@@ -56,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+       priority: 0.7,
+     }));
+   } catch (error) {
+-    console.error("Sitemap: failed to fetch products", error);
++    logger.error("Sitemap: failed to fetch products", error);
+   }
+ 
+   return [...staticRoutes, ...productRoutes];
+diff --git a/lib/auth.ts b/lib/auth.ts
+index a70024c..3e89d2b 100644
+--- a/lib/auth.ts
++++ b/lib/auth.ts
+@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
+ import GoogleProvider from "next-auth/providers/google";
+ import { prisma } from "./prisma";
+ import bcrypt from "bcrypt";
++import { logger } from "./logger";
+ 
+ export const authOptions: NextAuthOptions = {
+   providers: [
+@@ -140,7 +141,7 @@ export async function isAdmin(): Promise<boolean> {
+     const session = await getServerSession(authOptions);
+     return session?.user?.role === "ADMIN";
+   } catch (error) {
+-    console.error("FAILED TO FETCH SESSION, " + error);
++    logger.error("isAdmin: failed to fetch session", error);
+     return false;
+   }
+ }
+diff --git a/lib/auth/withAdminAuth.ts b/lib/auth/withAdminAuth.ts
+index 0858333..56b765b 100644
+--- a/lib/auth/withAdminAuth.ts
++++ b/lib/auth/withAdminAuth.ts
+@@ -1,5 +1,6 @@
+ import { isAdmin } from "@/lib/auth";
+ import { ActionResponse } from "@/types/actions";
++import { logger } from "@/lib/logger";
+ 
+ /**
+  * Wraps a server action so that:
+@@ -30,7 +31,7 @@ export function withAdminAuth<Args extends unknown[], T>(
+     try {
+       return await action(...args);
+     } catch (error) {
+-      console.error("withAdminAuth: action threw", error);
++      logger.error("withAdminAuth: action threw", error);
+       return {
+         success: false,
+         error:
+diff --git a/lib/logger.ts b/lib/logger.ts
+new file mode 100644
+index 0000000..dbfd1be
+--- /dev/null
++++ b/lib/logger.ts
+@@ -0,0 +1,48 @@
++/**
++ * Minimal structured logger.
++ *
++ * Not a replacement for a full observability stack — just a single place
++ * that gives every log line a consistent level prefix instead of bare
++ * console.log/console.error scattered through actions, services, and
++ * routes. Swapping this for a real provider (Pino, Sentry, etc.) later
++ * only means changing this file.
++ */
++
++type LogContext = Record<string, unknown> | unknown;
++
++function emit(
++  level: "DEBUG" | "INFO" | "WARN" | "ERROR",
++  method: (...args: unknown[]) => void,
++  message: string,
++  context?: LogContext,
++) {
++  const prefix = `[${level}] ${message}`;
++  if (context !== undefined) {
++    method(prefix, context);
++  } else {
++    method(prefix);
++  }
++}
++
++export const logger = {
++  /** Dev-only diagnostic detail — silent in production. */
++  debug(message: string, context?: LogContext) {
++    if (process.env.NODE_ENV !== "development") return;
++    emit("DEBUG", console.log, message, context);
++  },
++
++  /** Normal operational events worth keeping a record of. */
++  info(message: string, context?: LogContext) {
++    emit("INFO", console.log, message, context);
++  },
++
++  /** Something unexpected but recoverable. */
++  warn(message: string, context?: LogContext) {
++    emit("WARN", console.warn, message, context);
++  },
++
++  /** A failure. Pass the caught error (or any context) as the second arg. */
++  error(message: string, error?: unknown) {
++    emit("ERROR", console.error, message, error);
++  },
++};
+diff --git a/lib/services/image-upload.ts b/lib/services/image-upload.ts
+index b1a6c0b..eb2d91c 100644
+--- a/lib/services/image-upload.ts
++++ b/lib/services/image-upload.ts
+@@ -1,4 +1,5 @@
+ import { imagekit } from "@/lib/imagekit";
++import { logger } from "@/lib/logger";
+ 
+ export type UploadedImage = {
+   url: string;
+@@ -24,7 +25,7 @@ export async function uploadProductImage(
+ 
+     return { url: response.url, fileId: response.fileId };
+   } catch (err) {
+-    console.error("Image upload error:", err);
++    logger.error("Image upload failed", err);
+     throw new Error("Image upload failed");
+   }
+ }
+@@ -39,9 +40,6 @@ export async function deleteProductImage(fileId: string): Promise<void> {
+   try {
+     await imagekit.deleteFile(fileId);
+   } catch (err) {
+-    console.error(
+-      `Failed to clean up orphaned image (fileId: ${fileId}):`,
+-      err,
+-    );
++    logger.error(`Failed to clean up orphaned image (fileId: ${fileId})`, err);
+   }
+ }
+diff --git a/lib/services/products.ts b/lib/services/products.ts
+index ec4adad..d012b7b 100644
+--- a/lib/services/products.ts
++++ b/lib/services/products.ts
+@@ -3,6 +3,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants";
+ import { AddProductSchema } from "@/lib/validations/addprod";
+ import { Product, ProductCatType, ProductTypes } from "@prisma/client";
+ import { uploadProductImage, deleteProductImage } from "./image-upload";
++import { logger } from "@/lib/logger";
+ 
+ /**
+  * Product service layer.
+@@ -117,7 +118,7 @@ export async function createProduct(body: NewProductInput): Promise<Product> {
+       },
+     });
+   } catch (err) {
+-    console.error("Prisma create error:", err);
++    logger.error("Prisma create error", err);
+     await deleteProductImage(uploaded.fileId);
+     throw err;
+   }
+diff --git a/lib/utils/devComment.ts b/lib/utils/devComment.ts
+deleted file mode 100644
+index 2404581..0000000
+--- a/lib/utils/devComment.ts
++++ /dev/null
+@@ -1,5 +0,0 @@
+-export const devComment = (message: string) => {
+-  if (process.env.NODE_ENV === "development") {
+-    console.log("DEV😊 " + message);
+-  }
+-};
+diff --git a/server/products.ts b/server/products.ts
+index 4ca0958..8c91825 100644
+--- a/server/products.ts
++++ b/server/products.ts
+@@ -8,6 +8,7 @@ import { Product, ProductCatType, ProductTypes } from "@prisma/client";
+ import { updateTag } from "next/cache";
+ import { cacheLife, cacheTag } from "next/cache";
+ import { ActionResponse } from "@/types/actions";
++import { logger } from "@/lib/logger";
+ 
+ /**
+  * This file is the Next.js boundary for products: "use server", cache
+@@ -60,8 +61,7 @@ export async function getProducts({
+   cacheLife("hours");
+   cacheTag("products");
+ 
+-  if (process.env.NODE_ENV === "development")
+-    console.log("📦 getProducts called:", { search, type, category, active, page });
++  logger.debug("getProducts called", { search, type, category, active, page });
+ 
+   try {
+     const { products, total, totalPages } = await productService.listProducts({
+@@ -75,7 +75,7 @@ export async function getProducts({
+ 
+     return { success: true, products, total, totalPages };
+   } catch (error) {
+-    console.error("Error fetching products:", error);
++    logger.error("Error fetching products", error);
+     return {
+       success: false,
+       message: (error as Error).message,
+@@ -94,7 +94,7 @@ export async function getProductById(id: string): Promise<Product | null> {
+   try {
+     return await productService.findProductById(id);
+   } catch (error) {
+-    console.error("Error fetching product:", error);
++    logger.error("Error fetching product", error);
+     throw error;
+   }
+ }
