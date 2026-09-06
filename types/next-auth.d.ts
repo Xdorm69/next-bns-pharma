@@ -1,13 +1,18 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
+  interface User extends DefaultUser {
+    role?: string;
+  }
+
   interface Session {
     user: {
       id: string;
       email: string;
       name: string;
+      role: string;
     } & DefaultSession["user"];
-    provider?: string; // 👈 add provider here
+    provider?: string;
   }
 }
 
@@ -16,6 +21,7 @@ declare module "next-auth/jwt" {
     id?: string;
     email?: string;
     name?: string;
-    provider?: string; // 👈 add provider here
+    role?: string;
+    provider?: string;
   }
 }
