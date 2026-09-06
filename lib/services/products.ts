@@ -109,6 +109,7 @@ export async function createProduct(body: NewProductInput): Promise<Product> {
       data: {
         name: data.name,
         description: data.description,
+        slug: data.name.toLowerCase().replace(/\s+/g, "-") + "-" + data.type,
         type: data.type as ProductTypes,
         category: data.category as ProductCatType,
         ingredients: data.ingredients,
